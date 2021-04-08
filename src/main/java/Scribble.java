@@ -35,7 +35,7 @@ public class Scribble extends Applet
     clear_button = new Button("Clear");
     clear_button.setForeground(Color.black);
     clear_button.setBackground(Color.lightGray);
-    clear_button.addActionListener(this); 
+    clear_button.addActionListener(this);
     this.add(clear_button);
 
     // Create a menu of colors and add it to the applet.
