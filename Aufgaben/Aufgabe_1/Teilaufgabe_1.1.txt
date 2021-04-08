@@ -1,0 +1,53 @@
+1. Beschreiben Sie in kurzen Texten (stichwortartig), wofür die angeführten Klassen im Programm zuständig bzw. verantwortlich sind:
+   Draw, DrawGUI, DrawActionListener, ColorItemListener, ShapeManager und ScribbleDrawer.
+
+Draw
+- enthält main Methode, hiermit wird in Java das Programm ausgeführt
+- erstellt die GUI
+- wenn doCommand mit "clear" aufgerufen wird, wird die GUI auf Ihren Anfangszustand
+zurückgesetzt
+- wenn doCommand mit "quit" aufgerufen wird, wird das Fenster geschlossen und somit das Programm
+geschlossen
+
+DrawGUI
+- DrawGUI erbt von JFrame
+- DrawGUI implementiert die GUI
+- der Konstruktor der DrawGUI Klasse erstellt die GUI und setzt die EventListener
+(DrawActionListener und ColorItemListener)
+- unsere GUI beinhaltet zwei DrawActionListener, "clear" und "quit" diese sorgen für die
+Funktionalität der beiden Knöpfe clear und quit
+- TODO noch mehr hinschreiben
+
+DrawActionListener
+- implementiert das Interface ActionListener
+- beinhaltet den Konstruktor DrawActionListener und die Methode actionPerformed
+- DrawActionListener horcht auf einen Command und führt diesen aus, wenn aufgerufen
+
+ColorItemListener
+- implementiert das Interface ItemListener
+- ist zuständig für das Ändern der Farbe -> wenn Nutzer im Dialog andere Farbe auswählt dann
+wird itemStateChanged ausgeführt und je nachdem welche Farbe man gewählt hat, diese gesetzt
+
+ShapeManager
+- implementiert das Interface ItemListener
+- beinhaltet die abstrake Klasse ShapeDrawer, welche von MouseAdapter erbt und das Interface
+MouseMotionListener implementiert
+- TODO noch mehr hinschreiben
+
+ScribbleDrawer
+- die Klasse ScribbleDrawer ist für das tatsächliche Zeichnen zuständig im Scribble Modus
+- wenn ein beliebiger Knopf der Maus gedrückt wird, werden sich die X und Y Koordinaten des
+Cursors gespeichert, wenn man dann die Maus bewegt, wird zwischen diesen Koordinaten und
+denen wo man die Maus loslässt ein Strich gemalt
+------------------------------------------------------------------------------------------------------------------------
+
+2. Ablauf Operation quit
+- TODO
+3. Ablauf Operation Farbauswahl (im color_chooser)
+- TODO
+4. Ablauf der Scribble-Operation (Kurven malen)
+- TODO
+5. Ablauf Operation Rechteck zeichnen *
+- TODO
+6. Ablauf Operation Shape wählen
+- TODO
