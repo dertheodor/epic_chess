@@ -4,9 +4,15 @@
 // You may study, use, modify, and distribute it for non-commercial purposes.
 // For any commercial use, see http://www.davidflanagan.com/javaexamples
 
+// *** modified by PTP 04/2020
+// *** minimal changes from AWT to Swing -> replace elements/classes
+// *** behavior is similiar but not equal ! (Why?)
+
 import java.applet.*;
 import java.awt.*;
 import java.awt.event.*;
+import javax.swing.*;  //++
+
 
 /** The application class.  Processes high-level commands sent by GUI */
 public class Draw {
@@ -15,7 +21,7 @@ public class Draw {
 
   /** Application constructor:  create an instance of our GUI class */
   public Draw() { window = new DrawGUI(this); }
-  protected Frame window;
+protected JFrame window; //chg
 
   /** This is the application method that processes commands sent by the GUI */
   public void doCommand(String command) {
@@ -34,7 +40,7 @@ public class Draw {
 }
 
 /** This class implements the GUI for our application */
-class DrawGUI extends Frame {
+class DrawGUI extends JFrame {
   Draw app;      // A reference to the application, to send commands to.
   Color color;
 
@@ -61,14 +67,14 @@ class DrawGUI extends Frame {
     color_chooser.add("Blue");
 
     // Create two buttons
-    Button clear = new Button("Clear");
-    Button quit = new Button("Quit");
+JButton clear = new JButton("Clear");
+JButton quit = new JButton("Quit");
 
     // Set a LayoutManager, and add the choosers and buttons to the window.
     this.setLayout(new FlowLayout(FlowLayout.RIGHT, 10, 5));
-    this.add(new Label("Shape:"));
+this.add(new JLabel("Shape:"));
     this.add(shape_chooser);
-    this.add(new Label("Color:"));
+this.add(new JLabel("Color:"));
     this.add(color_chooser);
     this.add(clear);
     this.add(quit);
@@ -232,7 +238,7 @@ class DrawGUI extends Frame {
 
     class ColorItemListener implements ItemListener {
 
-      // user selected new color => store new color in DrawGUI
+ // user selected new color => store new color in DrawGUIs
       public void itemStateChanged(ItemEvent e) {
         if(e.getItem().equals("Black"))
         {
@@ -263,6 +269,7 @@ class DrawGUI extends Frame {
     // Finally, set the size of the window, and pop it up
     this.setSize(500, 400);
     this.setBackground(Color.white);
-    this.show();
+// this.show(); //chg
+this.setVisible(true); // ++
   }
 }
