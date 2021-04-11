@@ -16,7 +16,6 @@ DrawGUI
 (DrawActionListener und ColorItemListener)
 - unsere GUI beinhaltet zwei DrawActionListener, "clear" und "quit" diese sorgen für die
 Funktionalität der beiden Knöpfe clear und quit
-- TODO noch mehr hinschreiben
 
 DrawActionListener
 - implementiert das Interface ActionListener
@@ -32,7 +31,8 @@ ShapeManager
 - implementiert das Interface ItemListener
 - beinhaltet die abstrake Klasse ShapeDrawer, welche von MouseAdapter erbt und das Interface
 MouseMotionListener implementiert
-- TODO noch mehr hinschreiben
+- Beinhaltet die Hauptfunktionalitäten der einzelnen Shape Klassen und managet, welche gerade aktiv sind.
+- Wird in der folgenden Aufgabe genauer erklärt.
 
 ScribbleDrawer
 - die Klasse ScribbleDrawer ist für das tatsächliche Zeichnen zuständig im Scribble Modus
@@ -63,8 +63,25 @@ Im Rumpf von mouseDragged wird für die Kurve dann die aktuell ausgewählte Farb
 gezeichent.
 
 5. Ablauf Operation Rechteck zeichnen *
-Im Grunde funktioniert Rechteck zeichnen ähnlich wie die Scribble Operation. Der Unterschied besteht darin,
-dass es in RectangleDrawer noch zusätzlich mouseReleased gibt.
+Im Grunde funktioniert Rechteck zeichnen ähnlich wie die Scribble Operation. Wird eine Maustaste gedrückt,
+wird nun aber nur die erste Ecke des Rechtecks festgesetzt.
+Mousedragged funktioniert mit dem so genannten rubberband Mode. Dabei wird , während die Maus "gedragged" wird,
+temporär die zweite Ecke des Rechtecks gesetzt
+und zwischen den beiden Ecken ein Rechteck aufgespannt. Wird die Maus jetzt weiter bewegt, wird das eben temporär gezeichnete Rechteck,
+mit der Farbe des Hintergrunds übermalt
+es verschwindet also wieder. An dem Punkt wo sich die Maus jetzt befindet, wird das neue Rechteck aufgespannt.
+Da dieser Vorgang häufig vorkommt,
+wirkt es so als wäre das Rechteck elastisch.
+Erst wenn mousereleased ausgeführt wird, wird ein letztes Mal das letzte temporäre Rechteck übermalt und das finale Rechteck gesetzt.
+Der Unterschied zur Scribble Operation besteht also darin, dass die Finale Zeichnung also erst mit dem loslassen der Maus
+gemacht wird, alle Bewegungen davor sind grundsätzlich irrelevant, für das Rechteck, welches auf dem Bildschirm bleibt.
+Außerdem folgt der gezeichnete Strich hierbei natürlich auch nicht jeder Bewegung der Maus, sondern der Punkt an dem sich
+die Maus befindet bildet nur die zweite Ecke des Rechtecks, zwischen denen es dann gezeichnet wird.
 
 6. Ablauf Operation Shape wählen
-- TODO
+Default ist der scribbleDrawer, der immer eingestellt wird, sollte das Programm starten. Beim Start des Programms werden
+jedoch auch Objekte der OvalDrawer und der RectangleDrawer Klasse erstellt. Sie bleiben nur inaktiv solange sie noch nicht
+verwendet werden. Wenn der Drawer jetzt auf einen anderen Drawer geändert werden soll,
+wird nur der mouse- und der mouseMotionListener im alten Drawer gelöscht und auf den neuen Drawer gesetzt.
+Die Änderung zwischen den Drawern funktioniert sonst identisch zu der Änderung zwischen den Farben.
+
