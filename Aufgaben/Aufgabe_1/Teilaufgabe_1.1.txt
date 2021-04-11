@@ -42,12 +42,29 @@ denen wo man die Maus loslässt ein Strich gemalt
 ------------------------------------------------------------------------------------------------------------------------
 
 2. Ablauf Operation quit
-- TODO
+Wenn unsere doCommand Methode mit dem command "quit" aufgerufen wird, schließt sich dadurch
+die GUI und danach auch das Programm selbst. Die eigentlich Logik dahinter ist wie folgt aufgebaut:
+Wir haben einen JButton Knopf quit welcher einen Listener auf sich hat. Wird nun dieser "Quit" Knopf
+gedrückt, wird mit Hilfe des Listeners und der actionPerformed-Methode doCommand mit dem String "quit"
+aufgerufen. Dadurch schließt sich das Fenster. Des weiterem gibt es einen WindowListener auf dem Fenster
+schließen Knopf, wodurch ebenfalls doCommand mit "quit" aufgerufen wird.
+
 3. Ablauf Operation Farbauswahl (im color_chooser)
-- TODO
+Die Farbauswahl erfolgt durch ein Untermenu in einem JLabel namens "Color:". Die möglichen Farben werden in
+in der Methode DrawGUI definiert. Diese werden dann in das eben genannte JLabel hinzugefügt. Im Rumpf von
+itemStateChanged werden dann alle möglichen Farben abgeklappert und die gerade ausgewählte als die tatsächliche
+Farbe dann gesetzt. Als default Farbe ist schwarz gesetzt.
+
 4. Ablauf der Scribble-Operation (Kurven malen)
-- TODO
+Kurven malen funktioniert wie folgt: Wenn der Nutzer einen beliebiger Knopf der Maus drückt,
+werden sich die X und Y Koordinaten des Cursors gespeichert. Wenn man dann die Maus bewegt,
+wird zwischen diesen eben gespeicherten Koordinaten und denen wo man die Maus loslässt ein Strich gezeichnet.
+Im Rumpf von mouseDragged wird für die Kurve dann die aktuell ausgewählte Farbe gesetzt und dann der Strich
+gezeichent.
+
 5. Ablauf Operation Rechteck zeichnen *
-- TODO
+Im Grunde funktioniert Rechteck zeichnen ähnlich wie die Scribble Operation. Der Unterschied besteht darin,
+dass es in RectangleDrawer noch zusätzlich mouseReleased gibt.
+
 6. Ablauf Operation Shape wählen
 - TODO
