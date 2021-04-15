@@ -11,6 +11,7 @@ package mydraw;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.HashMap;
 import java.util.Locale;
 import javax.swing.*;  //++
 
@@ -303,7 +304,7 @@ class DrawGUI extends JFrame {
     /**
      * API method: change height of the window
      *
-     * @param height to be set
+     * @param height to be set height greater than 0
      */
     public void setHeight(int height) {
         if (height > 0) {
@@ -328,7 +329,7 @@ class DrawGUI extends JFrame {
     /**
      * API method: change width of the window
      *
-     * @param width to be set
+     * @param width to be set width greater than 0
      */
     public void setWidth(int width) {
         if (width > 0) {
@@ -398,13 +399,30 @@ class DrawGUI extends JFrame {
             super(str);
         }
     }
-//
-//    /**
-//     * API method: get fg color ...
-//     */
-//    public String getFGColor() {
-//        // do it ...
-//    }
+
+    /**
+     * API method: get fg color ...
+     *
+     * @return the currently selected color
+     */
+    public String getFGColor() {
+        HashMap<String, String> colorRGBValues = new HashMap<>();
+        colorRGBValues.put("java.awt.Color[r=255,g=255,b=255]", "white");
+        colorRGBValues.put("java.awt.Color[r=192,g=192,b=192]", "lightgray");
+        colorRGBValues.put("java.awt.Color[r=128,g=128,b=128]", "gray");
+        colorRGBValues.put("java.awt.Color[r=64,g=64,b=64]", "darkgray");
+        colorRGBValues.put("java.awt.Color[r=0,g=0,b=0]", "black");
+        colorRGBValues.put("java.awt.Color[r=255,g=0,b=0]", "red");
+        colorRGBValues.put("java.awt.Color[r=255,g=175,b=175]", "pink");
+        colorRGBValues.put("java.awt.Color[r=255,g=200,b=0]", "orange");
+        colorRGBValues.put("java.awt.Color[r=255,g=255,b=0]", "yellow");
+        colorRGBValues.put("java.awt.Color[r=0,g=255,b=0]", "green");
+        colorRGBValues.put("java.awt.Color[r=255,g=0,b=255]", "magenta");
+        colorRGBValues.put("java.awt.Color[r=0,g=255,b=255]", "cyan");
+        colorRGBValues.put("java.awt.Color[r=0,g=0,b=255]", "blue");
+
+        return colorRGBValues.get(this.color.toString());
+    }
 //
 //    /**
 //     * API method: set bg color ...

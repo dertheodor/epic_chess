@@ -15,6 +15,7 @@ public class DrawTest {
         Assertions.assertEquals(400, DrawTestGUI.getHeight());
     }
 
+    // Negativtest durch absichtlich falsche Assertion nicht sinnvoll, ungültige Eingaben werden im Code abgedeckt
     @Test
     void setHeightTest() {
         DrawTestGUI.setHeight(800);
@@ -26,6 +27,7 @@ public class DrawTest {
         Assertions.assertEquals(500, DrawTestGUI.getWidth());
     }
 
+    // Negativtest durch absichtlich falsche Assertion nicht sinnvoll, ungültige Eingaben werden im Code abgedeckt
     @Test
     void setWidthTest() {
         DrawTestGUI.setWidth(800);
@@ -33,7 +35,7 @@ public class DrawTest {
     }
 
     @Test
-    void setFGColorTestPostive() {
+    void setFGColorTestPositive() {
         try {
             DrawTestGUI.setFGColor("blue");
             Assertions.assertEquals(Color.blue, DrawTestGUI.color);
@@ -48,6 +50,26 @@ public class DrawTest {
             DrawTestGUI.setFGColor("blue1");
         } catch (Exception e) {
             Assertions.assertEquals(e.getMessage(), "blue1 not available, please choose another color.");
+        }
+    }
+
+    @Test
+    void getFGColorTestPositive() {
+        try {
+            DrawTestGUI.setFGColor("pink");
+            Assertions.assertEquals("pink", DrawTestGUI.getFGColor());
+        } catch (Exception e) {
+            Assertions.fail();
+        }
+    }
+
+    @Test
+    void getFGColorTestNegative() {
+        try {
+            DrawTestGUI.setFGColor("pink");
+            Assertions.assertNotEquals("yellow", DrawTestGUI.getFGColor());
+        } catch (Exception e) {
+            Assertions.fail();
         }
     }
 }
