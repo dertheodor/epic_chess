@@ -1,4 +1,4 @@
-package main.java;
+package main.java.mydraw;
 // This example is from _Java Examples in a Nutshell_. (http://www.oreilly.com)
 // Copyright (c) 1997 by David Flanagan
 // This example is provided WITHOUT ANY WARRANTY either expressed or implied.
@@ -9,7 +9,6 @@ package main.java;
 // *** minimal changes from AWT to Swing -> replace elements/classes
 // *** behavior is similiar but not equal ! (Why?)
 
-import java.applet.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;  //++
