@@ -342,58 +342,7 @@ class DrawGUI extends JFrame {
         }
     }
 
-    /**
-     * API method: set current drawing color
-     *
-     * @param new_color the new color to be set
-     */
-    public void setFGColor(String new_color) throws ColorException {
-        String new_color_lc = new_color.toLowerCase();
-        switch (new_color_lc) {
-            case "white":
-                color = Color.white;
-                break;
-            case "lightgray":
-                color = Color.lightGray;
-                break;
-            case "gray":
-                color = Color.gray;
-                break;
-            case "darkgray":
-                color = Color.darkGray;
-                break;
-            case "black":
-                color = Color.black;
-                break;
-            case "red":
-                color = Color.red;
-                break;
-            case "pink":
-                color = Color.pink;
-                break;
-            case "orange":
-                color = Color.orange;
-                break;
-            case "yellow":
-                color = Color.yellow;
-                break;
-            case "green":
-                color = Color.green;
-                break;
-            case "magenta":
-                color = Color.magenta;
-                break;
-            case "cyan":
-                color = Color.cyan;
-                break;
-            case "blue":
-                color = Color.blue;
-                break;
-            default:
-                throw new ColorException(new_color_lc + " not available, please choose another color.");
-        }
-    }
-
+    // custom exception
     private static class ColorException extends Exception {
         ColorException(String str) {
             super(str);
@@ -401,11 +350,61 @@ class DrawGUI extends JFrame {
     }
 
     /**
-     * API method: get fg color ...
+     * Helper method for mapping strings to colors
+     *
+     * @param color as String
+     * @return color as Color
+     */
+    public Color colorSwitch(String color) throws ColorException {
+        switch (color) {
+            case "white":
+                return Color.white;
+            case "lightgray":
+                return Color.lightGray;
+            case "gray":
+                return Color.gray;
+            case "darkgray":
+                return Color.darkGray;
+            case "black":
+                return Color.black;
+            case "red":
+                return Color.red;
+            case "pink":
+                return Color.pink;
+            case "orange":
+                return Color.orange;
+            case "yellow":
+                return Color.yellow;
+            case "green":
+                return Color.green;
+            case "magenta":
+                return Color.magenta;
+            case "cyan":
+                return Color.cyan;
+            case "blue":
+                return Color.blue;
+            default:
+                throw new ColorException(color + " not available, please choose another color.");
+        }
+    }
+
+    /**
+     * API method: set current drawing color
+     *
+     * @param new_color the new drawing color to be set
+     */
+    public void setFGColor(String new_color) throws ColorException {
+        String new_color_lowercase = new_color.toLowerCase();
+        color = colorSwitch(new_color_lowercase);
+    }
+
+    /**
+     * API method: get currently selected drawing color
      *
      * @return the currently selected color
      */
     public String getFGColor() {
+        // Key-Value storage for possible java.awt colors
         HashMap<String, String> colorRGBValues = new HashMap<>();
         colorRGBValues.put("java.awt.Color[r=255,g=255,b=255]", "white");
         colorRGBValues.put("java.awt.Color[r=192,g=192,b=192]", "lightgray");
@@ -423,13 +422,16 @@ class DrawGUI extends JFrame {
 
         return colorRGBValues.get(this.color.toString());
     }
-//
-//    /**
-//     * API method: set bg color ...
-//     */
-//    public void setBGColor(String new_color) throws ColorException {
-//        // do it ...
-//    }
+
+    /**
+     * API method: set new background color
+     *
+     * @param new_color the new background color to be set
+     */
+    public void setBGColor(String new_color) throws ColorException {
+        String new_color_lowercase = new_color.toLowerCase();
+        setBackground(colorSwitch(new_color_lowercase));
+    }
 //
 //    /**
 //     * API method: get bg color ...
