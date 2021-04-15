@@ -1,4 +1,4 @@
-package main.java.mydraw;
+package mydraw;
 // This example is from _Java Examples in a Nutshell_. (http://www.oreilly.com)
 // Copyright (c) 1997 by David Flanagan
 // This example is provided WITHOUT ANY WARRANTY either expressed or implied.
@@ -294,114 +294,117 @@ class DrawGUI extends JFrame {
      * API method: get height ...
      * more details here ...
      */
-    public int getHeight() {
-        // do it ...
-    }
+//    public int getHeight() {
+//        // do it ...
+//    }
+//
 
     /**
      * API method: set height ...
+     *
+     * @return
      */
-    public void setHeight(int height) {
-        // do it ...
-    }
-
-    /**
-     * API method: get width ...
-     */
-    public int getWidth() {
-        // do it ...
-    }
-
-    /**
-     * API method: set width ...
-     */
-    public void setWidth(int width) {
-        // do it ...
-    }
-
-    /**
-     * API method: set fg color ...
-     */
-    public void setFGColor(String new_color) throws ColorException {
-        // do it ...
-    }
-
-    /**
-     * API method: get fg color ...
-     */
-    public String getFGColor() {
-        // do it ...
-    }
-
-    /**
-     * API method: set bg color ...
-     */
-    public void setBGColor(String new_color) throws ColorException {
-        // do it ...
-    }
-
-    /**
-     * API method: get bg color ...
-     */
-    public String getBGColor() {
-        // do it ...
-    }
-
-    /**
-     * API method: get drawing ...
-     */
-    public Image getDrawing() {
-        // do it ...
-    }
-
-    /**
-     * API method: writeImage ...
-     */
-    public void writeImage(Image img, String filename) throws IOException {
-        // do it ...
-    }
-
-    /**
-     * API method: readImage ...
-     */
-    public Image readImage(String filename) throws IOException {
-        // do it ...
-    }
-
-    /**
-     * API method: clear ...
-     */
-    public void clear() {
-        // do it ...
-    }
-
-    /**
-     * API - test method: paint every shape ...
-     */
-    public void autoDraw() {
-        // do it ...
-        // paint your testimage now using API methods
-    }
-
-
-    /**
-     * API: paint a rectangle ...
-     */
-    public void drawRectangle(Point upper_left, Point lower_right) {
-        // do it ...
-    }
-
-    /**
-     * API: paint an oval ...
-     */
-    public void drawOval(Point upper_left, Point lower_right) {
-        // do it ...
-    }
-
-    /**
-     * API: paint a polyline/scribble ...
-     */
-    public void drawPolyLine(java.util.List<Point> points) {
-        // do it ...
-    }
+//    public int setHeight() {
+//        return 2;
+//    }
+//
+//    /**
+//     * API method: get width ...
+//     */
+//    public int getWidth() {
+//        // do it ...
+//    }
+//
+//    /**
+//     * API method: set width ...
+//     */
+//    public void setWidth(int width) {
+//        // do it ...
+//    }
+//
+//    /**
+//     * API method: set fg color ...
+//     */
+//    public void setFGColor(String new_color) throws ColorException {
+//        // do it ...
+//    }
+//
+//    /**
+//     * API method: get fg color ...
+//     */
+//    public String getFGColor() {
+//        // do it ...
+//    }
+//
+//    /**
+//     * API method: set bg color ...
+//     */
+//    public void setBGColor(String new_color) throws ColorException {
+//        // do it ...
+//    }
+//
+//    /**
+//     * API method: get bg color ...
+//     */
+//    public String getBGColor() {
+//        // do it ...
+//    }
+//
+//    /**
+//     * API method: get drawing ...
+//     */
+//    public Image getDrawing() {
+//        // do it ...
+//    }
+//
+//    /**
+//     * API method: writeImage ...
+//     */
+//    public void writeImage(Image img, String filename) throws IOException {
+//        // do it ...
+//    }
+//
+//    /**
+//     * API method: readImage ...
+//     */
+//    public Image readImage(String filename) throws IOException {
+//        // do it ...
+//    }
+//
+//    /**
+//     * API method: clear ...
+//     */
+//    public void clear() {
+//        // do it ...
+//    }
+//
+//    /**
+//     * API - test method: paint every shape ...
+//     */
+//    public void autoDraw() {
+//        // do it ...
+//        // paint your testimage now using API methods
+//    }
+//
+//
+//    /**
+//     * API: paint a rectangle ...
+//     */
+//    public void drawRectangle(Point upper_left, Point lower_right) {
+//        // do it ...
+//    }
+//
+//    /**
+//     * API: paint an oval ...
+//     */
+//    public void drawOval(Point upper_left, Point lower_right) {
+//        // do it ...
+//    }
+//
+//    /**
+//     * API: paint a polyline/scribble ...
+//     */
+//    public void drawPolyLine(java.util.List<Point> points) {
+//        // do it ...
+//    }
 }
