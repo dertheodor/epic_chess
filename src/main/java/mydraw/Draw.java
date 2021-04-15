@@ -291,37 +291,57 @@ class DrawGUI extends JFrame {
     */
 
     /**
-     * API method: get height ...
-     * more details here ...
+     * API method: gets the height of the current window.
+     *
+     * @return height of window
      */
     public int getHeight() {
-        return 2;
+        return this.getSize().height;
     }
 
-//
-//    /**
-//     * API method: set height ...
-//     *
-//     * @return
-//     */
-//    public int setHeight() {
-//        return 2;
-//    }
-//
-//    /**
-//     * API method: get width ...
-//     */
-//    public int getWidth() {
-//        // do it ...
-//    }
-//
-//    /**
-//     * API method: set width ...
-//     */
-//    public void setWidth(int width) {
-//        // do it ...
-//    }
-//
+
+    /**
+     * API method: change height of the window
+     *
+     * @param height to be set
+     */
+    public void setHeight(int height) {
+        if (height > 0) {
+            this.setSize(this.getWidth(), height);
+        } else {
+            JOptionPane.showMessageDialog(null,
+                    "Height not valid",
+                    "Warning",
+                    JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
+
+    /**
+     * API method: gets the width of the current window.
+     *
+     * @return width of window
+     */
+    public int getWidth() {
+        return this.getSize().width;
+    }
+
+    /**
+     * API method: change width of the window
+     *
+     * @param width to be set
+     */
+    public void setWidth(int width) {
+        if (width > 0) {
+            this.setSize(width, this.getHeight());
+        } else {
+            JOptionPane.showMessageDialog(null,
+                    "Height not valid",
+                    "Warning",
+                    JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
 //    /**
 //     * API method: set fg color ...
 //     */
