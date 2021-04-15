@@ -1,9 +1,9 @@
 package mydraw;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.awt.*;
 
 public class DrawTest {
     // init Draw and GUI
@@ -31,5 +31,23 @@ public class DrawTest {
         DrawTestGUI.setWidth(800);
         Assertions.assertEquals(800, DrawTestGUI.getWidth());
     }
-}
 
+    @Test
+    void setFGColorTestPostive() {
+        try {
+            DrawTestGUI.setFGColor("blue");
+            Assertions.assertEquals(Color.blue, DrawTestGUI.color);
+        } catch (Exception e) {
+            Assertions.fail();
+        }
+    }
+
+    @Test
+    void setFGColorTestNegative() {
+        try {
+            DrawTestGUI.setFGColor("blue1");
+        } catch (Exception e) {
+            Assertions.assertEquals(e.getMessage(), "blue1 not available, please choose another color.");
+        }
+    }
+}

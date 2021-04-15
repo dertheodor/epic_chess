@@ -11,6 +11,7 @@ package mydraw;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Locale;
 import javax.swing.*;  //++
 
 
@@ -299,7 +300,6 @@ class DrawGUI extends JFrame {
         return this.getSize().height;
     }
 
-
     /**
      * API method: change height of the window
      *
@@ -315,7 +315,6 @@ class DrawGUI extends JFrame {
                     JOptionPane.WARNING_MESSAGE);
         }
     }
-
 
     /**
      * API method: gets the width of the current window.
@@ -342,12 +341,63 @@ class DrawGUI extends JFrame {
         }
     }
 
-//    /**
-//     * API method: set fg color ...
-//     */
-//    public void setFGColor(String new_color) throws ColorException {
-//        // do it ...
-//    }
+    /**
+     * API method: set current drawing color
+     *
+     * @param new_color the new color to be set
+     */
+    public void setFGColor(String new_color) throws ColorException {
+        String new_color_lc = new_color.toLowerCase();
+        switch (new_color_lc) {
+            case "white":
+                color = Color.white;
+                break;
+            case "lightgray":
+                color = Color.lightGray;
+                break;
+            case "gray":
+                color = Color.gray;
+                break;
+            case "darkgray":
+                color = Color.darkGray;
+                break;
+            case "black":
+                color = Color.black;
+                break;
+            case "red":
+                color = Color.red;
+                break;
+            case "pink":
+                color = Color.pink;
+                break;
+            case "orange":
+                color = Color.orange;
+                break;
+            case "yellow":
+                color = Color.yellow;
+                break;
+            case "green":
+                color = Color.green;
+                break;
+            case "magenta":
+                color = Color.magenta;
+                break;
+            case "cyan":
+                color = Color.cyan;
+                break;
+            case "blue":
+                color = Color.blue;
+                break;
+            default:
+                throw new ColorException(new_color_lc + " not available, please choose another color.");
+        }
+    }
+
+    private static class ColorException extends Exception {
+        ColorException(String str) {
+            super(str);
+        }
+    }
 //
 //    /**
 //     * API method: get fg color ...
