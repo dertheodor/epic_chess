@@ -91,4 +91,24 @@ public class DrawTest {
             Assertions.assertEquals(e.getMessage(), "blue1 not available, please choose another color.");
         }
     }
+
+    @Test
+    void getBGColorTestPositive() {
+        try {
+            DrawTestGUI.setBGColor("pink");
+            Assertions.assertEquals("pink", DrawTestGUI.getBGColor());
+        } catch (Exception e) {
+            Assertions.fail();
+        }
+    }
+
+    @Test
+    void getBGColorTestNegative() {
+        try {
+            DrawTestGUI.setBGColor("pink");
+            Assertions.assertNotEquals("yellow", DrawTestGUI.getBGColor());
+        } catch (Exception e) {
+            Assertions.fail();
+        }
+    }
 }

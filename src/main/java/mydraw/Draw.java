@@ -355,7 +355,7 @@ class DrawGUI extends JFrame {
      * @param color as String
      * @return color as Color
      */
-    public Color colorSwitch(String color) throws ColorException {
+    public Color colorSwitchHelper(String color) throws ColorException {
         switch (color) {
             case "white":
                 return Color.white;
@@ -395,15 +395,16 @@ class DrawGUI extends JFrame {
      */
     public void setFGColor(String new_color) throws ColorException {
         String new_color_lowercase = new_color.toLowerCase();
-        color = colorSwitch(new_color_lowercase);
+        color = colorSwitchHelper(new_color_lowercase);
     }
 
     /**
-     * API method: get currently selected drawing color
+     * Helper method for mapping strings to colors
      *
-     * @return the currently selected color
+     * @param awtColorRGB toString version of java.awt.Color
+     * @return actual String of color
      */
-    public String getFGColor() {
+    private String colorHashMapHelper(String awtColorRGB) {
         // Key-Value storage for possible java.awt colors
         HashMap<String, String> colorRGBValues = new HashMap<>();
         colorRGBValues.put("java.awt.Color[r=255,g=255,b=255]", "white");
@@ -420,7 +421,16 @@ class DrawGUI extends JFrame {
         colorRGBValues.put("java.awt.Color[r=0,g=255,b=255]", "cyan");
         colorRGBValues.put("java.awt.Color[r=0,g=0,b=255]", "blue");
 
-        return colorRGBValues.get(this.color.toString());
+        return colorRGBValues.get(awtColorRGB);
+    }
+
+    /**
+     * API method: get currently selected drawing color
+     *
+     * @return the currently selected drawing color
+     */
+    public String getFGColor() {
+        return colorHashMapHelper(this.color.toString());
     }
 
     /**
@@ -430,15 +440,17 @@ class DrawGUI extends JFrame {
      */
     public void setBGColor(String new_color) throws ColorException {
         String new_color_lowercase = new_color.toLowerCase();
-        setBackground(colorSwitch(new_color_lowercase));
+        setBackground(colorSwitchHelper(new_color_lowercase));
     }
-//
-//    /**
-//     * API method: get bg color ...
-//     */
-//    public String getBGColor() {
-//        // do it ...
-//    }
+
+    /**
+     * API method: get currently selected background color
+     *
+     * @return the currently selected background color
+     */
+    public String getBGColor() {
+        return colorHashMapHelper(this.getBackground().toString());
+    }
 //
 //    /**
 //     * API method: get drawing ...
