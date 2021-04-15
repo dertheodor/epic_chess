@@ -1,3 +1,4 @@
+package main.java;
 // This example is from _Java Examples in a Nutshell_. (http://www.oreilly.com)
 // Copyright (c) 1997 by David Flanagan
 // This example is provided WITHOUT ANY WARRANTY either expressed or implied.
