@@ -294,16 +294,16 @@ class DrawGUI extends JFrame {
      * API method: get height ...
      * more details here ...
      */
-//    public int getHeight() {
-//        // do it ...
-//    }
-//
+    public int getHeight() {
+        return 2;
+    }
 
-    /**
-     * API method: set height ...
-     *
-     * @return
-     */
+//
+//    /**
+//     * API method: set height ...
+//     *
+//     * @return
+//     */
 //    public int setHeight() {
 //        return 2;
 //    }
