@@ -7,38 +7,38 @@ import java.awt.*;
 
 public class DrawTest {
     // init Draw and GUI
-    Draw DrawTest = new Draw();
-    DrawGUI DrawTestGUI = new DrawGUI(DrawTest);
+    Draw drawTest = new Draw();
+    DrawGUI drawTestGUI = new DrawGUI(drawTest);
 
     @Test
     void getHeightTest() {
-        Assertions.assertEquals(400, DrawTestGUI.getHeight());
+        Assertions.assertEquals(400, drawTestGUI.getHeight());
     }
 
     // Negativtest durch absichtlich falsche Assertion nicht sinnvoll, ungültige Eingaben werden im Code abgedeckt
     @Test
     void setHeightTest() {
-        DrawTestGUI.setHeight(800);
-        Assertions.assertEquals(800, DrawTestGUI.getHeight());
+        drawTestGUI.setHeight(800);
+        Assertions.assertEquals(800, drawTestGUI.getHeight());
     }
 
     @Test
     void getWidthTest() {
-        Assertions.assertEquals(500, DrawTestGUI.getWidth());
+        Assertions.assertEquals(500, drawTestGUI.getWidth());
     }
 
     // Negativtest durch absichtlich falsche Assertion nicht sinnvoll, ungültige Eingaben werden im Code abgedeckt
     @Test
     void setWidthTest() {
-        DrawTestGUI.setWidth(800);
-        Assertions.assertEquals(800, DrawTestGUI.getWidth());
+        drawTestGUI.setWidth(800);
+        Assertions.assertEquals(800, drawTestGUI.getWidth());
     }
 
     @Test
     void setFGColorTestPositive() {
         try {
-            DrawTestGUI.setFGColor("blue");
-            Assertions.assertEquals(Color.blue, DrawTestGUI.color);
+            drawTestGUI.setFGColor("blue");
+            Assertions.assertEquals(Color.blue, drawTestGUI.color);
         } catch (Exception e) {
             Assertions.fail();
         }
@@ -47,7 +47,7 @@ public class DrawTest {
     @Test
     void setFGColorTestNegative() {
         try {
-            DrawTestGUI.setFGColor("blue1");
+            drawTestGUI.setFGColor("blue1");
         } catch (Exception e) {
             Assertions.assertEquals(e.getMessage(), "blue1 not available, please choose another color.");
         }
@@ -56,8 +56,8 @@ public class DrawTest {
     @Test
     void getFGColorTestPositive() {
         try {
-            DrawTestGUI.setFGColor("pink");
-            Assertions.assertEquals("pink", DrawTestGUI.getFGColor());
+            drawTestGUI.setFGColor("pink");
+            Assertions.assertEquals("pink", drawTestGUI.getFGColor());
         } catch (Exception e) {
             Assertions.fail();
         }
@@ -66,8 +66,8 @@ public class DrawTest {
     @Test
     void getFGColorTestNegative() {
         try {
-            DrawTestGUI.setFGColor("pink");
-            Assertions.assertNotEquals("yellow", DrawTestGUI.getFGColor());
+            drawTestGUI.setFGColor("pink");
+            Assertions.assertNotEquals("yellow", drawTestGUI.getFGColor());
         } catch (Exception e) {
             Assertions.fail();
         }
@@ -76,8 +76,8 @@ public class DrawTest {
     @Test
     void setBGColorTestPositive() {
         try {
-            DrawTestGUI.setBGColor("blue");
-            Assertions.assertEquals(Color.blue, DrawTestGUI.getBackground());
+            drawTestGUI.setBGColor("blue");
+            Assertions.assertEquals(Color.blue, drawTestGUI.getBackground());
         } catch (Exception e) {
             Assertions.fail();
         }
@@ -86,7 +86,7 @@ public class DrawTest {
     @Test
     void setBGColorTestNegative() {
         try {
-            DrawTestGUI.setBGColor("blue1");
+            drawTestGUI.setBGColor("blue1");
         } catch (Exception e) {
             Assertions.assertEquals(e.getMessage(), "blue1 not available, please choose another color.");
         }
@@ -95,8 +95,8 @@ public class DrawTest {
     @Test
     void getBGColorTestPositive() {
         try {
-            DrawTestGUI.setBGColor("pink");
-            Assertions.assertEquals("pink", DrawTestGUI.getBGColor());
+            drawTestGUI.setBGColor("pink");
+            Assertions.assertEquals("pink", drawTestGUI.getBGColor());
         } catch (Exception e) {
             Assertions.fail();
         }
@@ -105,10 +105,17 @@ public class DrawTest {
     @Test
     void getBGColorTestNegative() {
         try {
-            DrawTestGUI.setBGColor("pink");
-            Assertions.assertNotEquals("yellow", DrawTestGUI.getBGColor());
+            drawTestGUI.setBGColor("pink");
+            Assertions.assertNotEquals("yellow", drawTestGUI.getBGColor());
         } catch (Exception e) {
             Assertions.fail();
         }
+    }
+
+    @Test
+    void clearTest() {
+        drawTestGUI.clear();
+        Color c = drawTestGUI.getBackground();
+        
     }
 }

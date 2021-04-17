@@ -473,12 +473,15 @@ class DrawGUI extends JFrame {
 //        // do it ...
 //    }
 //
-//    /**
-//     * API method: clear ...
-//     */
-//    public void clear() {
-//        // do it ...
-//    }
+
+    /**
+     * API method: clear ...
+     */
+    public void clear() {
+        Graphics g = this.getGraphics();
+        g.setColor(this.getBackground());
+        g.fillRect(0, 0, this.getSize().width, this.getSize().height);
+    }
 //
 //    /**
 //     * API - test method: paint every shape ...
