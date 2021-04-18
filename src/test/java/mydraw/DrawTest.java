@@ -111,4 +111,5 @@ public class DrawTest {
             Assertions.fail();
         }
     }
+    //TODO test for getDrawing, writeImage and readImage
 }

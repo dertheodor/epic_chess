@@ -11,10 +11,10 @@ package mydraw;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.HashMap;
-import java.util.Locale;
 import javax.swing.*;  //++
-
 
 /**
  * The application class.  Processes high-level commands sent by GUI
@@ -451,27 +451,36 @@ class DrawGUI extends JFrame {
     public String getBGColor() {
         return colorHashMapHelper(this.getBackground().toString());
     }
-//
-//    /**
-//     * API method: get drawing ...
-//     */
-//    public Image getDrawing() {
-//        // do it ...
-//    }
-//
-//    /**
-//     * API method: writeImage ...
-//     */
-//    public void writeImage(Image img, String filename) throws IOException {
-//        // do it ...
-//    }
-//
-//    /**
-//     * API method: readImage ...
-//     */
-//    public Image readImage(String filename) throws IOException {
-//        // do it ...
-//    }
+
+    /**
+     * API method: get current drawing from canvas
+     *
+     * @return BufferedImage of current canvas
+     */
+    // TODO is this correct?
+    public Image getDrawing() {
+        return new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_RGB);
+    }
+
+    /**
+     * API method: writeImage uses the write method of MYBMPFile to write the given image as a Windows bitmap file (*.bmp)
+     *
+     * @param img      the image to be written
+     * @param filename the image's file name
+     */
+    public void writeImage(Image img, String filename) throws IOException {
+        MyBMPFile.write(filename, img);
+    }
+
+    /**
+     * API method: readImage uses the read method of MYBMPFile to read a Windows bitmap file (*.bmp)
+     *
+     * @param filename the image's file name
+     * @return the image read
+     */
+    public Image readImage(String filename) throws IOException {
+        return MyBMPFile.read(filename);
+    }
 //
 //    /**
 //     * API method: clear ...
