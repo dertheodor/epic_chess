@@ -9,12 +9,14 @@ package mydraw;
 // *** minimal changes from AWT to Swing -> replace elements/classes
 // *** behavior is similiar but not equal ! (Why?)
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashMap;
-import javax.swing.*;  //++
+
+import static java.awt.image.BufferedImage.TYPE_INT_RGB;
 
 /**
  * The application class.  Processes high-level commands sent by GUI
@@ -59,6 +61,7 @@ public class Draw {
 class DrawGUI extends JFrame {
     Draw app;      // A reference to the application, to send commands to.
     Color color;
+    JPanel bufferPanel;
 
     /**
      * The GUI constructor does all the work of creating the GUI and setting
@@ -85,6 +88,7 @@ class DrawGUI extends JFrame {
         // Create two buttons
         JButton clear = new JButton("Clear");
         JButton quit = new JButton("Quit");
+        JButton save = new JButton("Save");
 
         // Set a LayoutManager, and add the choosers and buttons to the window.
         this.setLayout(new FlowLayout(FlowLayout.RIGHT, 10, 5));
@@ -94,6 +98,7 @@ class DrawGUI extends JFrame {
         this.add(color_chooser);
         this.add(clear);
         this.add(quit);
+        this.add(save);
 
         // Here's a local class used for action listeners for the buttons
         class DrawActionListener implements ActionListener {
@@ -108,9 +113,31 @@ class DrawGUI extends JFrame {
             }
         }
 
+        //Create BufferedImage and set it hwyte
+        BufferedImage buffer = new BufferedImage(500, 400, TYPE_INT_RGB);
+        Graphics bufferG = buffer.createGraphics();
+        bufferG.setColor(Color.white);
+        bufferG.fillRect(0, 0, 500, 400);
+        bufferG.setColor(Color.black);
+        bufferPanel = new JPanel();
+        bufferPanel.setBounds(500, 400, 500, 400);
+        bufferPanel.getGraphics().drawImage(buffer, 0, 0, bufferPanel);
+        this.add(bufferPanel);
+
         // Define action listener adapters that connect the  buttons to the app
         clear.addActionListener(new DrawActionListener("clear"));
         quit.addActionListener(new DrawActionListener("quit"));
+        save.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                try {
+                    writeImage(buffer, "test.bmp");
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+            }
+        });
+
 
         // this class determines how mouse events are to be interpreted,
         // depending on the shape mode currently set
@@ -132,11 +159,15 @@ class DrawGUI extends JFrame {
                 }
 
                 public void mouseDragged(MouseEvent e) {
-                    Graphics g = gui.getGraphics();
+                    //Graphics g = gui.getGraphics();
+                    Graphics bufferG = buffer.createGraphics();
                     int x = e.getX(), y = e.getY();
-                    g.setColor(gui.color);
-                    g.setPaintMode();
-                    g.drawLine(lastx, lasty, x, y);
+                    //g.setColor(gui.color);
+                    bufferG.setColor(gui.color);
+                    //g.setPaintMode();
+                    bufferG.setPaintMode();
+                    //g.drawLine(lastx, lasty, x, y);
+                    bufferG.drawLine(lastx, lasty, x, y);
                     lastx = x;
                     lasty = y;
                 }
@@ -170,6 +201,7 @@ class DrawGUI extends JFrame {
                     g.setColor(gui.color);
                     // draw the finel rectangle
                     doDraw(pressx, pressy, e.getX(), e.getY(), g);
+                    //TODO Add update for Buffer
                 }
 
                 // mouse released => temporarily set second corner of rectangle
@@ -198,6 +230,7 @@ class DrawGUI extends JFrame {
                     int h = Math.abs(y1 - y0);
                     // draw rectangle
                     g.drawRect(x, y, w, h);
+                    //TODO Add update for Buffer
                 }
             }
 
@@ -210,6 +243,7 @@ class DrawGUI extends JFrame {
                     int h = Math.abs(y1 - y0);
                     // draw oval instead of rectangle
                     g.drawOval(x, y, w, h);
+                    //TODO Add update for Buffer
                 }
             }
 
@@ -287,6 +321,96 @@ class DrawGUI extends JFrame {
         this.setVisible(true); // ++
     }
 
+    /**
+     * Helper Method. Converts Color into int, the int represents the RGB values of the Color.
+     *
+     * @param color the Color we want to Convert into an int.
+     * @return the Color converted into an integer, that represents the RGB Values.
+     */
+    public int getIntFromColor(Color color) {
+        String currentColor = colorHashMapHelper(color.toString());
+        int red;
+        int green;
+        int blue;
+        switch (currentColor) {
+            case "white":
+                red = 255;
+                green = 255;
+                blue = 255;
+                break;
+            case "lightgray":
+                red = 192;
+                green = 192;
+                blue = 192;
+                break;
+            case "gray":
+                red = 128;
+                green = 128;
+                blue = 128;
+                break;
+            case "darkgray":
+                red = 64;
+                green = 64;
+                blue = 64;
+                break;
+            case "black":
+                red = 0;
+                green = 0;
+                blue = 0;
+                break;
+            case "red":
+                red = 255;
+                green = 0;
+                blue = 0;
+                break;
+            case "pink":
+                red = 255;
+                green = 175;
+                blue = 175;
+                break;
+            case "orange":
+                red = 255;
+                green = 200;
+                blue = 0;
+                break;
+            case "yellow":
+                red = 255;
+                green = 255;
+                blue = 0;
+                break;
+            case "green":
+                red = 0;
+                green = 255;
+                blue = 0;
+                break;
+            case "magenta":
+                red = 255;
+                green = 0;
+                blue = 255;
+                break;
+            case "cyan":
+                red = 0;
+                green = 255;
+                blue = 255;
+                break;
+            case "blue":
+                red = 0;
+                green = 0;
+                blue = 255;
+                break;
+            default:
+                red = 0;
+                green = 0;
+                blue = 0;
+                break;
+        }
+
+        red = (red << 16) & 0x00FF0000; //Shift red 16-bits and mask out other stuff
+        green = (green << 8) & 0x0000FF00; //Shift Green 8-bits and mask out other stuff
+        blue = blue & 0x000000FF; //Mask out anything not blue.
+
+        return 0xFF000000 | red | green | blue; //0xFF000000 for 100% Alpha. Bitwise OR everything together.
+    }
     /* API method stubs to be imported, commented and implemented in Draw.java
     -- first part --
     AH, PTP 2020
@@ -309,6 +433,7 @@ class DrawGUI extends JFrame {
     public void setHeight(int height) {
         if (height > 0) {
             this.setSize(this.getWidth(), height);
+            //TODO Add update for Buffer
         } else {
             JOptionPane.showMessageDialog(null,
                     "Height not valid",
@@ -334,6 +459,7 @@ class DrawGUI extends JFrame {
     public void setWidth(int width) {
         if (width > 0) {
             this.setSize(width, this.getHeight());
+            //TODO Add update for Buffer
         } else {
             JOptionPane.showMessageDialog(null,
                     "Height not valid",
@@ -459,7 +585,7 @@ class DrawGUI extends JFrame {
      */
     // TODO is this correct?
     public Image getDrawing() {
-        return new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_RGB);
+        return new BufferedImage(this.getWidth(), this.getHeight(), TYPE_INT_RGB);
     }
 
     /**
