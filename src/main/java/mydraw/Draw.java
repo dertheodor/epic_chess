@@ -16,8 +16,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashMap;
 
-import static java.awt.image.BufferedImage.TYPE_INT_RGB;
-
 /**
  * The application class.  Processes high-level commands sent by GUI
  */
@@ -48,6 +46,7 @@ public class Draw {
             Graphics g = window.getGraphics();
             g.setColor(window.getBackground());
             g.fillRect(0, 0, window.getSize().width, window.getSize().height);
+            //TODO also clear bufferedImage canvas
         } else if (command.equals("quit")) {      // quit the application
             window.dispose();                         // close the GUI
             System.exit(0);                           // and exit.
@@ -61,7 +60,6 @@ public class Draw {
 class DrawGUI extends JFrame {
     Draw app;      // A reference to the application, to send commands to.
     Color color;
-    JPanel bufferPanel;
 
     /**
      * The GUI constructor does all the work of creating the GUI and setting
@@ -100,6 +98,16 @@ class DrawGUI extends JFrame {
         this.add(quit);
         this.add(save);
 
+        // Create JPanel for BufferedImage
+        //JPanel bufferJPanel = new JPanel();
+        //bufferJPanel.setBounds(0, 0, 500, 400);
+        //this.add(bufferJPanel);
+
+        // Create BufferedImage
+        BufferedImage bufferImg = new BufferedImage(500, 400, BufferedImage.TYPE_INT_RGB);
+        Graphics bufferG = bufferImg.createGraphics();
+        bufferG.fillRect(0, 0, 500, 400);
+
         // Here's a local class used for action listeners for the buttons
         class DrawActionListener implements ActionListener {
             private String command;
@@ -113,17 +121,6 @@ class DrawGUI extends JFrame {
             }
         }
 
-        //Create BufferedImage and set it hwyte
-        BufferedImage buffer = new BufferedImage(500, 400, TYPE_INT_RGB);
-        Graphics bufferG = buffer.createGraphics();
-        bufferG.setColor(Color.white);
-        bufferG.fillRect(0, 0, 500, 400);
-        bufferG.setColor(Color.black);
-        bufferPanel = new JPanel();
-        bufferPanel.setBounds(500, 400, 500, 400);
-        bufferPanel.getGraphics().drawImage(buffer, 0, 0, bufferPanel);
-        this.add(bufferPanel);
-
         // Define action listener adapters that connect the  buttons to the app
         clear.addActionListener(new DrawActionListener("clear"));
         quit.addActionListener(new DrawActionListener("quit"));
@@ -131,7 +128,7 @@ class DrawGUI extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 try {
-                    writeImage(buffer, "test.bmp");
+                    writeImage(bufferImg, "test.bmp");
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                 }
@@ -159,17 +156,14 @@ class DrawGUI extends JFrame {
                 }
 
                 public void mouseDragged(MouseEvent e) {
-                    //Graphics g = gui.getGraphics();
-                    Graphics bufferG = buffer.createGraphics();
                     int x = e.getX(), y = e.getY();
-                    //g.setColor(gui.color);
                     bufferG.setColor(gui.color);
-                    //g.setPaintMode();
                     bufferG.setPaintMode();
-                    //g.drawLine(lastx, lasty, x, y);
                     bufferG.drawLine(lastx, lasty, x, y);
                     lastx = x;
                     lasty = y;
+                    // draw image from buffer to gui
+                    gui.getGraphics().drawImage(bufferImg,0,0,null);
                 }
             }
 
@@ -187,63 +181,61 @@ class DrawGUI extends JFrame {
                 // mouse released => fix second corner of rectangle
                 // and draw the resulting shape
                 public void mouseReleased(MouseEvent e) {
-                    Graphics g = gui.getGraphics();
                     if (lastx != -1) {
                         // first undraw a rubber rect
-                        g.setXORMode(gui.color);
-                        g.setColor(gui.getBackground());
-                        doDraw(pressx, pressy, lastx, lasty, g);
+                        bufferG.setXORMode(gui.color);
+                        bufferG.setColor(gui.getBackground());
+                        doDraw(pressx, pressy, lastx, lasty);
                         lastx = -1;
                         lasty = -1;
                     }
                     // these commands finish the rubberband mode
-                    g.setPaintMode();
-                    g.setColor(gui.color);
+                    bufferG.setPaintMode();
+                    bufferG.setColor(gui.color);
                     // draw the finel rectangle
-                    doDraw(pressx, pressy, e.getX(), e.getY(), g);
-                    //TODO Add update for Buffer
+                    doDraw(pressx, pressy, e.getX(), e.getY());
                 }
 
                 // mouse released => temporarily set second corner of rectangle
                 // draw the resulting shape in "rubber-band mode"
                 public void mouseDragged(MouseEvent e) {
-                    Graphics g = gui.getGraphics();
                     // these commands set the rubberband mode
-                    g.setXORMode(gui.color);
-                    g.setColor(gui.getBackground());
+                    bufferG.setXORMode(gui.color);
+                    bufferG.setColor(gui.getBackground());
                     if (lastx != -1) {
                         // first undraw previous rubber rect
-                        doDraw(pressx, pressy, lastx, lasty, g);
-
+                        doDraw(pressx, pressy, lastx, lasty);
                     }
                     lastx = e.getX();
                     lasty = e.getY();
                     // draw new rubber rect
-                    doDraw(pressx, pressy, lastx, lasty, g);
+                    doDraw(pressx, pressy, lastx, lasty);
                 }
 
-                public void doDraw(int x0, int y0, int x1, int y1, Graphics g) {
+                public void doDraw(int x0, int y0, int x1, int y1) {
                     // calculate upperleft and width/height of rectangle
                     int x = Math.min(x0, x1);
                     int y = Math.min(y0, y1);
                     int w = Math.abs(x1 - x0);
                     int h = Math.abs(y1 - y0);
                     // draw rectangle
-                    g.drawRect(x, y, w, h);
-                    //TODO Add update for Buffer
+                    bufferG.drawRect(x, y, w, h);
+                    // draw image from buffer to gui
+                    gui.getGraphics().drawImage(bufferImg,0,0,null);
                 }
             }
 
             // if this class is active, ovals are drawn
             class OvalDrawer extends RectangleDrawer {
-                public void doDraw(int x0, int y0, int x1, int y1, Graphics g) {
+                public void doDraw(int x0, int y0, int x1, int y1) {
                     int x = Math.min(x0, x1);
                     int y = Math.min(y0, y1);
                     int w = Math.abs(x1 - x0);
                     int h = Math.abs(y1 - y0);
                     // draw oval instead of rectangle
-                    g.drawOval(x, y, w, h);
-                    //TODO Add update for Buffer
+                    bufferG.drawOval(x, y, w, h);
+                    // draw image from buffer to gui
+                    gui.getGraphics().drawImage(bufferImg,0,0,null);
                 }
             }
 
