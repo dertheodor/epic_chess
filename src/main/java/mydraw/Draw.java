@@ -321,96 +321,6 @@ class DrawGUI extends JFrame {
         this.setVisible(true); // ++
     }
 
-    /**
-     * Helper Method. Converts Color into int, the int represents the RGB values of the Color.
-     *
-     * @param color the Color we want to Convert into an int.
-     * @return the Color converted into an integer, that represents the RGB Values.
-     */
-    public int getIntFromColor(Color color) {
-        String currentColor = colorHashMapHelper(color.toString());
-        int red;
-        int green;
-        int blue;
-        switch (currentColor) {
-            case "white":
-                red = 255;
-                green = 255;
-                blue = 255;
-                break;
-            case "lightgray":
-                red = 192;
-                green = 192;
-                blue = 192;
-                break;
-            case "gray":
-                red = 128;
-                green = 128;
-                blue = 128;
-                break;
-            case "darkgray":
-                red = 64;
-                green = 64;
-                blue = 64;
-                break;
-            case "black":
-                red = 0;
-                green = 0;
-                blue = 0;
-                break;
-            case "red":
-                red = 255;
-                green = 0;
-                blue = 0;
-                break;
-            case "pink":
-                red = 255;
-                green = 175;
-                blue = 175;
-                break;
-            case "orange":
-                red = 255;
-                green = 200;
-                blue = 0;
-                break;
-            case "yellow":
-                red = 255;
-                green = 255;
-                blue = 0;
-                break;
-            case "green":
-                red = 0;
-                green = 255;
-                blue = 0;
-                break;
-            case "magenta":
-                red = 255;
-                green = 0;
-                blue = 255;
-                break;
-            case "cyan":
-                red = 0;
-                green = 255;
-                blue = 255;
-                break;
-            case "blue":
-                red = 0;
-                green = 0;
-                blue = 255;
-                break;
-            default:
-                red = 0;
-                green = 0;
-                blue = 0;
-                break;
-        }
-
-        red = (red << 16) & 0x00FF0000; //Shift red 16-bits and mask out other stuff
-        green = (green << 8) & 0x0000FF00; //Shift Green 8-bits and mask out other stuff
-        blue = blue & 0x000000FF; //Mask out anything not blue.
-
-        return 0xFF000000 | red | green | blue; //0xFF000000 for 100% Alpha. Bitwise OR everything together.
-    }
     /* API method stubs to be imported, commented and implemented in Draw.java
     -- first part --
     AH, PTP 2020
@@ -578,15 +488,14 @@ class DrawGUI extends JFrame {
         return colorHashMapHelper(this.getBackground().toString());
     }
 
-    /**
-     * API method: get current drawing from canvas
-     *
-     * @return BufferedImage of current canvas
-     */
-    // TODO is this correct?
-    public Image getDrawing() {
-        return new BufferedImage(this.getWidth(), this.getHeight(), TYPE_INT_RGB);
-    }
+//    /**
+//     * API method: get current drawing from canvas
+//     *
+//     * @return BufferedImage of current canvas
+//     */
+//    public Image getDrawing() {
+//        // do it ...
+//    }
 
     /**
      * API method: writeImage uses the write method of MYBMPFile to write the given image as a Windows bitmap file (*.bmp)
@@ -607,7 +516,6 @@ class DrawGUI extends JFrame {
     public Image readImage(String filename) throws IOException {
         return MyBMPFile.read(filename);
     }
-//
 
     /**
      * API method: clear ...
