@@ -71,49 +71,39 @@ class DrawGUI extends JFrame {
         color = Color.black;  // the current drawing color
 
         // Set a LayoutManager, and add the choosers and buttons to the window.
-        this.setLayout(new GridBagLayout());
-        GridBagConstraints gBC = new GridBagConstraints();
+        this.setLayout(new BorderLayout());
 
-        Choice shape_chooser = new Choice();
-        // selector for drawing modes
-        shape_chooser.add("Scribble");
-        shape_chooser.add("Rectangle");
-        shape_chooser.add("Oval");
+        // drawing modes and its JComboBox
+        String shapes[] = {"Scribble", "Rectangle", "Oval"};
+        JComboBox comboBoxDrawingModes = new JComboBox(shapes);
 
-        gBC.gridx = 0;
-        gBC.gridy = 0;
-        gBC.fill = GridBagConstraints.HORIZONTAL;
+        // drawing colors and its JComboBox
+        String colors[] = {"Black", "Green", "Red", "Blue"};
+        JComboBox comboBoxDrawingColors = new JComboBox(colors);
 
-        this.add(new JLabel("Shape:"), gBC);
-        this.add(shape_chooser, gBC);
-
-        // selector for drawing colors
-        Choice color_chooser = new Choice();
-        color_chooser.add("Black");
-        color_chooser.add("Green");
-        color_chooser.add("Red");
-        color_chooser.add("Blue");
-
-        // Create two buttons
+        // header JButtons
         JButton clear = new JButton("Clear");
-        JButton quit = new JButton("Quit");
         JButton save = new JButton("Save");
+        JButton quit = new JButton("Quit");
 
+        // create header panel and add components to it
+        JPanel headerPanel = new JPanel();
+        headerPanel.setLayout(new FlowLayout());
 
-        this.add(new JLabel("Color:"));
-        this.add(color_chooser);
+        headerPanel.add(new JLabel("Shape:"));
+        headerPanel.add(comboBoxDrawingModes);
+        headerPanel.add(new JLabel("Color:"));
+        headerPanel.add(comboBoxDrawingColors);
+        headerPanel.add(clear);
+        headerPanel.add(save);
+        headerPanel.add(quit);
 
-        this.add(clear, gBC);
-        this.add(save, gBC);
+        // add header panel to JFrame
+        this.add(headerPanel, BorderLayout.PAGE_START);
 
-
-        this.add(quit, gBC);
-
-        // Create JPanel for BufferedImage
-        JPanel canvasPanel = new JPanel();
-        canvasPanel.setBackground(Color.red);
-        //canvasPanel.setPreferredSize(new Dimension(500, 420));
-        this.add(canvasPanel);
+        // create drawing panel and add components to it
+        JPanel drawingPanel = new JPanel();
+        this.add(drawingPanel, BorderLayout.CENTER);
 
         // Create BufferedImage
         BufferedImage bufferImg = new BufferedImage(500, 400, BufferedImage.TYPE_INT_RGB);
@@ -177,6 +167,7 @@ class DrawGUI extends JFrame {
                     lasty = y;
                     // draw image from buffer to gui
                     gui.getGraphics().drawImage(bufferImg, 0, 0, null);
+                    //drawingPanel.getGraphics().drawImage(bufferImg, 0, 0, null);
                 }
             }
 
@@ -292,7 +283,7 @@ class DrawGUI extends JFrame {
             }
         }
 
-        shape_chooser.addItemListener(new ShapeManager(this));
+        comboBoxDrawingModes.addItemListener(new ShapeManager(this));
 
         class ColorItemListener implements ItemListener {
 
@@ -310,7 +301,7 @@ class DrawGUI extends JFrame {
             }
         }
 
-        color_chooser.addItemListener(new ColorItemListener());
+        comboBoxDrawingColors.addItemListener(new ColorItemListener());
 
         // Handle the window close request similarly
         this.addWindowListener(new WindowAdapter() {
