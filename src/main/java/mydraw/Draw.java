@@ -166,8 +166,7 @@ class DrawGUI extends JFrame {
                     lastx = x;
                     lasty = y;
                     // draw image from buffer to gui
-                    gui.getGraphics().drawImage(bufferImg, 0, 0, null);
-                    //drawingPanel.getGraphics().drawImage(bufferImg, 0, 0, null);
+                    drawingPanel.getGraphics().drawImage(bufferImg, -9, -67, null);
                 }
             }
 
@@ -225,7 +224,7 @@ class DrawGUI extends JFrame {
                     // draw rectangle
                     bufferG.drawRect(x, y, w, h);
                     // draw image from buffer to gui
-                    gui.getGraphics().drawImage(bufferImg, 0, 0, null);
+                    drawingPanel.getGraphics().drawImage(bufferImg, -9, -67, null);
                 }
             }
 
@@ -239,7 +238,7 @@ class DrawGUI extends JFrame {
                     // draw oval instead of rectangle
                     bufferG.drawOval(x, y, w, h);
                     // draw image from buffer to gui
-                    gui.getGraphics().drawImage(bufferImg, 0, 0, null);
+                    drawingPanel.getGraphics().drawImage(bufferImg, -9, -67, null);
                 }
             }
 
