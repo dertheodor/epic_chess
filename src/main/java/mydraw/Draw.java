@@ -27,6 +27,8 @@ public class Draw {
         new Draw();
     }
 
+    protected DrawGUI window; //chg
+
     /**
      * Application constructor:  create an instance of our GUI class
      */
@@ -34,20 +36,20 @@ public class Draw {
         window = new DrawGUI(this);
     }
 
-    protected JFrame window; //chg
 
     /**
      * This is the application method that processes commands sent by the GUI
      */
     public void doCommand(String command) {
-        if (command.equals("clear")) {          // clear the GUI window
-            // It would be more modular to include this functionality in the GUI
-            // class itself.  But for demonstration purposes, we do it here.
-            Graphics g = window.getGraphics();
-            g.setColor(window.getBackground());
-            g.fillRect(0, 0, window.getSize().width, window.getSize().height);
-            //TODO also clear bufferedImage canvas
-        } else if (command.equals("quit")) {      // quit the application
+        if (command.equals("clear")) {
+            // clear the GUI window, by filling everything with white.
+            BufferedImage bufferImg = window.getBufferedImage();
+            Graphics bufferImgGraphics = bufferImg.getGraphics();
+            bufferImgGraphics.setColor(Color.white);
+            bufferImgGraphics.fillRect(0, 0, bufferImg.getWidth(), bufferImg.getHeight());
+            window.getdrawingPanel().getGraphics().drawImage(bufferImg, -9, -67, null);
+        } else if (command.equals("quit")) {
+            // quit the application
             window.dispose();                         // close the GUI
             System.exit(0);                           // and exit.
         }
@@ -60,6 +62,8 @@ public class Draw {
 class DrawGUI extends JFrame {
     Draw app;      // A reference to the application, to send commands to.
     Color color;
+    BufferedImage bufferImg;
+    JPanel drawingPanel;
 
     /**
      * The GUI constructor does all the work of creating the GUI and setting
@@ -102,13 +106,13 @@ class DrawGUI extends JFrame {
         this.add(headerPanel, BorderLayout.PAGE_START);
 
         // create drawing panel and add components to it
-        JPanel drawingPanel = new JPanel();
+        drawingPanel = new JPanel();
         this.add(drawingPanel, BorderLayout.CENTER);
 
         // Create BufferedImage
-        BufferedImage bufferImg = new BufferedImage(500, 400, BufferedImage.TYPE_INT_RGB);
+        bufferImg = new BufferedImage(500, 400, BufferedImage.TYPE_INT_RGB);
         Graphics bufferG = bufferImg.createGraphics();
-        bufferG.fillRect(0, 0, 500, 400);
+        bufferG.fillRect(0, 0, bufferImg.getWidth(), bufferImg.getHeight());
 
 
         // Here's a local class used for action listeners for the buttons
@@ -314,6 +318,24 @@ class DrawGUI extends JFrame {
         this.setBackground(Color.white);
         // this.show(); //chg
         this.setVisible(true); // ++
+    }
+
+    /**
+     * Fetches the BufferedImage of this Class
+     *
+     * @return the BufferedImage of this DrawGUI Class
+     */
+    public BufferedImage getBufferedImage() {
+        return this.bufferImg;
+    }
+
+    /**
+     * Fetches the drawingPanel of this Class
+     *
+     * @return the drawingPanel of this DrawGUI Class
+     */
+    public JPanel getdrawingPanel() {
+        return this.drawingPanel;
     }
 
     /* API method stubs to be imported, commented and implemented in Draw.java
