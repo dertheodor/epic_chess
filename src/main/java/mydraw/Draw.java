@@ -70,11 +70,22 @@ class DrawGUI extends JFrame {
         app = application;    // Remember the application reference
         color = Color.black;  // the current drawing color
 
-        // selector for drawing modes
+        // Set a LayoutManager, and add the choosers and buttons to the window.
+        this.setLayout(new GridBagLayout());
+        GridBagConstraints gBC = new GridBagConstraints();
+
         Choice shape_chooser = new Choice();
+        // selector for drawing modes
         shape_chooser.add("Scribble");
         shape_chooser.add("Rectangle");
         shape_chooser.add("Oval");
+
+        gBC.gridx = 0;
+        gBC.gridy = 0;
+        gBC.fill = GridBagConstraints.HORIZONTAL;
+
+        this.add(new JLabel("Shape:"), gBC);
+        this.add(shape_chooser, gBC);
 
         // selector for drawing colors
         Choice color_chooser = new Choice();
@@ -88,25 +99,27 @@ class DrawGUI extends JFrame {
         JButton quit = new JButton("Quit");
         JButton save = new JButton("Save");
 
-        // Set a LayoutManager, and add the choosers and buttons to the window.
-        this.setLayout(new FlowLayout(FlowLayout.RIGHT, 10, 5));
-        this.add(new JLabel("Shape:"));
-        this.add(shape_chooser);
+
         this.add(new JLabel("Color:"));
         this.add(color_chooser);
-        this.add(clear);
-        this.add(quit);
-        this.add(save);
+
+        this.add(clear, gBC);
+        this.add(save, gBC);
+
+
+        this.add(quit, gBC);
 
         // Create JPanel for BufferedImage
-        //JPanel bufferJPanel = new JPanel();
-        //bufferJPanel.setBounds(0, 0, 500, 400);
-        //this.add(bufferJPanel);
+        JPanel canvasPanel = new JPanel();
+        canvasPanel.setBackground(Color.red);
+        //canvasPanel.setPreferredSize(new Dimension(500, 420));
+        this.add(canvasPanel);
 
         // Create BufferedImage
         BufferedImage bufferImg = new BufferedImage(500, 400, BufferedImage.TYPE_INT_RGB);
         Graphics bufferG = bufferImg.createGraphics();
         bufferG.fillRect(0, 0, 500, 400);
+
 
         // Here's a local class used for action listeners for the buttons
         class DrawActionListener implements ActionListener {
@@ -163,7 +176,7 @@ class DrawGUI extends JFrame {
                     lastx = x;
                     lasty = y;
                     // draw image from buffer to gui
-                    gui.getGraphics().drawImage(bufferImg,0,0,null);
+                    gui.getGraphics().drawImage(bufferImg, 0, 0, null);
                 }
             }
 
@@ -192,7 +205,7 @@ class DrawGUI extends JFrame {
                     // these commands finish the rubberband mode
                     bufferG.setPaintMode();
                     bufferG.setColor(gui.color);
-                    // draw the finel rectangle
+                    // draw the final rectangle
                     doDraw(pressx, pressy, e.getX(), e.getY());
                 }
 
@@ -221,7 +234,7 @@ class DrawGUI extends JFrame {
                     // draw rectangle
                     bufferG.drawRect(x, y, w, h);
                     // draw image from buffer to gui
-                    gui.getGraphics().drawImage(bufferImg,0,0,null);
+                    gui.getGraphics().drawImage(bufferImg, 0, 0, null);
                 }
             }
 
@@ -235,7 +248,7 @@ class DrawGUI extends JFrame {
                     // draw oval instead of rectangle
                     bufferG.drawOval(x, y, w, h);
                     // draw image from buffer to gui
-                    gui.getGraphics().drawImage(bufferImg,0,0,null);
+                    gui.getGraphics().drawImage(bufferImg, 0, 0, null);
                 }
             }
 
