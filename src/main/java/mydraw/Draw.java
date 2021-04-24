@@ -14,7 +14,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * The application class.  Processes high-level commands sent by GUI
@@ -59,6 +61,7 @@ class DrawGUI extends JFrame {
     Draw app;      // A reference to the application, to send commands to.
     Color color;
     BufferedImage bufferImg;
+    Graphics bufferG;
     JPanel drawingPanel;
     int windowWidth;
     int windowHeight;
@@ -113,7 +116,7 @@ class DrawGUI extends JFrame {
 
         // Create BufferedImage
         bufferImg = new BufferedImage(windowWidth, windowHeight, BufferedImage.TYPE_INT_RGB);
-        Graphics bufferG = bufferImg.createGraphics();
+        bufferG = bufferImg.getGraphics();
         bufferG.fillRect(0, 0, bufferImg.getWidth(), bufferImg.getHeight());
 
 
@@ -545,29 +548,64 @@ class DrawGUI extends JFrame {
      * API - test method: automatically paint an image
      */
     public void autoDraw() {
-        // do it ...
-        // paint your testimage now using API methods
+        // auto draw rectangle
+        drawRectangle(new Point(100, 100), new Point(250, 250));
+        // auto draw oval
+        drawOval(new Point(100, 100), new Point(250, 250));
+
+        List<Point> pointList = new ArrayList<>();
+        // auto-fill pointList
+        for (int i = 100; i < 250; i++) {
+            pointList.add(new Point(i, i));
+        }
+        // auto draw points
+        drawPolyLine(pointList);
     }
 
 
-//    /**
-//     * API: paint a rectangle ...
-//     */
-//    public void drawRectangle(Point upper_left, Point lower_right) {
-//        // do it ...
-//    }
-//
-//    /**
-//     * API: paint an oval ...
-//     */
-//    public void drawOval(Point upper_left, Point lower_right) {
-//        // do it ...
-//    }
-//
-//    /**
-//     * API: paint a polyline/scribble ...
-//     */
-//    public void drawPolyLine(java.util.List<Point> points) {
-//        // do it ...
-//    }
+    /**
+     * API: paint a rectangle automatically on canvas
+     *
+     * @param upper_left  the upper left point of the rectangle
+     * @param lower_right the lower right point of the rectangle
+     */
+    public void drawRectangle(Point upper_left, Point lower_right) {
+        // calculate width/height of rectangle
+        int w = lower_right.x - upper_left.x;
+        int h = lower_right.y - upper_left.y;
+        // draw rectangle
+        bufferG.drawRect(upper_left.x, upper_left.y, w, h);
+        // draw image from buffer to gui
+        drawingPanel.getGraphics().drawImage(bufferImg, -9, -67, null);
+    }
+
+    /**
+     * API: paint an oval automatically on canvas
+     *
+     * @param upper_left  the upper left point of the rectangle
+     * @param lower_right the lower right point of the rectangle
+     */
+    public void drawOval(Point upper_left, Point lower_right) {
+        // calculate width/height of rectangle
+        int w = lower_right.x - upper_left.x;
+        int h = lower_right.y - upper_left.y;
+        // draw rectangle
+        bufferG.drawOval(upper_left.x, upper_left.y, w, h);
+        // draw image from buffer to gui
+        drawingPanel.getGraphics().drawImage(bufferImg, -9, -67, null);
+    }
+
+    /**
+     * API: paint a polyline/scribble on canvas
+     *
+     * @param points List of points to draw
+     */
+    public void drawPolyLine(java.util.List<Point> points) {
+        // iterate over all points
+        for (int i = 0; i < points.size() - 1; i++) {
+            bufferG.drawLine(points.get(i).x, points.get(i).y, points.get(i + 1).x, points.get(i + 1).y);
+        }
+        // draw image from buffer to gui
+        drawingPanel.getGraphics().drawImage(bufferImg, -9, -67, null);
+    }
 }
