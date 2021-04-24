@@ -478,6 +478,31 @@ class DrawGUI extends JFrame {
     }
 
     /**
+     * A Method which compares two Images and returns a boolean.
+     *
+     * @param referenceImg Our Reference Image.
+     * @param compareImg   The Image which is compared to the Reference Image.
+     * @return returns true, if both images are the same Size and have the same colored Pixels at the same Points.
+     */
+    public boolean isImgSameAsReference(BufferedImage referenceImg, BufferedImage compareImg) {
+        int referenceImgWidth = referenceImg.getWidth();
+        int referenceImgHeight = referenceImg.getHeight();
+
+        if (referenceImgHeight != compareImg.getHeight() || referenceImgWidth != compareImg.getWidth()) {
+            return false;
+        } else {
+            for (int i = 0; i < referenceImgWidth; i++) {
+                for (int j = 0; j < referenceImgHeight; j++) {
+                    if (referenceImg.getRGB(i, j) != compareImg.getRGB(i, j)) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
      * API method: get currently selected drawing color
      *
      * @return the currently selected drawing color
@@ -499,7 +524,7 @@ class DrawGUI extends JFrame {
     /**
      * API method: get currently selected background color
      *
-     * @return the currently selected background color
+     * @return String the currently selected background color
      */
     public String getBGColor() {
         return colorHashMapHelper(this.getBackground().toString());
