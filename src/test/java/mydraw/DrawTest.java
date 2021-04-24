@@ -12,7 +12,7 @@ public class DrawTest {
 
     @Test
     void getHeightTest() {
-        Assertions.assertEquals(400, DrawTestGUI.getHeight());
+        Assertions.assertEquals(DrawTestGUI.getSize().height, DrawTestGUI.getHeight());
     }
 
     // Negativtest durch absichtlich falsche Assertion nicht sinnvoll, ungültige Eingaben werden im Code abgedeckt
@@ -24,7 +24,7 @@ public class DrawTest {
 
     @Test
     void getWidthTest() {
-        Assertions.assertEquals(500, DrawTestGUI.getWidth());
+        Assertions.assertEquals(DrawTestGUI.getSize().width, DrawTestGUI.getWidth());
     }
 
     // Negativtest durch absichtlich falsche Assertion nicht sinnvoll, ungültige Eingaben werden im Code abgedeckt
