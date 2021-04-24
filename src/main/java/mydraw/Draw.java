@@ -60,6 +60,8 @@ class DrawGUI extends JFrame {
     Color color;
     BufferedImage bufferImg;
     JPanel drawingPanel;
+    int windowWidth;
+    int windowHeight;
 
     /**
      * The GUI constructor does all the work of creating the GUI and setting
@@ -69,20 +71,23 @@ class DrawGUI extends JFrame {
         super("Draw");        // Create the window
         app = application;    // Remember the application reference
         color = Color.black;  // the current drawing color
+        windowWidth = 550;
+        windowHeight = 440;
 
         // Set a LayoutManager, and add the choosers and buttons to the window.
         this.setLayout(new BorderLayout());
 
         // drawing modes and its JComboBox
-        String shapes[] = {"Scribble", "Rectangle", "Oval"};
-        JComboBox comboBoxDrawingModes = new JComboBox(shapes);
+        String[] shapes = {"Scribble", "Rectangle", "Oval"};
+        JComboBox<String> comboBoxDrawingModes = new JComboBox<>(shapes);
 
         // drawing colors and its JComboBox
-        String colors[] = {"Black", "Green", "Red", "Blue"};
-        JComboBox comboBoxDrawingColors = new JComboBox(colors);
+        String[] colors = {"Black", "Green", "Red", "Blue"};
+        JComboBox<String> comboBoxDrawingColors = new JComboBox<>(colors);
 
         // header JButtons
         JButton clear = new JButton("Clear");
+        JButton autoDraw = new JButton("Auto");
         JButton save = new JButton("Save");
         JButton quit = new JButton("Quit");
 
@@ -95,6 +100,7 @@ class DrawGUI extends JFrame {
         headerPanel.add(new JLabel("Color:"));
         headerPanel.add(comboBoxDrawingColors);
         headerPanel.add(clear);
+        headerPanel.add(autoDraw);
         headerPanel.add(save);
         headerPanel.add(quit);
 
@@ -106,7 +112,7 @@ class DrawGUI extends JFrame {
         this.add(drawingPanel, BorderLayout.CENTER);
 
         // Create BufferedImage
-        bufferImg = new BufferedImage(500, 400, BufferedImage.TYPE_INT_RGB);
+        bufferImg = new BufferedImage(windowWidth, windowHeight, BufferedImage.TYPE_INT_RGB);
         Graphics bufferG = bufferImg.createGraphics();
         bufferG.fillRect(0, 0, bufferImg.getWidth(), bufferImg.getHeight());
 
@@ -315,7 +321,7 @@ class DrawGUI extends JFrame {
         });
 
         // Finally, set the size of the window, and pop it up
-        this.setSize(500, 400);
+        this.setSize(windowWidth, windowHeight);
         this.setBackground(Color.white);
         // this.show(); //chg
         this.setVisible(true); // ++
