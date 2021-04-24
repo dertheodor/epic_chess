@@ -42,12 +42,8 @@ public class Draw {
      */
     public void doCommand(String command) {
         if (command.equals("clear")) {
-            // clear the GUI window, by filling everything with white.
-            BufferedImage bufferImg = window.getBufferedImage();
-            Graphics bufferImgGraphics = bufferImg.getGraphics();
-            bufferImgGraphics.setColor(Color.white);
-            bufferImgGraphics.fillRect(0, 0, bufferImg.getWidth(), bufferImg.getHeight());
-            window.getdrawingPanel().getGraphics().drawImage(bufferImg, -9, -67, null);
+            // clear drawing canvas
+              window.clear();
         } else if (command.equals("quit")) {
             // quit the application
             window.dispose();                         // close the GUI
@@ -131,11 +127,16 @@ class DrawGUI extends JFrame {
         // Define action listener adapters that connect the  buttons to the app
         clear.addActionListener(new DrawActionListener("clear"));
         quit.addActionListener(new DrawActionListener("quit"));
+
+        // init imageCounter so multiple files can be saved
+        final int[] imageCounter = {0};
+
         save.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 try {
-                    writeImage(bufferImg, "test.bmp");
+                    imageCounter[0]++;
+                    writeImage(bufferImg, "drawing" + imageCounter[0] + ".bmp");
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                 }
@@ -320,27 +321,9 @@ class DrawGUI extends JFrame {
         this.setVisible(true); // ++
     }
 
-    /**
-     * Fetches the BufferedImage of this Class
-     *
-     * @return the BufferedImage of this DrawGUI Class
-     */
-    public BufferedImage getBufferedImage() {
-        return this.bufferImg;
-    }
-
-    /**
-     * Fetches the drawingPanel of this Class
-     *
-     * @return the drawingPanel of this DrawGUI Class
-     */
-    public JPanel getdrawingPanel() {
-        return this.drawingPanel;
-    }
-
     /* API method stubs to be imported, commented and implemented in Draw.java
     -- first part --
-    AH, PTP 2020
+    AH, PTP 2021
     */
 
     /**
@@ -505,14 +488,14 @@ class DrawGUI extends JFrame {
         return colorHashMapHelper(this.getBackground().toString());
     }
 
-//    /**
-//     * API method: get current drawing from canvas
-//     *
-//     * @return BufferedImage of current canvas
-//     */
-//    public Image getDrawing() {
-//        // do it ...
-//    }
+    /**
+     * API method: get current drawing from canvas
+     *
+     * @return BufferedImage of current canvas
+     */
+    public Image getDrawing() {
+        return bufferImg;
+    }
 
     /**
      * API method: writeImage uses the write method of MYBMPFile to write the given image as a Windows bitmap file (*.bmp)
@@ -535,12 +518,13 @@ class DrawGUI extends JFrame {
     }
 
     /**
-     * API method: clear ...
+     * API method: clears the contents of the bufferImg
      */
     public void clear() {
-        Graphics g = this.getGraphics();
-        g.setColor(this.getBackground());
-        g.fillRect(0, 0, this.getSize().width, this.getSize().height);
+        Graphics bufferImgGraphics = bufferImg.getGraphics();
+        bufferImgGraphics.setColor(Color.white);
+        bufferImgGraphics.fillRect(0, 0, bufferImg.getWidth(), bufferImg.getHeight());
+        drawingPanel.getGraphics().drawImage(bufferImg, -9, -67, null);
     }
 //
 //    /**
