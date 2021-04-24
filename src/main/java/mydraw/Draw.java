@@ -43,7 +43,7 @@ public class Draw {
     public void doCommand(String command) {
         if (command.equals("clear")) {
             // clear drawing canvas
-              window.clear();
+            window.clear();
         } else if (command.equals("quit")) {
             // quit the application
             window.dispose();                         // close the GUI
@@ -134,9 +134,9 @@ class DrawGUI extends JFrame {
         clear.addActionListener(new DrawActionListener("clear"));
         quit.addActionListener(new DrawActionListener("quit"));
 
+        // Define mouseListener for saving
         // init imageCounter so multiple files can be saved
         final int[] imageCounter = {0};
-
         save.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -146,6 +146,14 @@ class DrawGUI extends JFrame {
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                 }
+            }
+        });
+
+        // Define mouseListener for autoDrawing
+        autoDraw.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                autoDraw();
             }
         });
 
@@ -532,16 +540,16 @@ class DrawGUI extends JFrame {
         bufferImgGraphics.fillRect(0, 0, bufferImg.getWidth(), bufferImg.getHeight());
         drawingPanel.getGraphics().drawImage(bufferImg, -9, -67, null);
     }
-//
-//    /**
-//     * API - test method: paint every shape ...
-//     */
-//    public void autoDraw() {
-//        // do it ...
-//        // paint your testimage now using API methods
-//    }
-//
-//
+
+    /**
+     * API - test method: automatically paint an image
+     */
+    public void autoDraw() {
+        // do it ...
+        // paint your testimage now using API methods
+    }
+
+
 //    /**
 //     * API: paint a rectangle ...
 //     */
