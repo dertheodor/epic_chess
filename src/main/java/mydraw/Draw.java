@@ -573,6 +573,8 @@ class DrawGUI extends JFrame {
         // calculate width/height of rectangle
         int w = lower_right.x - upper_left.x;
         int h = lower_right.y - upper_left.y;
+        // set color
+        bufferG.setColor(this.color);
         // draw rectangle
         bufferG.drawRect(upper_left.x, upper_left.y, w, h);
         // draw image from buffer to gui
@@ -589,6 +591,8 @@ class DrawGUI extends JFrame {
         // calculate width/height of rectangle
         int w = lower_right.x - upper_left.x;
         int h = lower_right.y - upper_left.y;
+        // set color
+        bufferG.setColor(this.color);
         // draw rectangle
         bufferG.drawOval(upper_left.x, upper_left.y, w, h);
         // draw image from buffer to gui
@@ -605,6 +609,8 @@ class DrawGUI extends JFrame {
         for (int i = 0; i < points.size() - 1; i++) {
             bufferG.drawLine(points.get(i).x, points.get(i).y, points.get(i + 1).x, points.get(i + 1).y);
         }
+        // set color
+        bufferG.setColor(this.color);
         // draw image from buffer to gui
         drawingPanel.getGraphics().drawImage(bufferImg, -9, -67, null);
     }
