@@ -1,58 +1,66 @@
 // Purpose.  Command design pattern - decoupling producer from consumer
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 /**
  * simple test with command queue pattern
  * modified by ptp
- *
  */
 public class CommandQueue {
 
-    interface Command { void execute(); }
-
-    static class DomesticEngineer implements Command {
-	public void execute() {
-	    System.out.println( "take out the trash" );
-	}  }
-
-    static class Politician implements Command {
-	public void execute() {
-	    System.out.println( "take money from the rich, take votes from the poor" );
-	}  }
-
-    static class Programmer implements Command {
-	public void execute() {
-	    System.out.println( "sell the bugs, charge extra for the fixes" );
-	}  }
-
-    static class Mathematics implements Command {
-	public void execute() {
-	    for (int i=0; i<5; i++) {
-		System.out.println("sin ("+i+") = "+Math.sin(i*3.14));
-	    }
-	    System.out.println( "finish" );}
+    interface Drawable {
+        void draw(Graphics g);
     }
 
-    public static List<Command> produceRequests() {
-	List<Command> queue = new ArrayList<Command>();
-	queue.add( new DomesticEngineer() );
-	queue.add( new Politician() );
-	queue.add( new Programmer() );
-	queue.add( new Mathematics() );
-
-	return queue;
+    static class ScribbleDrawer implements Drawable {
+        public void draw(Graphics g) {
+            System.out.println("take out the trash");
+        }
     }
 
-    public static void workOffRequests( List<Command> queue ) {
-	for (Iterator<Command> it = queue.iterator(); it.hasNext(); )
-	    it.next().execute();
+    static class RectangleDrawer implements Drawable {
+        public void draw(Graphics g) {
+            System.out.println("take money from the rich, take votes from the poor");
+        }
     }
 
-    public static void main( String[] args ) {
-	List<Command> queue = produceRequests();
-	workOffRequests( queue );
-    }}
+    static class OvalDrawer implements Drawable {
+        public void draw(Graphics g) {
+            System.out.println("sell the bugs, charge extra for the fixes");
+        }
+    }
+
+    //   static class Mathematics implements Drawable {
+    //       public void draw() {
+    //           for (int i = 0; i < 5; i++) {
+    //               System.out.println("sin (" + i + ") = " + Math.sin(i * 3.14));
+    //           }
+    //           System.out.println("finish");
+    //       }
+    //   }
+
+    public static List<Drawable> produceRequests() {
+        List<Drawable> queue = new ArrayList<Drawable>();
+        queue.add(new ScribbleDrawer());
+        queue.add(new RectangleDrawer());
+        queue.add(new OvalDrawer());
+        //queue.add(new Mathematics());
+
+        return queue;
+    }
+
+    public static void workOffRequests(List<Drawable> queue) {
+        for (Iterator<Drawable> it = queue.iterator(); it.hasNext(); ) break;
+        //it.next().draw(g); //TODO Add the Graphics to correctly use this Method
+    }
+
+    public static void main(String[] args) {
+        List<Drawable> queue = produceRequests();
+        workOffRequests(queue);
+    }
+}
 
 // take out the trash
 // take money from the rich, take votes from the poor
