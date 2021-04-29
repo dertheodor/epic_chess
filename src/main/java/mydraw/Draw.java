@@ -294,13 +294,12 @@ class DrawGUI extends JFrame {
 
             // user selected new shape => reset the shape mode
             public void itemStateChanged(ItemEvent e) {
-                if (e.getItem().equals("Scribble")) {
-                    setCurrentDrawer(scribbleDrawer);
-                } else if (e.getItem().equals("Rectangle")) {
-                    setCurrentDrawer(rectDrawer);
-                } else if (e.getItem().equals("Oval")) {
-                    setCurrentDrawer(ovalDrawer);
-                }
+                // Key-Value storage for possible colors
+                HashMap<String, ShapeDrawer> itemToDrawer = new HashMap<>();
+                itemToDrawer.put("Scribble", scribbleDrawer);
+                itemToDrawer.put("Rectangle", rectDrawer);
+                itemToDrawer.put("Oval", ovalDrawer);
+                setCurrentDrawer(itemToDrawer.get(e.getItem().toString()));
             }
         }
 
@@ -310,15 +309,7 @@ class DrawGUI extends JFrame {
 
             // user selected new color => store new color in DrawGUIs
             public void itemStateChanged(ItemEvent e) {
-                if (e.getItem().equals("Black")) {
-                    color = Color.black;
-                } else if (e.getItem().equals("Green")) {
-                    color = Color.green;
-                } else if (e.getItem().equals("Red")) {
-                    color = Color.red;
-                } else if (e.getItem().equals("Blue")) {
-                    color = Color.blue;
-                }
+                color = colorSwitchHelper(e.getItem().toString());
             }
         }
 
@@ -408,37 +399,26 @@ class DrawGUI extends JFrame {
      * @param color as String
      * @return color as Color
      */
-    public Color colorSwitchHelper(String color) throws ColorException {
-        switch (color) {
-            case "white":
-                return Color.white;
-            case "lightgray":
-                return Color.lightGray;
-            case "gray":
-                return Color.gray;
-            case "darkgray":
-                return Color.darkGray;
-            case "black":
-                return Color.black;
-            case "red":
-                return Color.red;
-            case "pink":
-                return Color.pink;
-            case "orange":
-                return Color.orange;
-            case "yellow":
-                return Color.yellow;
-            case "green":
-                return Color.green;
-            case "magenta":
-                return Color.magenta;
-            case "cyan":
-                return Color.cyan;
-            case "blue":
-                return Color.blue;
-            default:
-                throw new ColorException(color + " not available, please choose another color.");
-        }
+    public Color colorSwitchHelper(String color) {
+        String toLowerCaseColor = color.toLowerCase();
+
+        // Key-Value storage for possible colors
+        HashMap<String, Color> stringToColorMap = new HashMap<>();
+        stringToColorMap.put("white", Color.white);
+        stringToColorMap.put("lightgray", Color.lightGray);
+        stringToColorMap.put("gray", Color.gray);
+        stringToColorMap.put("darkgray", Color.darkGray);
+        stringToColorMap.put("black", Color.black);
+        stringToColorMap.put("red", Color.red);
+        stringToColorMap.put("pink", Color.pink);
+        stringToColorMap.put("orange", Color.orange);
+        stringToColorMap.put("yellow", Color.yellow);
+        stringToColorMap.put("green", Color.green);
+        stringToColorMap.put("magenta", Color.magenta);
+        stringToColorMap.put("cyan", Color.cyan);
+        stringToColorMap.put("blue", Color.blue);
+
+        return stringToColorMap.get(toLowerCaseColor);
     }
 
     /**
@@ -452,7 +432,7 @@ class DrawGUI extends JFrame {
     }
 
     /**
-     * Helper method for mapping strings to colors
+     * Helper method for mapping awt.Color.toStrings to colors
      *
      * @param awtColorRGB toString version of java.awt.Color
      * @return actual String of color
