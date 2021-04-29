@@ -1,0 +1,10 @@
+Teilaufgabe 1.3 Bajusz Penning
+
+Theodor Bajusz und Lars Penning bilden eine Gruppe.
+
+Ziel: Wir wollen Schach implementieren. Dabei wollen wir zunächst die grundlegenden Grafiken und Regeln implementieren
+und je nach dem wieviel Zeit uns bleibt;
+Die Grafiken schön gestalten,
+Leichte Veränderungen der Regeln (Mischung der Offiziere) einbauen.
+
+Das Spiel soll nur lokal auf einem PC laufen und immer zwei Spieler beinhalten, die sich duellieren.
