@@ -1,5 +1,7 @@
 Im wesentlichen Unterscheiden sich die beiden Dateien, außer der Namensgebung der Klasse, nur dadurch, dass in
 MyBMPFile ein BufferedOutputStream anstatt eines FileOutputStream verwendet wird.
+Hier ein Diff der beiden Dateien: https://www.diffchecker.com/C7OUiWdi
+
 Des weiterem wird in MyBMPFile
 fo = new BufferedOutputStream (new FileOutputStream(parFilename));
 anstelle von
