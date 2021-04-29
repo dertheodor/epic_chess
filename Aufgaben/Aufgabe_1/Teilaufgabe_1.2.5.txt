@@ -1,0 +1,16 @@
+Im wesentlichen Unterscheiden sich die beiden Dateien, außer der Namensgebung der Klasse, nur dadurch, dass in
+MyBMPFile ein BufferedOutputStream anstatt eines FileOutputStream verwendet wird.
+Hier ein Diff der beiden Dateien: https://www.diffchecker.com/C7OUiWdi
+
+Des weiterem wird in MyBMPFile
+fo = new BufferedOutputStream (new FileOutputStream(parFilename));
+anstelle von
+fo = new FileOutputStream (parFilename); aufgerufen.
+
+In MyBMPFile ist die Performance des speicherns um ungefähr den Faktor 50 schneler.
+
+Eine detailliertere Erklärung über die Funktionsweise haben wir hier gefunden:
+https://stackoverflow.com/questions/43528057/performance-bufferedoutputstream-vs-fileoutputstream-in-java
+
+Wir haben noch zwei Screenshots beigefügt, in denen wir die Ausführungszeit der beiden Varianten gemessen haben.
+(BMPFile_exec_time.png und MyBMPFile_exec_time.png)

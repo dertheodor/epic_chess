@@ -145,7 +145,7 @@ class DrawGUI extends JFrame {
             public void mouseClicked(MouseEvent e) {
                 try {
                     imageCounter[0]++;
-                    writeImage(bufferImg, "drawing" + imageCounter[0] + ".bmp");
+                    writeImage(getDrawing(), "drawing" + imageCounter[0] + ".bmp");
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                 }
