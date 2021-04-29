@@ -1,2 +1,0 @@
-Der einzige Unterschied der beiden Klassen besteht darin, dass MyBMPFile auch das Package myDraw importiert,
-während BMPFile nur die normalen Java Libraries importiert.
