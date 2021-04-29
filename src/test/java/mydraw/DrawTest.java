@@ -115,11 +115,14 @@ public class DrawTest {
         }
     }
 
+    /**
+     * Tests methods: autoDraw, drawRectangle, drawOval, drawPolyLine and getDrawing
+     */
     @Test
     void autoDrawTestPositive() {
         drawTestGUI.autoDraw();
         try {
-            drawTestGUI.writeImage(drawTestGUI.bufferImg, "testing.bmp");
+            drawTestGUI.writeImage(drawTestGUI.getDrawing(), "testing.bmp");
             Image referenceImg = drawTestGUI.readImage("reference.bmp");
             BufferedImage bufferedReferenceImg = imgToBufferedImageHelper(referenceImg);
             Image compareImg = drawTestGUI.readImage("testing.bmp");
@@ -131,11 +134,14 @@ public class DrawTest {
         }
     }
 
+    /**
+     * Tests methods: autoDraw, drawRectangle, drawOval, drawPolyLine and getDrawing
+     */
     @Test
     void autoDrawTestNegative() {
         drawTestGUI.autoDraw();
         try {
-            drawTestGUI.writeImage(drawTestGUI.bufferImg, "testing.bmp");
+            drawTestGUI.writeImage(drawTestGUI.getDrawing(), "testing.bmp");
             Image referenceImg = drawTestGUI.readImage("wrongReference.bmp");
             BufferedImage bufferedReferenceImg = imgToBufferedImageHelper(referenceImg);
             Image compareImg = drawTestGUI.readImage("testing.bmp");
