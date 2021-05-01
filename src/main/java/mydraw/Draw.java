@@ -29,29 +29,13 @@ public class Draw {
         new Draw();
     }
 
-    protected DrawGUI window; //chg
-
     /**
      * Application constructor:  create an instance of our GUI class
      */
     public Draw() {
-        window = new DrawGUI(this);
+        DrawGUI window = new DrawGUI(this);
     }
 
-
-    /**
-     * This is the application method that processes commands sent by the GUI
-     */
-    public void doCommand(String command) {
-        if (command.equals("clear")) {
-            // clear drawing canvas
-            window.clear();
-        } else if (command.equals("quit")) {
-            // quit the application
-            window.dispose();                         // close the GUI
-            System.exit(0);                           // and exit.
-        }
-    }
 }
 
 /**
@@ -125,24 +109,6 @@ class DrawGUI extends JFrame {
         bufferG = bufferImg.getGraphics();
         bufferG.fillRect(0, 0, bufferImg.getWidth(), bufferImg.getHeight());
 
-
-        // Here's a local class used for action listeners for the buttons
-        class DrawActionListener implements ActionListener {
-            private String command;
-
-            public DrawActionListener(String cmd) {
-                command = cmd;
-            }
-
-            public void actionPerformed(ActionEvent e) {
-                app.doCommand(command);
-            }
-        }
-
-        // Define action listener adapters that connect the  buttons to the app
-        clear.addActionListener(new DrawActionListener("clear"));
-        quit.addActionListener(new DrawActionListener("quit"));
-
         // Define mouseListener for saving
         // init imageCounter so multiple files can be saved
         final int[] imageCounter = {0};
@@ -166,6 +132,23 @@ class DrawGUI extends JFrame {
             }
         });
 
+        // Define mouseListener for clear
+        clear.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                clear();
+            }
+        });
+
+        // Define mouseListener for kermit death
+        quit.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+                System.exit(0);
+            }
+        });
+
         comboBoxDrawingModes.addItemListener(shapeManager);
 
         class ColorItemListener implements ItemListener {
@@ -181,7 +164,7 @@ class DrawGUI extends JFrame {
         // Handle the window close request similarly
         this.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
-                app.doCommand("quit");
+                System.exit(0);
             }
         });
 
