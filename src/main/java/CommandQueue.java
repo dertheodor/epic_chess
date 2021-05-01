@@ -17,6 +17,8 @@ public class CommandQueue {
     static class ScribbleDrawer implements Drawable {
         public void draw(Graphics g) {
             System.out.println("take out the trash");
+            //führ das aus
+            //adde mich in die queue
         }
     }
 
