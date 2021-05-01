@@ -73,10 +73,20 @@ class DrawGUI extends JFrame {
         // drawing modes and its JComboBox
         String[] shapes = {"Scribble", "Rectangle", "Oval"};
         JComboBox<String> comboBoxDrawingModes = new JComboBox<>(shapes);
+        comboBoxDrawingModes.addItemListener(shapeManager);
 
         // drawing colors and its JComboBox
-        String[] colors = {"Black", "Green", "Red", "Blue"};
+        String[] colors = {
+                "Black", "White", "Orange", "Cyan", "Yellow", "Green", "Red", "Blue", "Dark Gray", "Gray", "Light Gray"};
         JComboBox<String> comboBoxDrawingColors = new JComboBox<>(colors);
+        class ColorItemListener implements ItemListener {
+
+            // user selected new color => store new color in DrawGUIs
+            public void itemStateChanged(ItemEvent e) {
+                color = colorSwitchHelper(e.getItem().toString());
+            }
+        }
+        comboBoxDrawingColors.addItemListener(new ColorItemListener());
 
         // header JButtons
         JButton clear = new JButton("Clear");
@@ -140,26 +150,13 @@ class DrawGUI extends JFrame {
             }
         });
 
-        // Define mouseListener for kermit death
+        // Define mouseListener for quitting
         quit.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-
                 System.exit(0);
             }
         });
-
-        comboBoxDrawingModes.addItemListener(shapeManager);
-
-        class ColorItemListener implements ItemListener {
-
-            // user selected new color => store new color in DrawGUIs
-            public void itemStateChanged(ItemEvent e) {
-                color = colorSwitchHelper(e.getItem().toString());
-            }
-        }
-
-        comboBoxDrawingColors.addItemListener(new ColorItemListener());
 
         // Handle the window close request similarly
         this.addWindowListener(new WindowAdapter() {
@@ -247,7 +244,7 @@ class DrawGUI extends JFrame {
      */
     public Color colorSwitchHelper(String color) {
         String toLowerCaseColor = color.toLowerCase();
-
+        String eliminatedWhiteSpaceColor = toLowerCaseColor.replace(" ", "");
         // Key-Value storage for possible colors
         HashMap<String, Color> stringToColorMap = new HashMap<>();
         stringToColorMap.put("white", Color.white);
@@ -264,7 +261,7 @@ class DrawGUI extends JFrame {
         stringToColorMap.put("cyan", Color.cyan);
         stringToColorMap.put("blue", Color.blue);
 
-        return stringToColorMap.get(toLowerCaseColor);
+        return stringToColorMap.get(eliminatedWhiteSpaceColor);
     }
 
     /**
