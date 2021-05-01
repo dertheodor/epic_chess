@@ -7,6 +7,24 @@ import java.util.HashMap;
 // depending on the shape mode currently set
 class ShapeManager implements ItemListener {
     DrawGUI gui;
+    ScribbleDrawer scribbleDrawer;
+    RectangleDrawer rectDrawer;
+    OvalDrawer ovalDrawer;
+    ShapeDrawer currentDrawer;
+
+    // constructor
+    public ShapeManager(DrawGUI itsGui) {
+        scribbleDrawer = new ScribbleDrawer();
+        rectDrawer = new RectangleDrawer();
+        ovalDrawer = new OvalDrawer();
+
+        gui = itsGui;
+        // default: scribble mode
+        currentDrawer = scribbleDrawer;
+        // activate scribble drawer
+        gui.addMouseListener(currentDrawer);
+        gui.addMouseMotionListener(currentDrawer);
+    }
 
     abstract class ShapeDrawer extends MouseAdapter implements MouseMotionListener {
         public void mouseMoved(MouseEvent e) { /* ignore */ }
@@ -103,20 +121,6 @@ class ShapeManager implements ItemListener {
             // draw image from buffer to gui
             gui.drawingPanel.getGraphics().drawImage(gui.bufferImg, -9, -67, null);
         }
-    }
-
-    ScribbleDrawer scribbleDrawer = new ScribbleDrawer();
-    RectangleDrawer rectDrawer = new RectangleDrawer();
-    OvalDrawer ovalDrawer = new OvalDrawer();
-    ShapeDrawer currentDrawer;
-
-    public ShapeManager(DrawGUI itsGui) {
-        gui = itsGui;
-        // default: scribble mode
-        currentDrawer = scribbleDrawer;
-        // activate scribble drawer
-        gui.addMouseListener(currentDrawer);
-        gui.addMouseMotionListener(currentDrawer);
     }
 
     // reset the shape drawer
