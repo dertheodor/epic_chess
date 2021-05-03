@@ -10,9 +10,26 @@ import java.util.List;
  * modified by ptp
  */
 public class CommandQueue {
+    List<Drawable> requestQueue;
+    ArrayList<Drawable> undoList;
+
+    public CommandQueue() {
+        requestQueue = new LinkedList<Drawable>();
+        undoList = new ArrayList<Drawable>();
+    }
 
     public interface Drawable {
         void draw(Graphics g);
+    }
+
+    /**
+     * Adds drawing to requests queue
+     *
+     * @param drawable Drawing
+     */
+    public void addToRequestQueue(Drawable drawable) {
+        requestQueue.add(drawable);
+        workOffRequests(requestQueue);
     }
 
     public static class ScribbleDrawer implements Drawable {
@@ -32,19 +49,21 @@ public class CommandQueue {
         private int startingPointY;
         private int rectangleWidth;
         private int rectangleHeight;
+        private Color drawingColor;
 
-        public RectangleDrawer(int upperLeftX, int upperLeftY, int lowerRightX, int lowerRightY) {
+        public RectangleDrawer(int upperLeftX, int upperLeftY, int lowerRightX, int lowerRightY, Color color) {
             startingPointX = Math.min(upperLeftX, lowerRightX);
             startingPointY = Math.min(upperLeftY, lowerRightY);
             rectangleWidth = Math.abs(lowerRightX - upperLeftX);
             rectangleHeight = Math.abs(lowerRightY - upperLeftY);
+            drawingColor = color;
         }
 
         public void draw(Graphics g) {
+            // set drawing color
+            g.setColor(drawingColor);
             // draw rectangle
             g.drawRect(startingPointX, startingPointY, rectangleWidth, rectangleHeight);
-
-
         }
     }
 
@@ -54,37 +73,31 @@ public class CommandQueue {
         }
     }
 
-    //   static class Mathematics implements Drawable {
-    //       public void draw() {
-    //           for (int i = 0; i < 5; i++) {
-    //               System.out.println("sin (" + i + ") = " + Math.sin(i * 3.14));
-    //           }
-    //           System.out.println("finish");
-    //       }
-    //   }
-
-    //  public static List<Drawable> produceRequests() {
-    //      List<Drawable> queue = new ArrayList<Drawable>();
-    //      queue.add(new ScribbleDrawer());
-    //      queue.add(new RectangleDrawer());
-    //      queue.add(new OvalDrawer());
-    //      //queue.add(new Mathematics());
+    //    public static List<Drawable> produceRequests() {
+//        List<Drawable> queue = new ArrayList<Drawable>();
+//        //queue.add(new ScribbleDrawer());
+//        queue.add(new RectangleDrawer());
+//        //queue.add(new OvalDrawer());
 //
-    //      return queue;
-    //  }
-
-    //  public static void workOffRequests(List<Drawable> queue) {
-    //      for (Iterator<Drawable> it = queue.iterator(); it.hasNext(); ) break;
-    //      //it.next().draw(g); //TODO Add the Graphics to correctly use this Method
-    //  }
+//        return queue;
+//    }
 //
-    //  public static void main(String[] args) {
-    //      List<Drawable> queue = produceRequests();
-    //      workOffRequests(queue);
-    //  }
+    public void workOffRequests(List<Drawable> queue) {
+        for (Drawable drawable : queue) {
+            // draw drawable object
+            drawable.draw(DrawGUI.bufferImg.getGraphics());
+
+            //TODO DrawGUI.updateCanvas();
+
+            // add drawable to undoList
+            undoList.add(drawable);
+            // remove drawable from requestQueue
+            requestQueue.remove(drawable);
+        }
+    }
+//
+//    public static void main(String[] args) {
+//        List<Drawable> queue = produceRequests();
+//        workOffRequests(queue);
+//    }
 }
-
-// take out the trash
-// take money from the rich, take votes from the poor
-// sell the bugs, charge extra for the fixes
-

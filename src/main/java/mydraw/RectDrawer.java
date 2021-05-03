@@ -6,11 +6,13 @@ import java.awt.event.MouseEvent;
 // if this class is active, rectangles are drawn
 class RectDrawer extends ShapeDrawer {
     DrawGUI gui;
+    CommandQueue cQ;
     int pressx, pressy;
     int lastx = -1, lasty = -1;
 
-    public RectDrawer(DrawGUI itsGui) {
+    public RectDrawer(DrawGUI itsGui, CommandQueue coQ) {
         gui = itsGui;
+        cQ = coQ;
     }
 
     // mouse pressed => fix first corner of rectangle
@@ -67,8 +69,10 @@ class RectDrawer extends ShapeDrawer {
     }
 
     public void drawForRealNow(int x0, int y0, int x1, int y1) {
-        new CommandQueue.RectangleDrawer(x0, y0, x1, y1).draw(gui.bufferG);
-
+        // create rectangle
+        CommandQueue.Drawable rectangle = new CommandQueue.RectangleDrawer(x0, y0, x1, y1, gui.color);
+        // add rectangle to queue
+        cQ.addToRequestQueue(rectangle);
     }
 }
 

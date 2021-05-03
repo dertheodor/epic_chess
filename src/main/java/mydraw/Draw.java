@@ -46,7 +46,7 @@ public class Draw {
 class DrawGUI extends JFrame {
     Draw app;      // A reference to the application, to send commands to.
     Color color;
-    BufferedImage bufferImg;
+    public static BufferedImage bufferImg;
     Graphics bufferG;
     JPanel drawingPanel;
     int windowWidth;
@@ -174,10 +174,12 @@ class DrawGUI extends JFrame {
         this.setVisible(true); // ++
     }
 
-    public void updateCanvas(Graphics bufferG) {
+    /* TODO update drawing panel after drawing
+    public void updateCanvas() {
         drawingPanel.getGraphics();
 
     }
+    */
 
     /**
      * API method: gets the height of the current window.

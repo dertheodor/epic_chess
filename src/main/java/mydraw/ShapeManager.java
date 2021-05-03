@@ -12,6 +12,7 @@ abstract class ShapeDrawer extends MouseAdapter implements MouseMotionListener {
 // depending on the shape mode currently set
 class ShapeManager implements ItemListener {
     DrawGUI gui;
+    CommandQueue cQ;
     ScribbleDrawer scribbleDrawer;
     RectDrawer rectDrawer;
     OvalDrawer ovalDrawer;
@@ -19,9 +20,12 @@ class ShapeManager implements ItemListener {
 
     // constructor
     public ShapeManager(DrawGUI itsGui) {
+        // create new CommandQueue
+        cQ = new CommandQueue();
+
         scribbleDrawer = new ScribbleDrawer(itsGui);
-        rectDrawer = new RectDrawer(itsGui);
-        ovalDrawer = new OvalDrawer(itsGui);
+        rectDrawer = new RectDrawer(itsGui, cQ);
+        ovalDrawer = new OvalDrawer(itsGui, cQ);
 
         gui = itsGui;
         // default: scribble mode
