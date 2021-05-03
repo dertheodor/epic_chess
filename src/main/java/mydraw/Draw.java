@@ -174,12 +174,9 @@ class DrawGUI extends JFrame {
         this.setVisible(true); // ++
     }
 
-    /* TODO update drawing panel after drawing
     public void updateCanvas() {
-        drawingPanel.getGraphics();
-
+        drawingPanel.getGraphics().drawImage(bufferImg, -9, -67, null);
     }
-    */
 
     /**
      * API method: gets the height of the current window.

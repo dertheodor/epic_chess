@@ -18,10 +18,6 @@ public class CommandQueue {
         undoList = new ArrayList<Drawable>();
     }
 
-    public interface Drawable {
-        void draw(Graphics g);
-    }
-
     /**
      * Adds drawing to requests queue
      *
@@ -30,47 +26,6 @@ public class CommandQueue {
     public void addToRequestQueue(Drawable drawable) {
         requestQueue.add(drawable);
         workOffRequests(requestQueue);
-    }
-
-    public static class ScribbleDrawer implements Drawable {
-        private int startingPoint;
-        private int endingPoint;
-
-
-        public void draw(Graphics g) {
-            System.out.println("take out the trash");
-            //führ das aus
-            //adde mich in die queue
-        }
-    }
-
-    public static class RectangleDrawer implements Drawable {
-        private int startingPointX;
-        private int startingPointY;
-        private int rectangleWidth;
-        private int rectangleHeight;
-        private Color drawingColor;
-
-        public RectangleDrawer(int upperLeftX, int upperLeftY, int lowerRightX, int lowerRightY, Color color) {
-            startingPointX = Math.min(upperLeftX, lowerRightX);
-            startingPointY = Math.min(upperLeftY, lowerRightY);
-            rectangleWidth = Math.abs(lowerRightX - upperLeftX);
-            rectangleHeight = Math.abs(lowerRightY - upperLeftY);
-            drawingColor = color;
-        }
-
-        public void draw(Graphics g) {
-            // set drawing color
-            g.setColor(drawingColor);
-            // draw rectangle
-            g.drawRect(startingPointX, startingPointY, rectangleWidth, rectangleHeight);
-        }
-    }
-
-    public static class OvalDrawer implements Drawable {
-        public void draw(Graphics g) {
-            System.out.println("sell the bugs, charge extra for the fixes");
-        }
     }
 
     //    public static List<Drawable> produceRequests() {

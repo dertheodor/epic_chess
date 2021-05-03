@@ -3,11 +3,11 @@ package mydraw;
 import java.awt.event.MouseEvent;
 
 // if this class is active, the mouse is interpreted as a pen
-class ScribbleDrawer extends ShapeDrawer {
+class ScribDrawer extends ShapeDrawer {
     int lastx, lasty;
     DrawGUI gui;
 
-    public ScribbleDrawer(DrawGUI itsGui) {
+    public ScribDrawer(DrawGUI itsGui) {
         gui = itsGui;
     }
 

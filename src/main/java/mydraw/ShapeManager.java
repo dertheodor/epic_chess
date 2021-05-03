@@ -13,23 +13,23 @@ abstract class ShapeDrawer extends MouseAdapter implements MouseMotionListener {
 class ShapeManager implements ItemListener {
     DrawGUI gui;
     CommandQueue cQ;
-    ScribbleDrawer scribbleDrawer;
+    ScribDrawer scribDrawer;
     RectDrawer rectDrawer;
-    OvalDrawer ovalDrawer;
+    OvDrawer ovDrawer;
     ShapeDrawer currentDrawer;
 
     // constructor
     public ShapeManager(DrawGUI itsGui) {
         // create new CommandQueue
-        cQ = new CommandQueue();
+        cQ = new CommandQueue(itsGui);
 
-        scribbleDrawer = new ScribbleDrawer(itsGui);
+        scribDrawer = new ScribDrawer(itsGui);
         rectDrawer = new RectDrawer(itsGui, cQ);
-        ovalDrawer = new OvalDrawer(itsGui, cQ);
+        ovDrawer = new OvDrawer(itsGui, cQ);
 
         gui = itsGui;
         // default: scribble mode
-        currentDrawer = scribbleDrawer;
+        currentDrawer = scribDrawer;
         // activate scribble drawer
         gui.addMouseListener(currentDrawer);
         gui.addMouseMotionListener(currentDrawer);
@@ -53,9 +53,9 @@ class ShapeManager implements ItemListener {
     public void itemStateChanged(ItemEvent e) {
         // Key-Value storage for possible colors
         HashMap<String, ShapeDrawer> itemToDrawer = new HashMap<>();
-        itemToDrawer.put("Scribble", scribbleDrawer);
+        itemToDrawer.put("Scribble", scribDrawer);
         itemToDrawer.put("Rectangle", rectDrawer);
-        itemToDrawer.put("Oval", ovalDrawer);
+        itemToDrawer.put("Oval", ovDrawer);
         setCurrentDrawer(itemToDrawer.get(e.getItem().toString()));
     }
 }

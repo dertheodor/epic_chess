@@ -1,11 +1,11 @@
 package mydraw;
 
 // if this class is active, ovals are drawn
-class OvalDrawer extends RectDrawer {
+class OvDrawer extends RectDrawer {
     DrawGUI gui;
     CommandQueue cQ;
 
-    public OvalDrawer(DrawGUI itsGui, CommandQueue coQ) {
+    public OvDrawer(DrawGUI itsGui, CommandQueue coQ) {
         super(itsGui, coQ);
         gui = itsGui;
         cQ = coQ;

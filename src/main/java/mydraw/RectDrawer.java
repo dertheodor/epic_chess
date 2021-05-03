@@ -70,7 +70,7 @@ class RectDrawer extends ShapeDrawer {
 
     public void drawForRealNow(int x0, int y0, int x1, int y1) {
         // create rectangle
-        CommandQueue.Drawable rectangle = new CommandQueue.RectangleDrawer(x0, y0, x1, y1, gui.color);
+        Drawable rectangle = new RectangleDrawer(x0, y0, x1, y1, gui.color);
         // add rectangle to queue
         cQ.addToRequestQueue(rectangle);
     }
