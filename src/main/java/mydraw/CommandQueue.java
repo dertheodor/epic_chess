@@ -12,10 +12,12 @@ import java.util.List;
 public class CommandQueue {
     List<Drawable> requestQueue;
     ArrayList<Drawable> undoList;
+    DrawGUI drawGUI;
 
-    public CommandQueue() {
+    public CommandQueue(DrawGUI itsGui) {
         requestQueue = new LinkedList<Drawable>();
         undoList = new ArrayList<Drawable>();
+        drawGUI = itsGui;
     }
 
     /**
@@ -41,8 +43,7 @@ public class CommandQueue {
         for (Drawable drawable : queue) {
             // draw drawable object
             drawable.draw(DrawGUI.bufferImg.getGraphics());
-
-            //TODO DrawGUI.updateCanvas();
+            drawGUI.updateCanvas();
 
             // add drawable to undoList
             undoList.add(drawable);
