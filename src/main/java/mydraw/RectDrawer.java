@@ -2,13 +2,14 @@ package mydraw;
 
 import java.awt.event.MouseEvent;
 
+
 // if this class is active, rectangles are drawn
-class RectangleDrawer extends ShapeDrawer {
+class RectDrawer extends ShapeDrawer {
     DrawGUI gui;
     int pressx, pressy;
     int lastx = -1, lasty = -1;
 
-    public RectangleDrawer(DrawGUI itsGui) {
+    public RectDrawer(DrawGUI itsGui) {
         gui = itsGui;
     }
 
@@ -33,7 +34,8 @@ class RectangleDrawer extends ShapeDrawer {
         gui.bufferG.setPaintMode();
         gui.bufferG.setColor(gui.color);
         // draw the final rectangle
-        doDraw(pressx, pressy, e.getX(), e.getY());
+        //doDraw(pressx, pressy, e.getX(), e.getY());
+        drawForRealNow(pressx, pressy, e.getX(), e.getY());
     }
 
     // mouse released => temporarily set second corner of rectangle
@@ -62,6 +64,11 @@ class RectangleDrawer extends ShapeDrawer {
         gui.bufferG.drawRect(x, y, w, h);
         // draw image from buffer to gui
         gui.drawingPanel.getGraphics().drawImage(gui.bufferImg, -9, -67, null);
+    }
+
+    public void drawForRealNow(int x0, int y0, int x1, int y1) {
+        new CommandQueue.RectangleDrawer(x0, y0, x1, y1).draw(gui.bufferG);
+
     }
 }
 

@@ -1,7 +1,7 @@
 package mydraw;
 
 // if this class is active, ovals are drawn
-class OvalDrawer extends RectangleDrawer {
+class OvalDrawer extends RectDrawer {
     DrawGUI gui;
 
     public OvalDrawer(DrawGUI itsGui) {

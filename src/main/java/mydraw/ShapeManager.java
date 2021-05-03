@@ -13,14 +13,14 @@ abstract class ShapeDrawer extends MouseAdapter implements MouseMotionListener {
 class ShapeManager implements ItemListener {
     DrawGUI gui;
     ScribbleDrawer scribbleDrawer;
-    RectangleDrawer rectDrawer;
+    RectDrawer rectDrawer;
     OvalDrawer ovalDrawer;
     ShapeDrawer currentDrawer;
 
     // constructor
     public ShapeManager(DrawGUI itsGui) {
         scribbleDrawer = new ScribbleDrawer(itsGui);
-        rectDrawer = new RectangleDrawer(itsGui);
+        rectDrawer = new RectDrawer(itsGui);
         ovalDrawer = new OvalDrawer(itsGui);
 
         gui = itsGui;

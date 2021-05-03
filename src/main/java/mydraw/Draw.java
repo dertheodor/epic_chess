@@ -33,7 +33,7 @@ public class Draw {
      * Application constructor:  create an instance of our GUI class
      */
     public Draw() {
-        DrawGUI window = new DrawGUI(this);
+        window = new DrawGUI(this);
     }
 
 }
@@ -172,10 +172,10 @@ class DrawGUI extends JFrame {
         this.setVisible(true); // ++
     }
 
-    /* API method stubs to be imported, commented and implemented in Draw.java
-    -- first part --
-    AH, PTP 2021
-    */
+    public void updateCanvas(Graphics bufferG) {
+        drawingPanel.getGraphics();
+
+    }
 
     /**
      * API method: gets the height of the current window.
