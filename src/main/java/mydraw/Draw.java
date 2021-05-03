@@ -29,6 +29,8 @@ public class Draw {
         new Draw();
     }
 
+    DrawGUI window;
+
     /**
      * Application constructor:  create an instance of our GUI class
      */
