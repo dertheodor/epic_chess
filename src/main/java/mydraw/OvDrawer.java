@@ -21,5 +21,13 @@ class OvDrawer extends RectDrawer {
         // draw image from buffer to gui
         gui.drawingPanel.getGraphics().drawImage(gui.bufferImg, -9, -67, null);
     }
+
+    @Override
+    public void drawForRealNow(int x0, int y0, int x1, int y1) {
+        // create oval
+        Drawable oval = new OvalDrawer(x0, y0, x1, y1, gui.color);
+        // add oval to queue
+        cQ.addToRequestQueue(oval);
+    }
 }
 

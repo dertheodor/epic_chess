@@ -44,8 +44,25 @@ class RectangleDrawer implements Drawable {
 }
 
 class OvalDrawer implements Drawable {
+    private int startingPointX;
+    private int startingPointY;
+    private int rectangleWidth;
+    private int rectangleHeight;
+    private Color drawingColor;
+
+    public OvalDrawer(int upperLeftX, int upperLeftY, int lowerRightX, int lowerRightY, Color color) {
+        startingPointX = Math.min(upperLeftX, lowerRightX);
+        startingPointY = Math.min(upperLeftY, lowerRightY);
+        rectangleWidth = Math.abs(lowerRightX - upperLeftX);
+        rectangleHeight = Math.abs(lowerRightY - upperLeftY);
+        drawingColor = color;
+    }
+
     public void draw(Graphics g) {
-        System.out.println("sell the bugs, charge extra for the fixes");
+        // set drawing color
+        g.setColor(drawingColor);
+        // draw oval
+        g.drawOval(startingPointX, startingPointY, rectangleWidth, rectangleHeight);
     }
 }
 
