@@ -9,14 +9,24 @@ interface Drawable {
 
 
 class ScribbleDrawer implements Drawable {
-    private int startingPoint;
-    private int endingPoint;
+    private int startingPointX;
+    private int startingPointY;
+    private int endingPointX;
+    private int endingPointY;
+    private Color drawingColor;
+
+    public ScribbleDrawer(int startX, int startY, int endX, int endY, Color color) {
+        startingPointX = startX;
+        startingPointY = startY;
+        endingPointX = endX;
+        endingPointY = endY;
+        drawingColor = color;
+    }
 
 
     public void draw(Graphics g) {
-        System.out.println("take out the trash");
-        //führ das aus
-        //adde mich in die queue
+        g.setColor(drawingColor);
+        g.drawLine(startingPointX, startingPointY, endingPointX, endingPointY);
     }
 }
 

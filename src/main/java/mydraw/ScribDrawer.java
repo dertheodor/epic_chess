@@ -6,9 +6,11 @@ import java.awt.event.MouseEvent;
 class ScribDrawer extends ShapeDrawer {
     int lastx, lasty;
     DrawGUI gui;
+    CommandQueue cQ;
 
-    public ScribDrawer(DrawGUI itsGui) {
+    public ScribDrawer(DrawGUI itsGui, CommandQueue coQ) {
         gui = itsGui;
+        cQ = coQ;
     }
 
     public void mousePressed(MouseEvent e) {
@@ -18,12 +20,13 @@ class ScribDrawer extends ShapeDrawer {
 
     public void mouseDragged(MouseEvent e) {
         int x = e.getX(), y = e.getY();
-        gui.bufferG.setColor(gui.color);
-        gui.bufferG.setPaintMode();
-        gui.bufferG.drawLine(lastx, lasty, x, y);
+        Drawable scribble = new ScribbleDrawer(lastx, lasty, x, y, gui.color);
         lastx = x;
         lasty = y;
+        // create rectangle
+        // add rectangle to queue
+        cQ.addToRequestQueue(scribble);
         // draw image from buffer to gui
-        gui.drawingPanel.getGraphics().drawImage(gui.bufferImg, -9, -67, null);
+        //gui.drawingPanel.getGraphics().drawImage(gui.bufferImg, -9, -67, null);
     }
 }

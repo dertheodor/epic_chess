@@ -23,7 +23,7 @@ class ShapeManager implements ItemListener {
         // create new CommandQueue
         cQ = new CommandQueue(itsGui);
 
-        scribDrawer = new ScribDrawer(itsGui);
+        scribDrawer = new ScribDrawer(itsGui, cQ);
         rectDrawer = new RectDrawer(itsGui, cQ);
         ovDrawer = new OvDrawer(itsGui, cQ);
 

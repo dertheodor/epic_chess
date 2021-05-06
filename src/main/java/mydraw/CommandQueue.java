@@ -44,7 +44,6 @@ public class CommandQueue {
             // draw drawable object
             drawable.draw(DrawGUI.bufferImg.getGraphics());
             drawGUI.updateCanvas();
-
             // add drawable to undoList
             undoList.add(drawable);
             // remove drawable from requestQueue
