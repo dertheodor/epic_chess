@@ -397,18 +397,32 @@ class DrawGUI extends JFrame {
      * API - test method: automatically paint an image
      */
     public void autoDraw() {
-        // auto draw rectangle
-        drawRectangle(new Point(100, 100), new Point(250, 250));
-        // auto draw oval
-        drawOval(new Point(100, 100), new Point(250, 250));
+        Color[] availableColorsArray = new Color[]{
+                Color.white, Color.lightGray, Color.gray, Color.darkGray,
+                Color.black, Color.red, Color.pink, Color.orange, Color.yellow,
+                Color.green, Color.magenta, Color.cyan, Color.blue};
+        int fakePI = (int)Math.PI;
 
-        List<Point> pointList = new ArrayList<>();
-        // auto-fill pointList
-        for (int i = 100; i < 250; i++) {
-            pointList.add(new Point(i, i));
+        // for every available color from java.awt.Color draw all available "shapes"
+        for (int x = 0; x < 13; x++) {
+            color = availableColorsArray[x];
+            int offset = fakePI * x;
+
+            // auto draw rectangle
+            drawRectangle(new Point(100 + offset, 100 + offset), new Point(250 + offset, 250 + offset));
+            // auto draw oval
+            drawOval(new Point(100 + offset, 100 + offset), new Point(250 + offset, 250 + offset));
+
+            List<Point> pointList = new ArrayList<>();
+            // auto-fill pointList
+            for (int y = 100; y < 250; y++) {
+                pointList.add(new Point(y + offset, y + offset));
+            }
+            // auto draw points
+            drawPolyLine(pointList);
         }
-        // auto draw points
-        drawPolyLine(pointList);
+        // after autoDraw set back color to default
+        color = Color.black;
     }
 
 
