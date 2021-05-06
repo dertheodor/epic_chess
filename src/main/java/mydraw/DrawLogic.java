@@ -2,6 +2,34 @@ package mydraw;
 
 import java.awt.event.MouseEvent;
 
+// if this class is active, the mouse is interpreted as a pen
+class ScribDrawer extends ShapeDrawer {
+    int lastx, lasty;
+    DrawGUI gui;
+    CommandQueue cQ;
+
+    public ScribDrawer(DrawGUI itsGui, CommandQueue coQ) {
+        gui = itsGui;
+        cQ = coQ;
+    }
+
+    public void mousePressed(MouseEvent e) {
+        lastx = e.getX();
+        lasty = e.getY();
+    }
+
+    public void mouseDragged(MouseEvent e) {
+        int x = e.getX(), y = e.getY();
+        Drawable scribble = new ScribbleDrawer(lastx, lasty, x, y, gui.color);
+        lastx = x;
+        lasty = y;
+        // create rectangle
+        // add rectangle to queue
+        cQ.addToRequestQueue(scribble);
+        // draw image from buffer to gui
+        //gui.drawingPanel.getGraphics().drawImage(gui.bufferImg, -9, -67, null);
+    }
+}
 
 // if this class is active, rectangles are drawn
 class RectDrawer extends ShapeDrawer {
@@ -73,6 +101,37 @@ class RectDrawer extends ShapeDrawer {
         Drawable rectangle = new RectangleDrawer(x0, y0, x1, y1, gui.color);
         // add rectangle to queue
         cQ.addToRequestQueue(rectangle);
+    }
+}
+
+// if this class is active, ovals are drawn
+class OvDrawer extends RectDrawer {
+    DrawGUI gui;
+    CommandQueue cQ;
+
+    public OvDrawer(DrawGUI itsGui, CommandQueue coQ) {
+        super(itsGui, coQ);
+        gui = itsGui;
+        cQ = coQ;
+    }
+
+    public void doDraw(int x0, int y0, int x1, int y1) {
+        int x = Math.min(x0, x1);
+        int y = Math.min(y0, y1);
+        int w = Math.abs(x1 - x0);
+        int h = Math.abs(y1 - y0);
+        // draw oval instead of rectangle
+        gui.bufferG.drawOval(x, y, w, h);
+        // draw image from buffer to gui
+        gui.drawingPanel.getGraphics().drawImage(gui.bufferImg, -9, -67, null);
+    }
+
+    @Override
+    public void drawForRealNow(int x0, int y0, int x1, int y1) {
+        // create oval
+        Drawable oval = new OvalDrawer(x0, y0, x1, y1, gui.color);
+        // add oval to queue
+        cQ.addToRequestQueue(oval);
     }
 }
 
