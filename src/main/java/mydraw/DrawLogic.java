@@ -1,12 +1,15 @@
 package mydraw;
 
+import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 // if this class is active, the mouse is interpreted as a pen
 class ScribbleDrawerLogic extends ShapeDrawer {
     int lastx, lasty;
     DrawGUI gui;
     CommandQueue cQ;
+    ArrayList<Point> pointArrayList;
 
     public ScribbleDrawerLogic(DrawGUI itsGui, CommandQueue coQ) {
         gui = itsGui;
@@ -16,18 +19,32 @@ class ScribbleDrawerLogic extends ShapeDrawer {
     public void mousePressed(MouseEvent e) {
         lastx = e.getX();
         lasty = e.getY();
+        pointArrayList = new ArrayList<>();
+        pointArrayList.add(new Point(lastx, lasty));
     }
 
     public void mouseDragged(MouseEvent e) {
         int x = e.getX(), y = e.getY();
-        Drawable scribble = new ScribbleDrawer(lastx, lasty, x, y, gui.color);
+        // draw points whilst in "rubberband" mode
+        gui.bufferG.setColor(gui.color);
+        gui.bufferG.drawLine(lastx, lasty, x, y);
+        gui.drawingPanel.getGraphics().drawImage(gui.bufferImg, -9, -67, null);
+
         lastx = x;
         lasty = y;
-        // create rectangle
-        // add rectangle to queue
+        pointArrayList.add(new Point(lastx, lasty));
+    }
+
+    public void mouseReleased(MouseEvent e) {
+        // undraw "rubberband" line which was drawn whilst dragging mouse
+        gui.bufferG.setColor(gui.getBackground());
+        // iterate trough drawn points and draw them
+        for (int i = 0; i < pointArrayList.size() - 1; i++) {
+            gui.bufferG.drawLine(pointArrayList.get(i).x, pointArrayList.get(i).y, pointArrayList.get(i+1).x, pointArrayList.get(i+1).y);
+        }
+        
+        Drawable scribble = new ScribbleDrawer(pointArrayList, gui.color);
         cQ.addToRequestQueue(scribble);
-        // draw image from buffer to gui
-        //gui.drawingPanel.getGraphics().drawImage(gui.bufferImg, -9, -67, null);
     }
 }
 

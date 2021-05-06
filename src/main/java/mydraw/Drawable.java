@@ -2,6 +2,7 @@ package mydraw;
 
 
 import java.awt.*;
+import java.util.ArrayList;
 
 interface Drawable {
     void draw(Graphics g);
@@ -9,24 +10,21 @@ interface Drawable {
 
 
 class ScribbleDrawer implements Drawable {
-    private int startingPointX;
-    private int startingPointY;
-    private int endingPointX;
-    private int endingPointY;
+    private ArrayList<Point> drawingPoints;
     private Color drawingColor;
 
-    public ScribbleDrawer(int startX, int startY, int endX, int endY, Color color) {
-        startingPointX = startX;
-        startingPointY = startY;
-        endingPointX = endX;
-        endingPointY = endY;
+    public ScribbleDrawer(ArrayList<Point> pointArrayList, Color color) {
         drawingColor = color;
+        drawingPoints = pointArrayList;
     }
-
 
     public void draw(Graphics g) {
         g.setColor(drawingColor);
-        g.drawLine(startingPointX, startingPointY, endingPointX, endingPointY);
+
+        // iterate trough drawn points and draw them
+        for (int i = 0; i < drawingPoints.size() - 1; i++) {
+            g.drawLine(drawingPoints.get(i).x, drawingPoints.get(i).y, drawingPoints.get(i+1).x, drawingPoints.get(i+1).y);
+        }
     }
 }
 
