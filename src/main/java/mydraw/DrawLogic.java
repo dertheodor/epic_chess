@@ -3,12 +3,12 @@ package mydraw;
 import java.awt.event.MouseEvent;
 
 // if this class is active, the mouse is interpreted as a pen
-class ScribDrawer extends ShapeDrawer {
+class ScribbleDrawerLogic extends ShapeDrawer {
     int lastx, lasty;
     DrawGUI gui;
     CommandQueue cQ;
 
-    public ScribDrawer(DrawGUI itsGui, CommandQueue coQ) {
+    public ScribbleDrawerLogic(DrawGUI itsGui, CommandQueue coQ) {
         gui = itsGui;
         cQ = coQ;
     }
@@ -32,13 +32,13 @@ class ScribDrawer extends ShapeDrawer {
 }
 
 // if this class is active, rectangles are drawn
-class RectDrawer extends ShapeDrawer {
+class RectangleDrawerLogic extends ShapeDrawer {
     DrawGUI gui;
     CommandQueue cQ;
     int pressx, pressy;
     int lastx = -1, lasty = -1;
 
-    public RectDrawer(DrawGUI itsGui, CommandQueue coQ) {
+    public RectangleDrawerLogic(DrawGUI itsGui, CommandQueue coQ) {
         gui = itsGui;
         cQ = coQ;
     }
@@ -105,11 +105,11 @@ class RectDrawer extends ShapeDrawer {
 }
 
 // if this class is active, ovals are drawn
-class OvDrawer extends RectDrawer {
+class OvalDrawerLogicLogic extends RectangleDrawerLogic {
     DrawGUI gui;
     CommandQueue cQ;
 
-    public OvDrawer(DrawGUI itsGui, CommandQueue coQ) {
+    public OvalDrawerLogicLogic(DrawGUI itsGui, CommandQueue coQ) {
         super(itsGui, coQ);
         gui = itsGui;
         cQ = coQ;
