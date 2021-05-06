@@ -15,7 +15,7 @@ class ShapeManager implements ItemListener {
     CommandQueue cQ;
     ScribbleDrawerLogic scribbleDrawerLogic;
     RectangleDrawerLogic rectangleDrawerLogic;
-    OvalDrawerLogicLogic ovalDrawerLogic;
+    OvalDrawerLogic ovalDrawerLogic;
     ShapeDrawer currentDrawer;
 
     // constructor
@@ -25,7 +25,7 @@ class ShapeManager implements ItemListener {
 
         scribbleDrawerLogic = new ScribbleDrawerLogic(itsGui, cQ);
         rectangleDrawerLogic = new RectangleDrawerLogic(itsGui, cQ);
-        ovalDrawerLogic = new OvalDrawerLogicLogic(itsGui, cQ);
+        ovalDrawerLogic = new OvalDrawerLogic(itsGui, cQ);
 
         gui = itsGui;
         // default: scribble mode

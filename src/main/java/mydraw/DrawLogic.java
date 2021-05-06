@@ -105,11 +105,11 @@ class RectangleDrawerLogic extends ShapeDrawer {
 }
 
 // if this class is active, ovals are drawn
-class OvalDrawerLogicLogic extends RectangleDrawerLogic {
+class OvalDrawerLogic extends RectangleDrawerLogic {
     DrawGUI gui;
     CommandQueue cQ;
 
-    public OvalDrawerLogicLogic(DrawGUI itsGui, CommandQueue coQ) {
+    public OvalDrawerLogic(DrawGUI itsGui, CommandQueue coQ) {
         super(itsGui, coQ);
         gui = itsGui;
         cQ = coQ;
