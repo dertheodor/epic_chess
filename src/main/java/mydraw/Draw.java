@@ -55,6 +55,26 @@ class DrawGUI extends JFrame {
     // init ShapeManager
     ShapeManager shapeManager;
 
+    class DrawingPanel extends JPanel {
+
+        @Override
+        public void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            g.drawImage(bufferImg, -9, -67, null);
+            if (windowHeight != getHeight() || windowWidth != getWidth()) {
+                BufferedImage newBufferImg = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
+                Graphics newBufferG = newBufferImg.getGraphics();
+                newBufferG.fillRect(0, 0, bufferImg.getWidth(), bufferImg.getHeight());
+                bufferImg = newBufferImg;
+                bufferG = newBufferG;
+                windowWidth = getWidth();
+                windowHeight = getHeight();
+
+            }
+        }
+
+    }
+
     /**
      * The GUI constructor does all the work of creating the GUI and setting
      * up event listeners.  Note the use of local and anonymous classes.
@@ -113,7 +133,7 @@ class DrawGUI extends JFrame {
         this.add(headerPanel, BorderLayout.PAGE_START);
 
         // create drawing panel and add components to it
-        drawingPanel = new JPanel();
+        drawingPanel = new DrawingPanel();
         this.add(drawingPanel, BorderLayout.CENTER);
 
         // Create BufferedImage
@@ -401,7 +421,7 @@ class DrawGUI extends JFrame {
                 Color.white, Color.lightGray, Color.gray, Color.darkGray,
                 Color.black, Color.red, Color.pink, Color.orange, Color.yellow,
                 Color.green, Color.magenta, Color.cyan, Color.blue};
-        int fakePI = (int)Math.PI;
+        int fakePI = (int) Math.PI;
 
         // for every available color from java.awt.Color draw all available "shapes"
         for (int x = 0; x < 13; x++) {
