@@ -46,7 +46,7 @@ public class Draw {
 class DrawGUI extends JFrame {
     Draw app;      // A reference to the application, to send commands to.
     Color color;
-    public static BufferedImage bufferImg;
+    BufferedImage bufferImg;
     Graphics bufferG;
     JPanel drawingPanel;
     int windowWidth;
@@ -64,12 +64,13 @@ class DrawGUI extends JFrame {
             if (windowHeight != getHeight() || windowWidth != getWidth()) {
                 BufferedImage newBufferImg = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
                 Graphics newBufferG = newBufferImg.getGraphics();
-                newBufferG.fillRect(0, 0, bufferImg.getWidth(), bufferImg.getHeight());
+                newBufferG.setColor(Color.white);
+                newBufferG.fillRect(0, 0, newBufferImg.getWidth(), newBufferImg.getHeight());
+                newBufferG.drawImage(bufferImg, 0, 0, null);
                 bufferImg = newBufferImg;
                 bufferG = newBufferG;
                 windowWidth = getWidth();
                 windowHeight = getHeight();
-
             }
         }
 
@@ -241,7 +242,6 @@ class DrawGUI extends JFrame {
     public void setWidth(int width) {
         if (width > 0) {
             this.setSize(width, this.getHeight());
-            //TODO Add update for Buffer
         } else {
             JOptionPane.showMessageDialog(null,
                     "Height not valid",
@@ -407,9 +407,8 @@ class DrawGUI extends JFrame {
      * API method: clears the contents of the bufferImg
      */
     public void clear() {
-        Graphics bufferImgGraphics = bufferImg.getGraphics();
-        bufferImgGraphics.setColor(Color.white);
-        bufferImgGraphics.fillRect(0, 0, bufferImg.getWidth(), bufferImg.getHeight());
+        bufferG.setColor(Color.white);
+        bufferG.fillRect(0, 0, bufferImg.getWidth(), bufferImg.getHeight());
         drawingPanel.getGraphics().drawImage(bufferImg, -9, -67, null);
     }
 

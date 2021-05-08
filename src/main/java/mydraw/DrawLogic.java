@@ -40,7 +40,7 @@ class ScribbleDrawerLogic extends ShapeDrawer {
         gui.bufferG.setColor(gui.getBackground());
         // iterate trough drawn points and draw them
         for (int i = 0; i < pointArrayList.size() - 1; i++) {
-            gui.bufferG.drawLine(pointArrayList.get(i).x, pointArrayList.get(i).y, pointArrayList.get(i+1).x, pointArrayList.get(i+1).y);
+            gui.bufferG.drawLine(pointArrayList.get(i).x, pointArrayList.get(i).y, pointArrayList.get(i + 1).x, pointArrayList.get(i + 1).y);
         }
         
         Drawable scribble = new ScribbleDrawer(pointArrayList, gui.color);
