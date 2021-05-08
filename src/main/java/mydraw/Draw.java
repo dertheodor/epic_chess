@@ -10,9 +10,12 @@ package mydraw;
 // *** behavior is similiar but not equal ! (Why?)
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -116,6 +119,11 @@ class DrawGUI extends JFrame {
         JButton clear = new JButton("Clear");
         JButton autoDraw = new JButton("Auto");
         JButton save = new JButton("Save");
+        JFileChooser saveFileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+        // set default name
+        saveFileChooser.setSelectedFile(new File("drawing.bmp"));
+        // only show bmp files
+        saveFileChooser.setFileFilter(new FileNameExtensionFilter("Bitmap (BMP)", "bmp"));
         JButton quit = new JButton("Quit");
 
         // create header panel and add components to it
@@ -144,16 +152,24 @@ class DrawGUI extends JFrame {
         bufferG.fillRect(0, 0, bufferImg.getWidth(), bufferImg.getHeight());
 
         // Define mouseListener for saving
-        // init imageCounter so multiple files can be saved
-        final int[] imageCounter = {0};
         save.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                try {
-                    imageCounter[0]++;
-                    writeImage(getDrawing(), "drawing" + imageCounter[0] + ".bmp");
-                } catch (IOException ioException) {
-                    ioException.printStackTrace();
+                // init modal on button press and save its return value for further processing
+                int returnValue = saveFileChooser.showSaveDialog(drawingPanel);
+
+                // triggered when save button is pressed
+                if (returnValue == JFileChooser.APPROVE_OPTION) {
+                    String filename = saveFileChooser.getSelectedFile().toString();
+                    // ensure that the file is saved as a bitmap
+                    if (!filename.endsWith(".bmp")) {
+                        filename += ".bmp";
+                    }
+                    try {
+                        writeImage(getDrawing(), filename);
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    }
                 }
             }
         });
