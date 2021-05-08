@@ -61,10 +61,11 @@ class DrawGUI extends JFrame {
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
             g.drawImage(bufferImg, -9, -67, null);
+            // check if height or width changed
             if (windowHeight != getHeight() || windowWidth != getWidth()) {
                 BufferedImage newBufferImg = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
                 Graphics newBufferG = newBufferImg.getGraphics();
-                newBufferG.setColor(Color.white);
+                //newBufferG.setColor(Color.white); TODO is this needed?
                 newBufferG.fillRect(0, 0, newBufferImg.getWidth(), newBufferImg.getHeight());
                 newBufferG.drawImage(bufferImg, 0, 0, null);
                 bufferImg = newBufferImg;
@@ -216,7 +217,6 @@ class DrawGUI extends JFrame {
     public void setHeight(int height) {
         if (height > 0) {
             this.setSize(this.getWidth(), height);
-            //TODO Add update for Buffer
         } else {
             JOptionPane.showMessageDialog(null,
                     "Height not valid",
