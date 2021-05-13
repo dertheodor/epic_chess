@@ -74,7 +74,7 @@ class OvalDrawer implements Drawable {
     }
 }
 
-class Filled3DRect implements Drawable {
+class Filled3DRectDrawer implements Drawable {
     private int startingPointX;
     private int startingPointY;
     private int rectangleWidth;
@@ -82,7 +82,7 @@ class Filled3DRect implements Drawable {
     private Color drawingColor;
     private boolean raisedBool;
 
-    public Filled3DRect(int upperLeftX, int upperLeftY, int lowerRightX, int lowerRightY, Color color, boolean raised) {
+    public Filled3DRectDrawer(int upperLeftX, int upperLeftY, int lowerRightX, int lowerRightY, Color color, boolean raised) {
         startingPointX = Math.min(upperLeftX, lowerRightX);
         startingPointY = Math.min(upperLeftY, lowerRightY);
         rectangleWidth = Math.abs(lowerRightX - upperLeftX);
@@ -96,6 +96,33 @@ class Filled3DRect implements Drawable {
         g.setColor(drawingColor);
         // draw oval
         g.fill3DRect(startingPointX, startingPointY, rectangleWidth, rectangleHeight, raisedBool);
+    }
+}
+
+class RoundRectDrawer implements Drawable {
+    private int startingPointX;
+    private int startingPointY;
+    private int rectangleWidth;
+    private int rectangleHeight;
+    private Color drawingColor;
+    private int arcWidth;
+    private int arcHeight;
+
+    public RoundRectDrawer(int upperLeftX, int upperLeftY, int lowerRightX, int lowerRightY, Color color, int arcW, int arcH) {
+        startingPointX = Math.min(upperLeftX, lowerRightX);
+        startingPointY = Math.min(upperLeftY, lowerRightY);
+        rectangleWidth = Math.abs(lowerRightX - upperLeftX);
+        rectangleHeight = Math.abs(lowerRightY - upperLeftY);
+        drawingColor = color;
+        arcWidth = arcW;
+        arcHeight = arcH;
+    }
+
+    public void draw(Graphics g) {
+        // set drawing color
+        g.setColor(drawingColor);
+        // draw oval
+        g.drawRoundRect(startingPointX, startingPointY, rectangleWidth, rectangleHeight, arcWidth, arcHeight);
     }
 }
 
