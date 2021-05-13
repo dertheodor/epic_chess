@@ -90,7 +90,7 @@ class DrawGUI extends JFrame {
         app = application;    // Remember the application reference
         fgColor = Color.black;  // the current drawing color
         bgColor = Color.white;  // the current background color
-        windowWidth = 700;
+        windowWidth = 750;
         windowHeight = 550;
 
         // instantiate ShapeManager
@@ -100,7 +100,7 @@ class DrawGUI extends JFrame {
         this.setLayout(new BorderLayout());
 
         // drawing modes and its JComboBox
-        String[] shapes = {"Scribble", "Rectangle", "Oval"};
+        String[] shapes = {"Scribble", "Rectangle", "Oval", "Filled 3DRect"};
         JComboBox<String> comboBoxDrawingModes = new JComboBox<>(shapes);
         comboBoxDrawingModes.addItemListener(shapeManager);
 

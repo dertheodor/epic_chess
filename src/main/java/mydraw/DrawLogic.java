@@ -152,3 +152,33 @@ class OvalDrawerLogic extends RectangleDrawerLogic {
     }
 }
 
+// if this class is active, Filled 3DRect are drawn
+class Filled3DRectDrawerLogic extends RectangleDrawerLogic {
+    DrawGUI gui;
+    CommandQueue cQ;
+
+    public Filled3DRectDrawerLogic(DrawGUI itsGui, CommandQueue coQ) {
+        super(itsGui, coQ);
+        gui = itsGui;
+        cQ = coQ;
+    }
+
+    public void doDraw(int x0, int y0, int x1, int y1) {
+        int x = Math.min(x0, x1);
+        int y = Math.min(y0, y1);
+        int w = Math.abs(x1 - x0);
+        int h = Math.abs(y1 - y0);
+        // draw oval instead of rectangle
+        gui.bufferG.fill3DRect(x,y,w,h,true);
+        // draw image from buffer to gui
+        gui.drawingPanel.getGraphics().drawImage(gui.bufferImg, -9, -67, null);
+    }
+
+    @Override
+    public void drawForRealNow(int x0, int y0, int x1, int y1) {
+        // create oval
+        Drawable threeDRect = new Filled3DRect(x0, y0, x1, y1, gui.fgColor, true);
+        // add oval to queue
+        cQ.addToRequestQueue(threeDRect);
+    }
+}

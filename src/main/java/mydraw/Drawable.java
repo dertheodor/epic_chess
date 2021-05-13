@@ -74,3 +74,28 @@ class OvalDrawer implements Drawable {
     }
 }
 
+class Filled3DRect implements Drawable {
+    private int startingPointX;
+    private int startingPointY;
+    private int rectangleWidth;
+    private int rectangleHeight;
+    private Color drawingColor;
+    private boolean raisedBool;
+
+    public Filled3DRect(int upperLeftX, int upperLeftY, int lowerRightX, int lowerRightY, Color color, boolean raised) {
+        startingPointX = Math.min(upperLeftX, lowerRightX);
+        startingPointY = Math.min(upperLeftY, lowerRightY);
+        rectangleWidth = Math.abs(lowerRightX - upperLeftX);
+        rectangleHeight = Math.abs(lowerRightY - upperLeftY);
+        drawingColor = color;
+        raisedBool = raised;
+    }
+
+    public void draw(Graphics g) {
+        // set drawing color
+        g.setColor(drawingColor);
+        // draw oval
+        g.fill3DRect(startingPointX, startingPointY, rectangleWidth, rectangleHeight, raisedBool);
+    }
+}
+

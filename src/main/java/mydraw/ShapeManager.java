@@ -16,6 +16,7 @@ class ShapeManager implements ItemListener {
     ScribbleDrawerLogic scribbleDrawerLogic;
     RectangleDrawerLogic rectangleDrawerLogic;
     OvalDrawerLogic ovalDrawerLogic;
+    Filled3DRectDrawerLogic threeDRectDrawerLogic;
     ShapeDrawer currentDrawer;
 
     // constructor
@@ -26,6 +27,7 @@ class ShapeManager implements ItemListener {
         scribbleDrawerLogic = new ScribbleDrawerLogic(itsGui, cQ);
         rectangleDrawerLogic = new RectangleDrawerLogic(itsGui, cQ);
         ovalDrawerLogic = new OvalDrawerLogic(itsGui, cQ);
+        threeDRectDrawerLogic = new Filled3DRectDrawerLogic(itsGui, cQ);
 
         gui = itsGui;
         // default: scribble mode
@@ -56,6 +58,7 @@ class ShapeManager implements ItemListener {
         itemToDrawer.put("Scribble", scribbleDrawerLogic);
         itemToDrawer.put("Rectangle", rectangleDrawerLogic);
         itemToDrawer.put("Oval", ovalDrawerLogic);
+        itemToDrawer.put("Filled 3DRect", threeDRectDrawerLogic);
         setCurrentDrawer(itemToDrawer.get(e.getItem().toString()));
     }
 }
