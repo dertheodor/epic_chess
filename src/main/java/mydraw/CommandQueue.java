@@ -42,7 +42,7 @@ public class CommandQueue {
     public void workOffRequests(List<Drawable> queue) {
         for (Drawable drawable : queue) {
             // draw drawable object
-            drawable.draw(DrawGUI.bufferImg.getGraphics());
+            drawable.draw(drawGUI.bufferImg.getGraphics());
             drawGUI.updateCanvas();
             // add drawable to undoList
             undoList.add(drawable);

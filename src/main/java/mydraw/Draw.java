@@ -10,9 +10,12 @@ package mydraw;
 // *** behavior is similiar but not equal ! (Why?)
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,8 +48,9 @@ public class Draw {
  */
 class DrawGUI extends JFrame {
     Draw app;      // A reference to the application, to send commands to.
-    Color color;
-    public static BufferedImage bufferImg;
+    Color fgColor;
+    Color bgColor;
+    BufferedImage bufferImg;
     Graphics bufferG;
     JPanel drawingPanel;
     int windowWidth;
@@ -55,6 +59,28 @@ class DrawGUI extends JFrame {
     // init ShapeManager
     ShapeManager shapeManager;
 
+    class DrawingPanel extends JPanel {
+
+        @Override
+        public void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            g.drawImage(bufferImg, -9, -67, null);
+            // check if height or width changed
+            if (windowHeight != getHeight() || windowWidth != getWidth()) {
+                BufferedImage newBufferImg = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
+                Graphics newBufferG = newBufferImg.getGraphics();
+                //newBufferG.setColor(Color.white); TODO is this needed?
+                newBufferG.fillRect(0, 0, newBufferImg.getWidth(), newBufferImg.getHeight());
+                newBufferG.drawImage(bufferImg, 0, 0, null);
+                bufferImg = newBufferImg;
+                bufferG = newBufferG;
+                windowWidth = getWidth();
+                windowHeight = getHeight();
+            }
+        }
+
+    }
+
     /**
      * The GUI constructor does all the work of creating the GUI and setting
      * up event listeners.  Note the use of local and anonymous classes.
@@ -62,9 +88,10 @@ class DrawGUI extends JFrame {
     public DrawGUI(Draw application) {
         super("Draw");        // Create the window
         app = application;    // Remember the application reference
-        color = Color.black;  // the current drawing color
-        windowWidth = 550;
-        windowHeight = 440;
+        fgColor = Color.black;  // the current drawing color
+        bgColor = Color.white;  // the current background color
+        windowWidth = 700;
+        windowHeight = 550;
 
         // instantiate ShapeManager
         shapeManager = new ShapeManager(this);
@@ -85,15 +112,40 @@ class DrawGUI extends JFrame {
 
             // user selected new color => store new color in DrawGUIs
             public void itemStateChanged(ItemEvent e) {
-                color = colorSwitchHelper(e.getItem().toString());
+                fgColor = colorSwitchHelper(e.getItem().toString());
             }
         }
+        // set default drawing color
+        comboBoxDrawingColors.getModel().setSelectedItem("Black");
         comboBoxDrawingColors.addItemListener(new ColorItemListener());
+
+        // background colors JComboBox
+        JComboBox<String> comboBoxBackgroundColors = new JComboBox<>(colors);
+        class BackgroundColorItemListener implements ItemListener {
+
+            // user selected new color => store new color in DrawGUIs
+            public void itemStateChanged(ItemEvent e) {
+                // set bg color so clearing sets background to selected color
+                bgColor = colorSwitchHelper(e.getItem().toString());
+                bufferG.setColor(colorSwitchHelper(e.getItem().toString()));
+                bufferG.fillRect(0, 0, bufferImg.getWidth(), bufferImg.getHeight());
+                updateCanvas();
+            }
+        }
+        // set default background color
+        comboBoxBackgroundColors.getModel().setSelectedItem("White");
+        comboBoxBackgroundColors.addItemListener(new BackgroundColorItemListener());
+
 
         // header JButtons
         JButton clear = new JButton("Clear");
         JButton autoDraw = new JButton("Auto");
         JButton save = new JButton("Save");
+        JFileChooser saveFileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+        // set default name
+        saveFileChooser.setSelectedFile(new File("drawing.bmp"));
+        // only show bmp files
+        saveFileChooser.setFileFilter(new FileNameExtensionFilter("Bitmap (BMP)", "bmp"));
         JButton quit = new JButton("Quit");
 
         // create header panel and add components to it
@@ -104,6 +156,8 @@ class DrawGUI extends JFrame {
         headerPanel.add(comboBoxDrawingModes);
         headerPanel.add(new JLabel("Color:"));
         headerPanel.add(comboBoxDrawingColors);
+        headerPanel.add(new JLabel("BG Color:"));
+        headerPanel.add(comboBoxBackgroundColors);
         headerPanel.add(clear);
         headerPanel.add(autoDraw);
         headerPanel.add(save);
@@ -113,25 +167,33 @@ class DrawGUI extends JFrame {
         this.add(headerPanel, BorderLayout.PAGE_START);
 
         // create drawing panel and add components to it
-        drawingPanel = new JPanel();
+        drawingPanel = new DrawingPanel();
         this.add(drawingPanel, BorderLayout.CENTER);
 
         // Create BufferedImage
-        bufferImg = new BufferedImage(windowWidth, windowHeight, BufferedImage.TYPE_INT_RGB);
+        bufferImg = new BufferedImage(windowWidth - (windowWidth / 46), windowHeight - (windowHeight / 7), BufferedImage.TYPE_INT_RGB);
         bufferG = bufferImg.getGraphics();
         bufferG.fillRect(0, 0, bufferImg.getWidth(), bufferImg.getHeight());
 
         // Define mouseListener for saving
-        // init imageCounter so multiple files can be saved
-        final int[] imageCounter = {0};
         save.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                try {
-                    imageCounter[0]++;
-                    writeImage(getDrawing(), "drawing" + imageCounter[0] + ".bmp");
-                } catch (IOException ioException) {
-                    ioException.printStackTrace();
+                // init modal on button press and save its return value for further processing
+                int returnValue = saveFileChooser.showSaveDialog(drawingPanel);
+
+                // triggered when save button is pressed
+                if (returnValue == JFileChooser.APPROVE_OPTION) {
+                    String filename = saveFileChooser.getSelectedFile().toString();
+                    // ensure that the file is saved as a bitmap
+                    if (!filename.endsWith(".bmp")) {
+                        filename += ".bmp";
+                    }
+                    try {
+                        writeImage(getDrawing(), filename);
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    }
                 }
             }
         });
@@ -195,7 +257,6 @@ class DrawGUI extends JFrame {
     public void setHeight(int height) {
         if (height > 0) {
             this.setSize(this.getWidth(), height);
-            //TODO Add update for Buffer
         } else {
             JOptionPane.showMessageDialog(null,
                     "Height not valid",
@@ -221,7 +282,6 @@ class DrawGUI extends JFrame {
     public void setWidth(int width) {
         if (width > 0) {
             this.setSize(width, this.getHeight());
-            //TODO Add update for Buffer
         } else {
             JOptionPane.showMessageDialog(null,
                     "Height not valid",
@@ -272,7 +332,7 @@ class DrawGUI extends JFrame {
      */
     public void setFGColor(String new_color) throws ColorException {
         String new_color_lowercase = new_color.toLowerCase();
-        color = colorSwitchHelper(new_color_lowercase);
+        fgColor = colorSwitchHelper(new_color_lowercase);
     }
 
     /**
@@ -332,7 +392,7 @@ class DrawGUI extends JFrame {
      * @return the currently selected drawing color
      */
     public String getFGColor() {
-        return colorHashMapHelper(this.color.toString());
+        return colorHashMapHelper(this.fgColor.toString());
     }
 
     /**
@@ -387,9 +447,8 @@ class DrawGUI extends JFrame {
      * API method: clears the contents of the bufferImg
      */
     public void clear() {
-        Graphics bufferImgGraphics = bufferImg.getGraphics();
-        bufferImgGraphics.setColor(Color.white);
-        bufferImgGraphics.fillRect(0, 0, bufferImg.getWidth(), bufferImg.getHeight());
+        bufferG.setColor(bgColor);
+        bufferG.fillRect(0, 0, bufferImg.getWidth(), bufferImg.getHeight());
         drawingPanel.getGraphics().drawImage(bufferImg, -9, -67, null);
     }
 
@@ -401,11 +460,11 @@ class DrawGUI extends JFrame {
                 Color.white, Color.lightGray, Color.gray, Color.darkGray,
                 Color.black, Color.red, Color.pink, Color.orange, Color.yellow,
                 Color.green, Color.magenta, Color.cyan, Color.blue};
-        int fakePI = (int)Math.PI;
+        int fakePI = (int) Math.PI;
 
         // for every available color from java.awt.Color draw all available "shapes"
         for (int x = 0; x < 13; x++) {
-            color = availableColorsArray[x];
+            fgColor = availableColorsArray[x];
             int offset = fakePI * x;
 
             // auto draw rectangle
@@ -422,7 +481,7 @@ class DrawGUI extends JFrame {
             drawPolyLine(pointList);
         }
         // after autoDraw set back color to default
-        color = Color.black;
+        fgColor = Color.black;
     }
 
 
@@ -437,7 +496,7 @@ class DrawGUI extends JFrame {
         int w = lower_right.x - upper_left.x;
         int h = lower_right.y - upper_left.y;
         // set color
-        bufferG.setColor(this.color);
+        bufferG.setColor(this.fgColor);
         // draw rectangle
         bufferG.drawRect(upper_left.x, upper_left.y, w, h);
         // draw image from buffer to gui
@@ -455,7 +514,7 @@ class DrawGUI extends JFrame {
         int w = lower_right.x - upper_left.x;
         int h = lower_right.y - upper_left.y;
         // set color
-        bufferG.setColor(this.color);
+        bufferG.setColor(this.fgColor);
         // draw rectangle
         bufferG.drawOval(upper_left.x, upper_left.y, w, h);
         // draw image from buffer to gui
@@ -473,7 +532,7 @@ class DrawGUI extends JFrame {
             bufferG.drawLine(points.get(i).x, points.get(i).y, points.get(i + 1).x, points.get(i + 1).y);
         }
         // set color
-        bufferG.setColor(this.color);
+        bufferG.setColor(this.fgColor);
         // draw image from buffer to gui
         drawingPanel.getGraphics().drawImage(bufferImg, -9, -67, null);
     }
