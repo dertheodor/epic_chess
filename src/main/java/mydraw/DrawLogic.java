@@ -152,7 +152,7 @@ class OvalDrawerLogic extends RectangleDrawerLogic {
     }
 }
 
-// if this class is active, Filled 3DRect are drawn
+// if this class is active, filled 3DRects are drawn
 class Filled3DRectDrawerLogic extends RectangleDrawerLogic {
     DrawGUI gui;
     CommandQueue cQ;
@@ -183,7 +183,7 @@ class Filled3DRectDrawerLogic extends RectangleDrawerLogic {
     }
 }
 
-// if this class is active, Filled 3DRect are drawn
+// if this class is active, round rectangles are drawn
 class RoundRectDrawerLogic extends RectangleDrawerLogic {
     DrawGUI gui;
     CommandQueue cQ;
