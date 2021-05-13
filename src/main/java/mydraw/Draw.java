@@ -48,7 +48,8 @@ public class Draw {
  */
 class DrawGUI extends JFrame {
     Draw app;      // A reference to the application, to send commands to.
-    Color color;
+    Color fgColor;
+    Color bgColor;
     BufferedImage bufferImg;
     Graphics bufferG;
     JPanel drawingPanel;
@@ -87,9 +88,10 @@ class DrawGUI extends JFrame {
     public DrawGUI(Draw application) {
         super("Draw");        // Create the window
         app = application;    // Remember the application reference
-        color = Color.black;  // the current drawing color
-        windowWidth = 550;
-        windowHeight = 440;
+        fgColor = Color.black;  // the current drawing color
+        bgColor = Color.white;  // the current background color
+        windowWidth = 700;
+        windowHeight = 550;
 
         // instantiate ShapeManager
         shapeManager = new ShapeManager(this);
@@ -110,10 +112,30 @@ class DrawGUI extends JFrame {
 
             // user selected new color => store new color in DrawGUIs
             public void itemStateChanged(ItemEvent e) {
-                color = colorSwitchHelper(e.getItem().toString());
+                fgColor = colorSwitchHelper(e.getItem().toString());
             }
         }
+        // set default drawing color
+        comboBoxDrawingColors.getModel().setSelectedItem("Black");
         comboBoxDrawingColors.addItemListener(new ColorItemListener());
+
+        // background colors JComboBox
+        JComboBox<String> comboBoxBackgroundColors = new JComboBox<>(colors);
+        class BackgroundColorItemListener implements ItemListener {
+
+            // user selected new color => store new color in DrawGUIs
+            public void itemStateChanged(ItemEvent e) {
+                // set bg color so clearing sets background to selected color
+                bgColor = colorSwitchHelper(e.getItem().toString());
+                bufferG.setColor(colorSwitchHelper(e.getItem().toString()));
+                bufferG.fillRect(0, 0, bufferImg.getWidth(), bufferImg.getHeight());
+                updateCanvas();
+            }
+        }
+        // set default background color
+        comboBoxBackgroundColors.getModel().setSelectedItem("White");
+        comboBoxBackgroundColors.addItemListener(new BackgroundColorItemListener());
+
 
         // header JButtons
         JButton clear = new JButton("Clear");
@@ -134,6 +156,8 @@ class DrawGUI extends JFrame {
         headerPanel.add(comboBoxDrawingModes);
         headerPanel.add(new JLabel("Color:"));
         headerPanel.add(comboBoxDrawingColors);
+        headerPanel.add(new JLabel("BG Color:"));
+        headerPanel.add(comboBoxBackgroundColors);
         headerPanel.add(clear);
         headerPanel.add(autoDraw);
         headerPanel.add(save);
@@ -147,7 +171,7 @@ class DrawGUI extends JFrame {
         this.add(drawingPanel, BorderLayout.CENTER);
 
         // Create BufferedImage
-        bufferImg = new BufferedImage(windowWidth, windowHeight, BufferedImage.TYPE_INT_RGB);
+        bufferImg = new BufferedImage(windowWidth - (windowWidth / 46), windowHeight - (windowHeight / 7), BufferedImage.TYPE_INT_RGB);
         bufferG = bufferImg.getGraphics();
         bufferG.fillRect(0, 0, bufferImg.getWidth(), bufferImg.getHeight());
 
@@ -308,7 +332,7 @@ class DrawGUI extends JFrame {
      */
     public void setFGColor(String new_color) throws ColorException {
         String new_color_lowercase = new_color.toLowerCase();
-        color = colorSwitchHelper(new_color_lowercase);
+        fgColor = colorSwitchHelper(new_color_lowercase);
     }
 
     /**
@@ -368,7 +392,7 @@ class DrawGUI extends JFrame {
      * @return the currently selected drawing color
      */
     public String getFGColor() {
-        return colorHashMapHelper(this.color.toString());
+        return colorHashMapHelper(this.fgColor.toString());
     }
 
     /**
@@ -423,7 +447,7 @@ class DrawGUI extends JFrame {
      * API method: clears the contents of the bufferImg
      */
     public void clear() {
-        bufferG.setColor(Color.white);
+        bufferG.setColor(bgColor);
         bufferG.fillRect(0, 0, bufferImg.getWidth(), bufferImg.getHeight());
         drawingPanel.getGraphics().drawImage(bufferImg, -9, -67, null);
     }
@@ -440,7 +464,7 @@ class DrawGUI extends JFrame {
 
         // for every available color from java.awt.Color draw all available "shapes"
         for (int x = 0; x < 13; x++) {
-            color = availableColorsArray[x];
+            fgColor = availableColorsArray[x];
             int offset = fakePI * x;
 
             // auto draw rectangle
@@ -457,7 +481,7 @@ class DrawGUI extends JFrame {
             drawPolyLine(pointList);
         }
         // after autoDraw set back color to default
-        color = Color.black;
+        fgColor = Color.black;
     }
 
 
@@ -472,7 +496,7 @@ class DrawGUI extends JFrame {
         int w = lower_right.x - upper_left.x;
         int h = lower_right.y - upper_left.y;
         // set color
-        bufferG.setColor(this.color);
+        bufferG.setColor(this.fgColor);
         // draw rectangle
         bufferG.drawRect(upper_left.x, upper_left.y, w, h);
         // draw image from buffer to gui
@@ -490,7 +514,7 @@ class DrawGUI extends JFrame {
         int w = lower_right.x - upper_left.x;
         int h = lower_right.y - upper_left.y;
         // set color
-        bufferG.setColor(this.color);
+        bufferG.setColor(this.fgColor);
         // draw rectangle
         bufferG.drawOval(upper_left.x, upper_left.y, w, h);
         // draw image from buffer to gui
@@ -508,7 +532,7 @@ class DrawGUI extends JFrame {
             bufferG.drawLine(points.get(i).x, points.get(i).y, points.get(i + 1).x, points.get(i + 1).y);
         }
         // set color
-        bufferG.setColor(this.color);
+        bufferG.setColor(this.fgColor);
         // draw image from buffer to gui
         drawingPanel.getGraphics().drawImage(bufferImg, -9, -67, null);
     }

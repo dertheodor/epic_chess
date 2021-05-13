@@ -26,7 +26,7 @@ class ScribbleDrawerLogic extends ShapeDrawer {
     public void mouseDragged(MouseEvent e) {
         int x = e.getX(), y = e.getY();
         // draw points whilst in "rubberband" mode
-        gui.bufferG.setColor(gui.color);
+        gui.bufferG.setColor(gui.fgColor);
         gui.bufferG.drawLine(lastx, lasty, x, y);
         gui.drawingPanel.getGraphics().drawImage(gui.bufferImg, -9, -67, null);
 
@@ -43,7 +43,7 @@ class ScribbleDrawerLogic extends ShapeDrawer {
             gui.bufferG.drawLine(pointArrayList.get(i).x, pointArrayList.get(i).y, pointArrayList.get(i + 1).x, pointArrayList.get(i + 1).y);
         }
         
-        Drawable scribble = new ScribbleDrawer(pointArrayList, gui.color);
+        Drawable scribble = new ScribbleDrawer(pointArrayList, gui.fgColor);
         cQ.addToRequestQueue(scribble);
     }
 }
@@ -71,7 +71,7 @@ class RectangleDrawerLogic extends ShapeDrawer {
     public void mouseReleased(MouseEvent e) {
         if (lastx != -1) {
             // first undraw a rubber rect
-            gui.bufferG.setXORMode(gui.color);
+            gui.bufferG.setXORMode(gui.fgColor);
             gui.bufferG.setColor(gui.getBackground());
             doDraw(pressx, pressy, lastx, lasty);
             lastx = -1;
@@ -79,7 +79,7 @@ class RectangleDrawerLogic extends ShapeDrawer {
         }
         // these commands finish the rubberband mode
         gui.bufferG.setPaintMode();
-        gui.bufferG.setColor(gui.color);
+        gui.bufferG.setColor(gui.fgColor);
         // draw the final rectangle
         //doDraw(pressx, pressy, e.getX(), e.getY());
         drawForRealNow(pressx, pressy, e.getX(), e.getY());
@@ -89,7 +89,7 @@ class RectangleDrawerLogic extends ShapeDrawer {
     // draw the resulting shape in "rubber-band mode"
     public void mouseDragged(MouseEvent e) {
         // these commands set the rubberband mode
-        gui.bufferG.setXORMode(gui.color);
+        gui.bufferG.setXORMode(gui.fgColor);
         gui.bufferG.setColor(gui.getBackground());
         if (lastx != -1) {
             // first undraw previous rubber rect
@@ -115,7 +115,7 @@ class RectangleDrawerLogic extends ShapeDrawer {
 
     public void drawForRealNow(int x0, int y0, int x1, int y1) {
         // create rectangle
-        Drawable rectangle = new RectangleDrawer(x0, y0, x1, y1, gui.color);
+        Drawable rectangle = new RectangleDrawer(x0, y0, x1, y1, gui.fgColor);
         // add rectangle to queue
         cQ.addToRequestQueue(rectangle);
     }
@@ -146,7 +146,7 @@ class OvalDrawerLogic extends RectangleDrawerLogic {
     @Override
     public void drawForRealNow(int x0, int y0, int x1, int y1) {
         // create oval
-        Drawable oval = new OvalDrawer(x0, y0, x1, y1, gui.color);
+        Drawable oval = new OvalDrawer(x0, y0, x1, y1, gui.fgColor);
         // add oval to queue
         cQ.addToRequestQueue(oval);
     }

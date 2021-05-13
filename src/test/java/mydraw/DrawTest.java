@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.nio.Buffer;
 
 public class DrawTest {
     // init Draw and GUI
@@ -41,7 +40,7 @@ public class DrawTest {
     void setFGColorTestPositive() {
         try {
             drawTestGUI.setFGColor("blue");
-            Assertions.assertEquals(Color.blue, drawTestGUI.color);
+            Assertions.assertEquals(Color.blue, drawTestGUI.fgColor);
         } catch (Exception e) {
             Assertions.fail();
         }
