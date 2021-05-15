@@ -226,6 +226,7 @@ class TriangleDrawerLogic extends RectangleDrawerLogic {
     }
 
     public void doDraw(int x0, int y0, int x1, int y1) {
+        // calculate height of triangle
         int heightX = (x0 + (x1 - x0) / 2);
         int heightY = y0 - x1 + x0;
         // first int-array represents the set of x values, second int-array represents the set of y values
@@ -255,6 +256,7 @@ class IsoscelesTriangleDrawerLogic extends RectangleDrawerLogic {
     }
 
     public void doDraw(int x0, int y0, int x1, int y1) {
+        // calculate height of triangle
         int heightX = (x0 + (x1 - x0) / 2);
         int heightY = y0 - x1 + x0;
         // first int-array represents the set of x values, second int-array represents the set of y values
