@@ -18,6 +18,8 @@ class ShapeManager implements ItemListener {
     OvalDrawerLogic ovalDrawerLogic;
     Filled3DRectDrawerLogic threeDRectDrawerLogic;
     RoundRectDrawerLogic roundRectDrawerLogic;
+    TriangleDrawerLogic triangleDrawerLogic;
+    IsoscelesTriangleDrawerLogic isoscelesTriangleDrawerLogic;
     ShapeDrawer currentDrawer;
 
     // constructor
@@ -30,6 +32,8 @@ class ShapeManager implements ItemListener {
         ovalDrawerLogic = new OvalDrawerLogic(itsGui, cQ);
         threeDRectDrawerLogic = new Filled3DRectDrawerLogic(itsGui, cQ);
         roundRectDrawerLogic = new RoundRectDrawerLogic(itsGui, cQ);
+        triangleDrawerLogic = new TriangleDrawerLogic(itsGui, cQ);
+        isoscelesTriangleDrawerLogic = new IsoscelesTriangleDrawerLogic(itsGui, cQ);
 
         gui = itsGui;
         // default: scribble mode
@@ -62,6 +66,8 @@ class ShapeManager implements ItemListener {
         itemToDrawer.put("Oval", ovalDrawerLogic);
         itemToDrawer.put("Filled 3DRect", threeDRectDrawerLogic);
         itemToDrawer.put("Round Rectangle", roundRectDrawerLogic);
+        itemToDrawer.put("Triangle", triangleDrawerLogic);
+        itemToDrawer.put("Isosceles triangle", isoscelesTriangleDrawerLogic);
         setCurrentDrawer(itemToDrawer.get(e.getItem().toString()));
     }
 }

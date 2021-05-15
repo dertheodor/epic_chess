@@ -168,7 +168,7 @@ class Filled3DRectDrawerLogic extends RectangleDrawerLogic {
         int y = Math.min(y0, y1);
         int w = Math.abs(x1 - x0);
         int h = Math.abs(y1 - y0);
-        // draw oval instead of rectangle
+        // draw filled 3DRect instead of rectangle
         gui.bufferG.fill3DRect(x, y, w, h, true);
         // draw image from buffer to gui
         gui.drawingPanel.getGraphics().drawImage(gui.bufferImg, -9, -67, null);
@@ -176,9 +176,9 @@ class Filled3DRectDrawerLogic extends RectangleDrawerLogic {
 
     @Override
     public void drawForRealNow(int x0, int y0, int x1, int y1) {
-        // create oval
+        // create threeDRect
         Drawable threeDRect = new Filled3DRectDrawer(x0, y0, x1, y1, gui.fgColor, true);
-        // add oval to queue
+        // add threeDRect to queue
         cQ.addToRequestQueue(threeDRect);
     }
 }
@@ -199,7 +199,7 @@ class RoundRectDrawerLogic extends RectangleDrawerLogic {
         int y = Math.min(y0, y1);
         int w = Math.abs(x1 - x0);
         int h = Math.abs(y1 - y0);
-        // draw oval instead of rectangle
+        // draw roundRect instead of rectangle
         gui.bufferG.drawRoundRect(x, y, w, h, 50, 50);
         // draw image from buffer to gui
         gui.drawingPanel.getGraphics().drawImage(gui.bufferImg, -9, -67, null);
@@ -207,9 +207,67 @@ class RoundRectDrawerLogic extends RectangleDrawerLogic {
 
     @Override
     public void drawForRealNow(int x0, int y0, int x1, int y1) {
-        // create oval
+        // create threeDRect
         Drawable threeDRect = new RoundRectDrawer(x0, y0, x1, y1, gui.fgColor, 50, 50);
-        // add oval to queue
+        // add threeDRect to queue
         cQ.addToRequestQueue(threeDRect);
+    }
+}
+
+// if this class is active, triangles are drawn
+class TriangleDrawerLogic extends RectangleDrawerLogic {
+    DrawGUI gui;
+    CommandQueue cQ;
+
+    public TriangleDrawerLogic(DrawGUI itsGui, CommandQueue coQ) {
+        super(itsGui, coQ);
+        gui = itsGui;
+        cQ = coQ;
+    }
+
+    public void doDraw(int x0, int y0, int x1, int y1) {
+        int heightX = (x0 + (x1 - x0) / 2);
+        int heightY = y0 - x1 + x0;
+        // first int-array represents the set of x values, second int-array represents the set of y values
+        gui.bufferG.drawPolygon(new int[]{x0, x1, heightX}, new int[]{y0, y1, heightY}, 3);
+        // draw image from buffer to gui
+        gui.drawingPanel.getGraphics().drawImage(gui.bufferImg, -9, -67, null);
+    }
+
+    @Override
+    public void drawForRealNow(int x0, int y0, int x1, int y1) {
+        // create oval
+        Drawable triangle = new TriangleDrawer(x0, y0, x1, y1, gui.fgColor);
+        // add oval to queue
+        cQ.addToRequestQueue(triangle);
+    }
+}
+
+// if this class is active, isosceles triangles are drawn
+class IsoscelesTriangleDrawerLogic extends RectangleDrawerLogic {
+    DrawGUI gui;
+    CommandQueue cQ;
+
+    public IsoscelesTriangleDrawerLogic(DrawGUI itsGui, CommandQueue coQ) {
+        super(itsGui, coQ);
+        gui = itsGui;
+        cQ = coQ;
+    }
+
+    public void doDraw(int x0, int y0, int x1, int y1) {
+        int heightX = (x0 + (x1 - x0) / 2);
+        int heightY = y0 - x1 + x0;
+        // first int-array represents the set of x values, second int-array represents the set of y values
+        gui.bufferG.drawPolygon(new int[]{x0, x1, heightX}, new int[]{y0, y0, heightY}, 3);
+        // draw image from buffer to gui
+        gui.drawingPanel.getGraphics().drawImage(gui.bufferImg, -9, -67, null);
+    }
+
+    @Override
+    public void drawForRealNow(int x0, int y0, int x1, int y1) {
+        // create oval
+        Drawable isoscelesTriangle = new IsoscelesTriangleDrawer(x0, y0, x1, y1, gui.fgColor);
+        // add oval to queue
+        cQ.addToRequestQueue(isoscelesTriangle);
     }
 }

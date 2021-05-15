@@ -23,7 +23,7 @@ class ScribbleDrawer implements Drawable {
 
         // iterate trough drawn points and draw them
         for (int i = 0; i < drawingPoints.size() - 1; i++) {
-            g.drawLine(drawingPoints.get(i).x, drawingPoints.get(i).y, drawingPoints.get(i+1).x, drawingPoints.get(i+1).y);
+            g.drawLine(drawingPoints.get(i).x, drawingPoints.get(i).y, drawingPoints.get(i + 1).x, drawingPoints.get(i + 1).y);
         }
     }
 }
@@ -94,7 +94,7 @@ class Filled3DRectDrawer implements Drawable {
     public void draw(Graphics g) {
         // set drawing color
         g.setColor(drawingColor);
-        // draw oval
+        // draw filled 3d-rectangle
         g.fill3DRect(startingPointX, startingPointY, rectangleWidth, rectangleHeight, raisedBool);
     }
 }
@@ -121,8 +121,61 @@ class RoundRectDrawer implements Drawable {
     public void draw(Graphics g) {
         // set drawing color
         g.setColor(drawingColor);
-        // draw oval
+        // draw round rectangle
         g.drawRoundRect(startingPointX, startingPointY, rectangleWidth, rectangleHeight, arcWidth, arcHeight);
     }
 }
 
+class TriangleDrawer implements Drawable {
+    private int startX;
+    private int startY;
+    private int dragX;
+    private int dragY;
+    private int heightX;
+    private int heightY;
+    private Color drawingColor;
+
+    public TriangleDrawer(int startingPointX, int startingPointY, int draggingPointX, int draggingPointY, Color color) {
+        startX = startingPointX;
+        startY = startingPointY;
+        dragX = draggingPointX;
+        dragY = draggingPointY;
+        heightX = (startX + (dragX - startX) / 2);
+        heightY = startY - dragX + startX;
+        drawingColor = color;
+    }
+
+    public void draw(Graphics g) {
+        // set drawing color
+        g.setColor(drawingColor);
+        // draw triangle
+        g.drawPolygon(new int[]{startX, dragX, heightX}, new int[]{startY, dragY, heightY}, 3);
+    }
+}
+
+class IsoscelesTriangleDrawer implements Drawable {
+    private int startX;
+    private int startY;
+    private int dragX;
+    private int dragY;
+    private int heightX;
+    private int heightY;
+    private Color drawingColor;
+
+    public IsoscelesTriangleDrawer(int startingPointX, int startingPointY, int draggingPointX, int draggingPointY, Color color) {
+        startX = startingPointX;
+        startY = startingPointY;
+        dragX = draggingPointX;
+        dragY = draggingPointY;
+        heightX = (startX + (dragX - startX) / 2);
+        heightY = startY - dragX + startX;
+        drawingColor = color;
+    }
+
+    public void draw(Graphics g) {
+        // set drawing color
+        g.setColor(drawingColor);
+        // draw isosceles triangle
+        g.drawPolygon(new int[]{startX, dragX, heightX}, new int[]{startY, startY, heightY}, 3);
+    }
+}

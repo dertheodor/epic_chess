@@ -100,7 +100,7 @@ class DrawGUI extends JFrame {
         this.setLayout(new BorderLayout());
 
         // drawing modes and its JComboBox
-        String[] shapes = {"Scribble", "Rectangle", "Oval", "Filled 3DRect", "Round Rectangle"};
+        String[] shapes = {"Scribble", "Rectangle", "Oval", "Filled 3DRect", "Round Rectangle", "Triangle", "Isosceles triangle"};
         JComboBox<String> comboBoxDrawingModes = new JComboBox<>(shapes);
         comboBoxDrawingModes.addItemListener(shapeManager);
 
