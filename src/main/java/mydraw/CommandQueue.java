@@ -17,19 +17,15 @@ public class CommandQueue {
     ArrayList<Drawable> undoList;
     ArrayList<Drawable> redoList;
     DrawGUI drawGUI;
-    JButton undo;
-    JButton redo;
 
-    public CommandQueue(DrawGUI itsGui, JButton undoReference, JButton redoReference) {
+    public CommandQueue(DrawGUI itsGui) {
         requestQueue = new LinkedList<Drawable>();
         undoList = new ArrayList<Drawable>();
         redoList = new ArrayList<Drawable>();
         drawGUI = itsGui;
-        undo = undoReference;
-        redo = redoReference;
 
         // Define mouseListener for undoing
-        undo.addMouseListener(new MouseAdapter() {
+        drawGUI.undo.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 undoLastDrawingAction();
@@ -37,35 +33,58 @@ public class CommandQueue {
         });
 
         // Define mouseListener for redoing
-        redo.addMouseListener(new MouseAdapter() {
+        drawGUI.redo.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 redoLastDrawingAction();
             }
         });
 
+        // Define mouseListener for clear
+        drawGUI.clear.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                // clear drawings TODO maybe make clear() so it also can be undone
+                drawGUI.clear();
+                // clear undo queue and set button to disabled
+                undoList.clear();
+                drawGUI.undo.setEnabled(false);
+                // clear redo queue and set button to disabled
+                redoList.clear();
+                drawGUI.redo.setEnabled(false);
+            }
+        });
     }
 
 
     /**
-     * TODO
+     * Undoes the last drawn Drawable
      */
     private void undoLastDrawingAction() {
         if (undoList.size() > 0) {
             Drawable undoOperation = undoList.get(undoList.size() - 1);
-            undoOperation.setDrawingColor(drawGUI.getBackground());
+            undoOperation.setDrawingColor(drawGUI.bgColor);
             undoOperation.draw(drawGUI.bufferG);
             drawGUI.updateCanvas();
+
             redoList.add(undoOperation);
+            // enable redo button as redoList has element in it now
+            drawGUI.redo.setEnabled(true);
+
             undoList.remove(undoOperation);
 
+            // disable undo button as undoList is empty now
+            if (undoList.size() == 0) {
+                drawGUI.undo.setEnabled(false);
+            }
         } else {
-            System.out.println("Theo stinkt");
+            // disable undo button as undoList is empty now
+            drawGUI.undo.setEnabled(false);
         }
     }
 
     /**
-     *
+     * Redoes the last undo action
      */
     private void redoLastDrawingAction() {
         if (redoList.size() > 0) {
@@ -73,10 +92,20 @@ public class CommandQueue {
             latestDrawable.setDrawingColor(latestDrawable.getLegacyColor());
             latestDrawable.draw(drawGUI.bufferG);
             drawGUI.updateCanvas();
+
             undoList.add(latestDrawable);
+            // enable undo button as undoList has element in it now
+            drawGUI.undo.setEnabled(true);
+
             redoList.remove(latestDrawable);
+
+            // disable redo button as redoList is empty now
+            if (redoList.size() == 0) {
+                drawGUI.redo.setEnabled(false);
+            }
         } else {
-            System.out.println("Theo stinkt");
+            // disable redo button as redList is empty now
+            drawGUI.redo.setEnabled(false);
         }
     }
 
@@ -87,6 +116,8 @@ public class CommandQueue {
      * @param drawable Drawing
      */
     public void addToRequestQueue(Drawable drawable) {
+        // enable undo button when first drawable is created
+        drawGUI.undo.setEnabled(true);
         requestQueue.add(drawable);
         workOffRequests(requestQueue);
     }

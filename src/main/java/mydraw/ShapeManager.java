@@ -24,9 +24,9 @@ class ShapeManager implements ItemListener {
     ShapeDrawer currentDrawer;
 
     // constructor
-    public ShapeManager(DrawGUI itsGui, JButton undoButton, JButton redoButton) {
+    public ShapeManager(DrawGUI itsGui) {
         // create new CommandQueue
-        cQ = new CommandQueue(itsGui, undoButton, redoButton);
+        cQ = new CommandQueue(itsGui);
 
         scribbleDrawerLogic = new ScribbleDrawerLogic(itsGui, cQ);
         rectangleDrawerLogic = new RectangleDrawerLogic(itsGui, cQ);
