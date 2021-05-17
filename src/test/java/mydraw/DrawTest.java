@@ -115,17 +115,22 @@ public class DrawTest {
     }
 
     /**
-     * Tests methods: autoDraw, drawRectangle, drawOval, drawPolyLine and getDrawing
+     * Tests methods: autoDraw and all available shapes
      */
     @Test
     void autoDrawTestPositive() {
+        // execute autoDraw()
         drawTestGUI.autoDraw();
         try {
-            drawTestGUI.writeImage(drawTestGUI.getDrawing(), "testing.bmp");
+            // read referenceImg from file
             Image referenceImg = drawTestGUI.readImage("reference.bmp");
             BufferedImage bufferedReferenceImg = imgToBufferedImageHelper(referenceImg);
-            Image compareImg = drawTestGUI.readImage("testing.bmp");
+
+            // create comparison image from current gui
+            Image compareImg = drawTestGUI.getDrawing();
             BufferedImage bufferedCompareImg = imgToBufferedImageHelper(compareImg);
+
+            // assert that they are the same
             Assertions.assertTrue(drawTestGUI.isImgSameAsReference(bufferedReferenceImg, bufferedCompareImg));
         } catch (IOException e) {
             Assertions.fail();
@@ -134,18 +139,28 @@ public class DrawTest {
     }
 
     /**
-     * Tests methods: autoDraw, drawRectangle, drawOval, drawPolyLine and getDrawing
+     * Tests methods: autoDraw and all available shapes
      */
     @Test
     void autoDrawTestNegative() {
+        // execute autoDraw()
         drawTestGUI.autoDraw();
         try {
-            drawTestGUI.writeImage(drawTestGUI.getDrawing(), "testing.bmp");
-            Image referenceImg = drawTestGUI.readImage("wrongReference.bmp");
+            // read referenceImg from file
+            Image referenceImg = drawTestGUI.readImage("reference.bmp");
             BufferedImage bufferedReferenceImg = imgToBufferedImageHelper(referenceImg);
-            Image compareImg = drawTestGUI.readImage("testing.bmp");
-            BufferedImage bufferedCompareImg = imgToBufferedImageHelper(compareImg);
-            Assertions.assertFalse(drawTestGUI.isImgSameAsReference(bufferedReferenceImg, bufferedCompareImg));
+
+            // read differentDrawingReference from file
+            Image differentDrawingReference = drawTestGUI.readImage("differentDrawingReference.bmp");
+            BufferedImage bufferedCompareImg0 = imgToBufferedImageHelper(differentDrawingReference);
+
+            // read differentSizeReference from file
+            Image differentSizeReference = drawTestGUI.readImage("differentSizeReference.bmp");
+            BufferedImage bufferedCompareImg1 = imgToBufferedImageHelper(differentSizeReference);
+
+            // test wrong size AND wrong painting
+            Assertions.assertFalse(drawTestGUI.isImgSameAsReference(bufferedReferenceImg, bufferedCompareImg0));
+            Assertions.assertFalse(drawTestGUI.isImgSameAsReference(bufferedReferenceImg, bufferedCompareImg1));
         } catch (IOException e) {
             Assertions.fail();
 
