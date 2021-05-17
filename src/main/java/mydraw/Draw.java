@@ -55,6 +55,8 @@ class DrawGUI extends JFrame {
     JPanel drawingPanel;
     int windowWidth;
     int windowHeight;
+    public JButton undo;
+    public JButton redo;
 
     // init ShapeManager
     ShapeManager shapeManager;
@@ -93,8 +95,11 @@ class DrawGUI extends JFrame {
         windowWidth = 750;
         windowHeight = 550;
 
+        undo = new JButton("Undo");
+        redo = new JButton("Redo");
+
         // instantiate ShapeManager
-        shapeManager = new ShapeManager(this);
+        shapeManager = new ShapeManager(this, undo, redo);
 
         // Set a LayoutManager, and add the choosers and buttons to the window.
         this.setLayout(new BorderLayout());
@@ -162,6 +167,8 @@ class DrawGUI extends JFrame {
         headerPanel.add(autoDraw);
         headerPanel.add(save);
         headerPanel.add(quit);
+        headerPanel.add(undo);
+        headerPanel.add(redo);
 
         // add header panel to JFrame
         this.add(headerPanel, BorderLayout.PAGE_START);
@@ -178,7 +185,7 @@ class DrawGUI extends JFrame {
         // Define mouseListener for saving
         save.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
+            public void mousePressed(MouseEvent e) {
                 // init modal on button press and save its return value for further processing
                 int returnValue = saveFileChooser.showSaveDialog(drawingPanel);
 
@@ -201,7 +208,7 @@ class DrawGUI extends JFrame {
         // Define mouseListener for autoDrawing
         autoDraw.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
+            public void mousePressed(MouseEvent e) {
                 autoDraw();
             }
         });
@@ -209,7 +216,7 @@ class DrawGUI extends JFrame {
         // Define mouseListener for clear
         clear.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
+            public void mousePressed(MouseEvent e) {
                 clear();
             }
         });
@@ -217,7 +224,7 @@ class DrawGUI extends JFrame {
         // Define mouseListener for quitting
         quit.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
+            public void mousePressed(MouseEvent e) {
                 System.exit(0);
             }
         });
@@ -463,7 +470,7 @@ class DrawGUI extends JFrame {
         int fakePI = (int) Math.PI;
 
         // for every available color from java.awt.Color draw all available "shapes"
-        for (int x = 0; x < 13; x++) {
+        for (int x = 0; x < availableColorsArray.length; x++) {
             fgColor = availableColorsArray[x];
             int offset = fakePI * x;
 
@@ -472,13 +479,13 @@ class DrawGUI extends JFrame {
             // auto draw oval
             drawOval(new Point(100 + offset, 100 + offset), new Point(210 + offset, 210 + offset));
             // auto draw filled 3D-rectangle
-            drawFilled3DRectangle(new Point(3 * 100 + offset, 2*100 + offset), new Point(2 * 210 + offset, 2*210 + offset));
+            drawFilled3DRectangle(new Point(3 * 100 + offset, 2 * 100 + offset), new Point(2 * 210 + offset, 2 * 210 + offset));
             // auto draw round rectangle
             drawRoundRectangle(new Point(100 + offset, 3 * 100 + offset), new Point(210 + offset, 2 * 210 + offset));
             // auto draw triangle
             drawTriangle(new Point(5 * 100 + offset, 2 * 100 + offset), new Point(3 * 210 + offset, 210 + offset));
             // auto draw isosceles triangle
-            drawIsoscelesTriangle(new Point(3 * 100 + offset, 2*100 + offset), new Point(2 * 210 + offset, 2*210 + offset));
+            drawIsoscelesTriangle(new Point(3 * 100 + offset, 2 * 100 + offset), new Point(2 * 210 + offset, 2 * 210 + offset));
 
             List<Point> pointList = new ArrayList<>();
             // auto-fill pointList

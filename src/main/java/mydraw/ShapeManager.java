@@ -1,5 +1,6 @@
 package mydraw;
 
+import javax.swing.*;
 import java.awt.event.*;
 import java.util.HashMap;
 
@@ -23,9 +24,9 @@ class ShapeManager implements ItemListener {
     ShapeDrawer currentDrawer;
 
     // constructor
-    public ShapeManager(DrawGUI itsGui) {
+    public ShapeManager(DrawGUI itsGui, JButton undoButton, JButton redoButton) {
         // create new CommandQueue
-        cQ = new CommandQueue(itsGui);
+        cQ = new CommandQueue(itsGui, undoButton, redoButton);
 
         scribbleDrawerLogic = new ScribbleDrawerLogic(itsGui, cQ);
         rectangleDrawerLogic = new RectangleDrawerLogic(itsGui, cQ);

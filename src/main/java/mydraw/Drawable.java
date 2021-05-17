@@ -6,6 +6,8 @@ import java.util.ArrayList;
 
 interface Drawable {
     void draw(Graphics g);
+
+    void setDrawingColor(Color newColor);
 }
 
 
@@ -25,6 +27,10 @@ class ScribbleDrawer implements Drawable {
         for (int i = 0; i < drawingPoints.size() - 1; i++) {
             g.drawLine(drawingPoints.get(i).x, drawingPoints.get(i).y, drawingPoints.get(i + 1).x, drawingPoints.get(i + 1).y);
         }
+    }
+
+    public void setDrawingColor(Color newColor) {
+        drawingColor = newColor;
     }
 }
 
@@ -49,6 +55,10 @@ class RectangleDrawer implements Drawable {
         // draw rectangle
         g.drawRect(startingPointX, startingPointY, rectangleWidth, rectangleHeight);
     }
+
+    public void setDrawingColor(Color newColor) {
+        drawingColor = newColor;
+    }
 }
 
 class OvalDrawer implements Drawable {
@@ -71,6 +81,10 @@ class OvalDrawer implements Drawable {
         g.setColor(drawingColor);
         // draw oval
         g.drawOval(startingPointX, startingPointY, rectangleWidth, rectangleHeight);
+    }
+
+    public void setDrawingColor(Color newColor) {
+        drawingColor = newColor;
     }
 }
 
@@ -96,6 +110,10 @@ class Filled3DRectDrawer implements Drawable {
         g.setColor(drawingColor);
         // draw filled 3d-rectangle
         g.fill3DRect(startingPointX, startingPointY, rectangleWidth, rectangleHeight, raisedBool);
+    }
+
+    public void setDrawingColor(Color newColor) {
+        drawingColor = newColor;
     }
 }
 
@@ -124,6 +142,10 @@ class RoundRectDrawer implements Drawable {
         // draw round rectangle
         g.drawRoundRect(startingPointX, startingPointY, rectangleWidth, rectangleHeight, arcWidth, arcHeight);
     }
+
+    public void setDrawingColor(Color newColor) {
+        drawingColor = newColor;
+    }
 }
 
 class TriangleDrawer implements Drawable {
@@ -151,6 +173,10 @@ class TriangleDrawer implements Drawable {
         // draw triangle
         g.drawPolygon(new int[]{startX, dragX, heightX}, new int[]{startY, dragY, heightY}, 3);
     }
+
+    public void setDrawingColor(Color newColor) {
+        drawingColor = newColor;
+    }
 }
 
 class IsoscelesTriangleDrawer implements Drawable {
@@ -177,5 +203,9 @@ class IsoscelesTriangleDrawer implements Drawable {
         g.setColor(drawingColor);
         // draw isosceles triangle
         g.drawPolygon(new int[]{startX, dragX, heightX}, new int[]{startY, startY, heightY}, 3);
+    }
+
+    public void setDrawingColor(Color newColor) {
+        drawingColor = newColor;
     }
 }
