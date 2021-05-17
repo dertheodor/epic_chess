@@ -57,6 +57,7 @@ class DrawGUI extends JFrame {
     int windowHeight;
     public JButton undo;
     public JButton redo;
+    public JButton clear;
 
     // init ShapeManager
     ShapeManager shapeManager;
@@ -92,14 +93,16 @@ class DrawGUI extends JFrame {
         app = application;    // Remember the application reference
         fgColor = Color.black;  // the current drawing color
         bgColor = Color.white;  // the current background color
-        windowWidth = 750;
+        windowWidth = 900;
         windowHeight = 550;
 
+        // instantiate public buttons
+        clear = new JButton("Clear");
         undo = new JButton("Undo");
         redo = new JButton("Redo");
 
         // instantiate ShapeManager
-        shapeManager = new ShapeManager(this, undo, redo);
+        shapeManager = new ShapeManager(this);
 
         // Set a LayoutManager, and add the choosers and buttons to the window.
         this.setLayout(new BorderLayout());
@@ -143,7 +146,6 @@ class DrawGUI extends JFrame {
 
 
         // header JButtons
-        JButton clear = new JButton("Clear");
         JButton autoDraw = new JButton("Auto");
         JButton save = new JButton("Save");
         JFileChooser saveFileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
@@ -169,6 +171,10 @@ class DrawGUI extends JFrame {
         headerPanel.add(quit);
         headerPanel.add(undo);
         headerPanel.add(redo);
+
+        // Set undo and redo buttons to disabled by default
+        undo.setEnabled(false);
+        redo.setEnabled(false);
 
         // add header panel to JFrame
         this.add(headerPanel, BorderLayout.PAGE_START);
@@ -210,14 +216,6 @@ class DrawGUI extends JFrame {
             @Override
             public void mousePressed(MouseEvent e) {
                 autoDraw();
-            }
-        });
-
-        // Define mouseListener for clear
-        clear.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                clear();
             }
         });
 
