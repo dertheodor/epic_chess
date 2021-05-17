@@ -15,6 +15,7 @@ import java.util.List;
 public class CommandQueue {
     List<Drawable> requestQueue;
     ArrayList<Drawable> undoList;
+    ArrayList<Drawable> redoList;
     DrawGUI drawGUI;
     JButton undo;
     JButton redo;
@@ -22,30 +23,63 @@ public class CommandQueue {
     public CommandQueue(DrawGUI itsGui, JButton undoReference, JButton redoReference) {
         requestQueue = new LinkedList<Drawable>();
         undoList = new ArrayList<Drawable>();
+        redoList = new ArrayList<Drawable>();
         drawGUI = itsGui;
         undo = undoReference;
         redo = redoReference;
 
-        // Define mouseListener for quitting
+        // Define mouseListener for undoing
         undo.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 undoLastDrawingAction();
             }
         });
+
+        // Define mouseListener for redoing
+        redo.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                redoLastDrawingAction();
+            }
+        });
+
     }
+
 
     /**
      * TODO
      */
     private void undoLastDrawingAction() {
-        Drawable undoOperation = undoList.get(undoList.size() - 1);
-        undoOperation.setDrawingColor(drawGUI.getBackground());
-        undoOperation.draw(drawGUI.bufferG);
-        drawGUI.updateCanvas();
-        //redoList.add(undoOperation);
-        undoList.remove(undoOperation);
+        if (undoList.size() > 0) {
+            Drawable undoOperation = undoList.get(undoList.size() - 1);
+            undoOperation.setDrawingColor(drawGUI.getBackground());
+            undoOperation.draw(drawGUI.bufferG);
+            drawGUI.updateCanvas();
+            redoList.add(undoOperation);
+            undoList.remove(undoOperation);
+
+        } else {
+            System.out.println("Theo stinkt");
+        }
     }
+
+    /**
+     *
+     */
+    private void redoLastDrawingAction() {
+        if (redoList.size() > 0) {
+            Drawable latestDrawable = redoList.get(redoList.size() - 1);
+            latestDrawable.setDrawingColor(latestDrawable.getLegacyColor());
+            latestDrawable.draw(drawGUI.bufferG);
+            drawGUI.updateCanvas();
+            undoList.add(latestDrawable);
+            redoList.remove(latestDrawable);
+        } else {
+            System.out.println("Theo stinkt");
+        }
+    }
+
 
     /**
      * Adds drawing to requests queue

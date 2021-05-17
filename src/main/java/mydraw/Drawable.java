@@ -8,15 +8,19 @@ interface Drawable {
     void draw(Graphics g);
 
     void setDrawingColor(Color newColor);
+
+    Color getLegacyColor();
 }
 
 
 class ScribbleDrawer implements Drawable {
     private ArrayList<Point> drawingPoints;
     private Color drawingColor;
+    private Color legacyColor;
 
     public ScribbleDrawer(ArrayList<Point> pointArrayList, Color color) {
         drawingColor = color;
+        legacyColor = color;
         drawingPoints = pointArrayList;
     }
 
@@ -32,6 +36,10 @@ class ScribbleDrawer implements Drawable {
     public void setDrawingColor(Color newColor) {
         drawingColor = newColor;
     }
+
+    public Color getLegacyColor() {
+        return legacyColor;
+    }
 }
 
 class RectangleDrawer implements Drawable {
@@ -40,6 +48,7 @@ class RectangleDrawer implements Drawable {
     private int rectangleWidth;
     private int rectangleHeight;
     private Color drawingColor;
+    private Color legacyColor;
 
     public RectangleDrawer(int upperLeftX, int upperLeftY, int lowerRightX, int lowerRightY, Color color) {
         startingPointX = Math.min(upperLeftX, lowerRightX);
@@ -47,6 +56,7 @@ class RectangleDrawer implements Drawable {
         rectangleWidth = Math.abs(lowerRightX - upperLeftX);
         rectangleHeight = Math.abs(lowerRightY - upperLeftY);
         drawingColor = color;
+        legacyColor = color;
     }
 
     public void draw(Graphics g) {
@@ -59,6 +69,10 @@ class RectangleDrawer implements Drawable {
     public void setDrawingColor(Color newColor) {
         drawingColor = newColor;
     }
+
+    public Color getLegacyColor() {
+        return legacyColor;
+    }
 }
 
 class OvalDrawer implements Drawable {
@@ -67,6 +81,7 @@ class OvalDrawer implements Drawable {
     private int rectangleWidth;
     private int rectangleHeight;
     private Color drawingColor;
+    private Color legacyColor;
 
     public OvalDrawer(int upperLeftX, int upperLeftY, int lowerRightX, int lowerRightY, Color color) {
         startingPointX = Math.min(upperLeftX, lowerRightX);
@@ -74,6 +89,7 @@ class OvalDrawer implements Drawable {
         rectangleWidth = Math.abs(lowerRightX - upperLeftX);
         rectangleHeight = Math.abs(lowerRightY - upperLeftY);
         drawingColor = color;
+        legacyColor = color;
     }
 
     public void draw(Graphics g) {
@@ -86,6 +102,10 @@ class OvalDrawer implements Drawable {
     public void setDrawingColor(Color newColor) {
         drawingColor = newColor;
     }
+
+    public Color getLegacyColor() {
+        return legacyColor;
+    }
 }
 
 class Filled3DRectDrawer implements Drawable {
@@ -94,6 +114,7 @@ class Filled3DRectDrawer implements Drawable {
     private int rectangleWidth;
     private int rectangleHeight;
     private Color drawingColor;
+    private Color legacyColor;
     private boolean raisedBool;
 
     public Filled3DRectDrawer(int upperLeftX, int upperLeftY, int lowerRightX, int lowerRightY, Color color, boolean raised) {
@@ -102,6 +123,7 @@ class Filled3DRectDrawer implements Drawable {
         rectangleWidth = Math.abs(lowerRightX - upperLeftX);
         rectangleHeight = Math.abs(lowerRightY - upperLeftY);
         drawingColor = color;
+        legacyColor = color;
         raisedBool = raised;
     }
 
@@ -115,6 +137,10 @@ class Filled3DRectDrawer implements Drawable {
     public void setDrawingColor(Color newColor) {
         drawingColor = newColor;
     }
+
+    public Color getLegacyColor() {
+        return legacyColor;
+    }
 }
 
 class RoundRectDrawer implements Drawable {
@@ -123,6 +149,7 @@ class RoundRectDrawer implements Drawable {
     private int rectangleWidth;
     private int rectangleHeight;
     private Color drawingColor;
+    private Color legacyColor;
     private int arcWidth;
     private int arcHeight;
 
@@ -132,6 +159,7 @@ class RoundRectDrawer implements Drawable {
         rectangleWidth = Math.abs(lowerRightX - upperLeftX);
         rectangleHeight = Math.abs(lowerRightY - upperLeftY);
         drawingColor = color;
+        legacyColor = color;
         arcWidth = arcW;
         arcHeight = arcH;
     }
@@ -146,6 +174,10 @@ class RoundRectDrawer implements Drawable {
     public void setDrawingColor(Color newColor) {
         drawingColor = newColor;
     }
+
+    public Color getLegacyColor() {
+        return legacyColor;
+    }
 }
 
 class TriangleDrawer implements Drawable {
@@ -156,6 +188,7 @@ class TriangleDrawer implements Drawable {
     private int heightX;
     private int heightY;
     private Color drawingColor;
+    private Color legacyColor;
 
     public TriangleDrawer(int startingPointX, int startingPointY, int draggingPointX, int draggingPointY, Color color) {
         startX = startingPointX;
@@ -165,6 +198,7 @@ class TriangleDrawer implements Drawable {
         heightX = (startX + (dragX - startX) / 2);
         heightY = startY - dragX + startX;
         drawingColor = color;
+        legacyColor = color;
     }
 
     public void draw(Graphics g) {
@@ -177,6 +211,10 @@ class TriangleDrawer implements Drawable {
     public void setDrawingColor(Color newColor) {
         drawingColor = newColor;
     }
+
+    public Color getLegacyColor() {
+        return legacyColor;
+    }
 }
 
 class IsoscelesTriangleDrawer implements Drawable {
@@ -187,6 +225,7 @@ class IsoscelesTriangleDrawer implements Drawable {
     private int heightX;
     private int heightY;
     private Color drawingColor;
+    private Color legacyColor;
 
     public IsoscelesTriangleDrawer(int startingPointX, int startingPointY, int draggingPointX, int draggingPointY, Color color) {
         startX = startingPointX;
@@ -196,6 +235,7 @@ class IsoscelesTriangleDrawer implements Drawable {
         heightX = (startX + (dragX - startX) / 2);
         heightY = startY - dragX + startX;
         drawingColor = color;
+        legacyColor = color;
     }
 
     public void draw(Graphics g) {
@@ -207,5 +247,9 @@ class IsoscelesTriangleDrawer implements Drawable {
 
     public void setDrawingColor(Color newColor) {
         drawingColor = newColor;
+    }
+
+    public Color getLegacyColor() {
+        return legacyColor;
     }
 }
