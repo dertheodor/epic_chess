@@ -206,4 +206,6 @@ public class DrawTest {
         // assert that they are the same
         Assertions.assertTrue(drawTestGUI.isImgSameAsReference(bufferedEmptyImg, bufferedCompareImg));
     }
+
+    // TODO add tests for reading past drawings
 }

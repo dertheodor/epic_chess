@@ -15,12 +15,11 @@ import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * The application class.  Processes high-level commands sent by GUI
@@ -73,7 +72,6 @@ class DrawGUI extends JFrame {
             if (windowHeight != getHeight() || windowWidth != getWidth()) {
                 BufferedImage newBufferImg = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
                 Graphics newBufferG = newBufferImg.getGraphics();
-                //newBufferG.setColor(Color.white); TODO is this needed?
                 newBufferG.fillRect(0, 0, newBufferImg.getWidth(), newBufferImg.getHeight());
                 newBufferG.drawImage(bufferImg, 0, 0, null);
                 bufferImg = newBufferImg;
@@ -163,7 +161,7 @@ class DrawGUI extends JFrame {
         JButton open = new JButton("Open");
         JFileChooser openFileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
         // set default name
-        openFileChooser.setSelectedFile(new File("last_drawing.txt"));
+        openFileChooser.setSelectedFile(new File("drawing.txt"));
         // only show txt files
         openFileChooser.setFileFilter(new FileNameExtensionFilter("Text file (TXT)", "txt"));
 
@@ -209,7 +207,7 @@ class DrawGUI extends JFrame {
         clear.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                // clear drawings TODO maybe make clear() so it also can be undone
+                // clear drawings
                 clear();
                 // clear undo queue and set button to disabled
                 cQ.undoList.clear();
@@ -261,7 +259,7 @@ class DrawGUI extends JFrame {
                             }
                         }
                     } else {
-                        JOptionPane.showMessageDialog(null,
+                        JOptionPane.showMessageDialog(drawingPanel,
                                 "Drawings can only be saved as .bmp and .txt files",
                                 "Warning",
                                 JOptionPane.WARNING_MESSAGE);
@@ -279,7 +277,19 @@ class DrawGUI extends JFrame {
 
                 // triggered when save button is pressed
                 if (returnValue == JFileChooser.APPROVE_OPTION) {
-                    // TODO open old drawing as txt file
+                    File toBeReadFile = openFileChooser.getSelectedFile();
+                    try {
+                        Scanner input = new Scanner(toBeReadFile);
+
+                        while (input.hasNextLine()) {
+                            String line = input.nextLine();
+                            readLineAndDrawDrawable(line);
+                        }
+                        input.close();
+
+                    } catch (FileNotFoundException fileNotFoundException) {
+                        fileNotFoundException.printStackTrace();
+                    }
                 }
             }
         });
@@ -678,5 +688,56 @@ class DrawGUI extends JFrame {
         }
         // after autoDraw set back color to default
         fgColor = Color.black;
+    }
+
+    /**
+     * @param line the to be read line of the input-buffer
+     */
+    public void readLineAndDrawDrawable(String line) {
+        // stringArray of comma separated values previously delimited by a ","
+        String[] separatedEntries = line.split("#");
+
+        // init params for later function calls
+        int arg1 = 0;
+        int arg2 = 0;
+        int arg3 = 0;
+        int arg4 = 0;
+        Color drawingColor = Color.black;
+
+        // this needs to be done all other shapes except scribble use the same params
+        if (!separatedEntries[0].equals("scribble")) {
+            // parse all arguments needed for drawings into Integers
+            arg1 = Integer.parseInt(separatedEntries[1]);
+            arg2 = Integer.parseInt(separatedEntries[2]);
+            arg3 = Integer.parseInt(separatedEntries[3]);
+            arg4 = Integer.parseInt(separatedEntries[4]);
+            drawingColor = colorSwitchHelper(colorHashMapHelper(separatedEntries[5]));
+        }
+
+        switch (separatedEntries[0]) {
+            case "scribble":
+                System.out.println(separatedEntries);
+                System.out.println(separatedEntries[1]);
+                //TODO extract points and call shapeManager.scribbleDrawerLogic with points for redraw
+                break;
+            case "rectangle":
+                shapeManager.rectangleDrawerLogic.drawForRealNow(arg1, arg2, arg3, arg4, drawingColor);
+                break;
+            case "oval":
+                shapeManager.ovalDrawerLogic.drawForRealNow(arg1, arg2, arg3, arg4, drawingColor);
+                break;
+            case "filled3drect":
+                shapeManager.threeDRectDrawerLogic.drawForRealNow(arg1, arg2, arg3, arg4, drawingColor);
+                break;
+            case "roundrect":
+                shapeManager.roundRectDrawerLogic.drawForRealNow(arg1, arg2, arg3, arg4, drawingColor);
+                break;
+            case "triangle":
+                shapeManager.triangleDrawerLogic.drawForRealNow(arg1, arg2, arg3, arg4, drawingColor);
+                break;
+            case "isoscelestriangle":
+                shapeManager.isoscelesTriangleDrawerLogic.drawForRealNow(arg1, arg2, arg3, arg4, drawingColor);
+                break;
+        }
     }
 }

@@ -89,15 +89,9 @@ public class CommandQueue {
         workOffRequests(requestQueue);
     }
 
-    //    public static List<Drawable> produceRequests() {
-//        List<Drawable> queue = new ArrayList<Drawable>();
-//        //queue.add(new ScribbleDrawer());
-//        queue.add(new RectangleDrawer());
-//        //queue.add(new OvalDrawer());
-//
-//        return queue;
-//    }
-//
+    /**
+     * @param queue the to be worked off queue
+     */
     public void workOffRequests(List<Drawable> queue) {
         for (Drawable drawable : queue) {
             // add drawable to stringBuffer
@@ -113,9 +107,4 @@ public class CommandQueue {
             requestQueue.remove(drawable);
         }
     }
-//
-//    public static void main(String[] args) {
-//        List<Drawable> queue = produceRequests();
-//        workOffRequests(queue);
-//    }
 }

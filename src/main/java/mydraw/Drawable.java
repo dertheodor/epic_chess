@@ -27,9 +27,9 @@ class ScribbleDrawer implements Drawable {
         drawingPoints = pointArrayList;
         redrawMetaInfo = new StringBuilder()
                 .append("scribble")
-                .append(",")
+                .append("#")
                 .append(pointArrayList)
-                .append(",")
+                .append("#")
                 .append(color);
     }
 
@@ -73,15 +73,15 @@ class RectangleDrawer implements Drawable {
         legacyColor = color;
         redrawMetaInfo = new StringBuilder()
                 .append("rectangle")
-                .append(",")
+                .append("#")
                 .append(upperLeftX)
-                .append(",")
+                .append("#")
                 .append(upperLeftY)
-                .append(",")
+                .append("#")
                 .append(lowerRightX)
-                .append(",")
+                .append("#")
                 .append(lowerRightY)
-                .append(",")
+                .append("#")
                 .append(color);
     }
 
@@ -123,15 +123,15 @@ class OvalDrawer implements Drawable {
         legacyColor = color;
         redrawMetaInfo = new StringBuilder()
                 .append("oval")
-                .append(",")
+                .append("#")
                 .append(upperLeftX)
-                .append(",")
+                .append("#")
                 .append(upperLeftY)
-                .append(",")
+                .append("#")
                 .append(lowerRightX)
-                .append(",")
+                .append("#")
                 .append(lowerRightY)
-                .append(",")
+                .append("#")
                 .append(color);
     }
 
@@ -175,17 +175,17 @@ class Filled3DRectDrawer implements Drawable {
         raisedBool = raised;
         redrawMetaInfo = new StringBuilder()
                 .append("filled3drect")
-                .append(",")
+                .append("#")
                 .append(upperLeftX)
-                .append(",")
+                .append("#")
                 .append(upperLeftY)
-                .append(",")
+                .append("#")
                 .append(lowerRightX)
-                .append(",")
+                .append("#")
                 .append(lowerRightY)
-                .append(",")
+                .append("#")
                 .append(color)
-                .append(",")
+                .append("#")
                 .append(raised);
     }
 
@@ -231,19 +231,19 @@ class RoundRectDrawer implements Drawable {
         arcHeight = arcH;
         redrawMetaInfo = new StringBuilder()
                 .append("roundrect")
-                .append(",")
+                .append("#")
                 .append(upperLeftX)
-                .append(",")
+                .append("#")
                 .append(upperLeftY)
-                .append(",")
+                .append("#")
                 .append(lowerRightX)
-                .append(",")
+                .append("#")
                 .append(lowerRightY)
-                .append(",")
+                .append("#")
                 .append(color)
-                .append(",")
+                .append("#")
                 .append(arcW)
-                .append(",")
+                .append("#")
                 .append(arcH);
     }
 
@@ -289,15 +289,15 @@ class TriangleDrawer implements Drawable {
         legacyColor = color;
         redrawMetaInfo = new StringBuilder()
                 .append("triangle")
-                .append(",")
+                .append("#")
                 .append(startingPointX)
-                .append(",")
+                .append("#")
                 .append(startingPointY)
-                .append(",")
+                .append("#")
                 .append(draggingPointX)
-                .append(",")
+                .append("#")
                 .append(draggingPointY)
-                .append(",")
+                .append("#")
                 .append(color);
     }
 
@@ -343,15 +343,15 @@ class IsoscelesTriangleDrawer implements Drawable {
         legacyColor = color;
         redrawMetaInfo = new StringBuilder()
                 .append("isoscelestriangle")
-                .append(",")
+                .append("#")
                 .append(startingPointX)
-                .append(",")
+                .append("#")
                 .append(startingPointY)
-                .append(",")
+                .append("#")
                 .append(draggingPointX)
-                .append(",")
+                .append("#")
                 .append(draggingPointY)
-                .append(",")
+                .append("#")
                 .append(color);
     }
 
