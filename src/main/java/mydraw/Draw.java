@@ -48,6 +48,7 @@ public class Draw {
  */
 class DrawGUI extends JFrame {
     Draw app;      // A reference to the application, to send commands to.
+    CommandQueue cQ;
     Color fgColor;
     Color bgColor;
     BufferedImage bufferImg;
@@ -55,6 +56,8 @@ class DrawGUI extends JFrame {
     JPanel drawingPanel;
     int windowWidth;
     int windowHeight;
+    public JButton undo;
+    public JButton redo;
 
     // init ShapeManager
     ShapeManager shapeManager;
@@ -90,11 +93,15 @@ class DrawGUI extends JFrame {
         app = application;    // Remember the application reference
         fgColor = Color.black;  // the current drawing color
         bgColor = Color.white;  // the current background color
-        windowWidth = 750;
+        windowWidth = 900;
         windowHeight = 550;
-
+        // instantiate public undo and redo buttons
+        undo = new JButton("Undo");
+        redo = new JButton("Redo");
+        // instantiate CommandQueue
+        cQ = new CommandQueue(this);
         // instantiate ShapeManager
-        shapeManager = new ShapeManager(this);
+        shapeManager = new ShapeManager(this, cQ);
 
         // Set a LayoutManager, and add the choosers and buttons to the window.
         this.setLayout(new BorderLayout());
@@ -129,6 +136,8 @@ class DrawGUI extends JFrame {
                 bgColor = colorSwitchHelper(e.getItem().toString());
                 bufferG.setColor(colorSwitchHelper(e.getItem().toString()));
                 bufferG.fillRect(0, 0, bufferImg.getWidth(), bufferImg.getHeight());
+                // repaint previously drawn drawables on new BG
+                repaintOnBackgroundChange();
                 updateCanvas();
             }
         }
@@ -138,8 +147,6 @@ class DrawGUI extends JFrame {
 
 
         // header JButtons
-        JButton clear = new JButton("Clear");
-        JButton autoDraw = new JButton("Auto");
         JButton save = new JButton("Save");
         JFileChooser saveFileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
         // set default name
@@ -147,6 +154,8 @@ class DrawGUI extends JFrame {
         // only show bmp files
         saveFileChooser.setFileFilter(new FileNameExtensionFilter("Bitmap (BMP)", "bmp"));
         JButton quit = new JButton("Quit");
+        JButton clear = new JButton("Clear");
+        JButton autoDraw = new JButton("Auto");
 
         // create header panel and add components to it
         JPanel headerPanel = new JPanel();
@@ -162,6 +171,12 @@ class DrawGUI extends JFrame {
         headerPanel.add(autoDraw);
         headerPanel.add(save);
         headerPanel.add(quit);
+        headerPanel.add(undo);
+        headerPanel.add(redo);
+
+        // Set undo and redo buttons to disabled by default
+        undo.setEnabled(false);
+        redo.setEnabled(false);
 
         // add header panel to JFrame
         this.add(headerPanel, BorderLayout.PAGE_START);
@@ -175,10 +190,35 @@ class DrawGUI extends JFrame {
         bufferG = bufferImg.getGraphics();
         bufferG.fillRect(0, 0, bufferImg.getWidth(), bufferImg.getHeight());
 
+        // Define mouseListener for clear
+        clear.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                // clear drawings TODO maybe make clear() so it also can be undone
+                clear();
+                // clear undo queue and set button to disabled
+                cQ.undoList.clear();
+                undo.setEnabled(false);
+                // clear redo queue and set button to disabled
+                cQ.redoList.clear();
+                redo.setEnabled(false);
+                // clear repaintList
+                cQ.repaintList.clear();
+            }
+        });
+
+        // Define mouseListener for autoDrawing
+        autoDraw.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                autoDraw();
+            }
+        });
+
         // Define mouseListener for saving
         save.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
+            public void mousePressed(MouseEvent e) {
                 // init modal on button press and save its return value for further processing
                 int returnValue = saveFileChooser.showSaveDialog(drawingPanel);
 
@@ -198,27 +238,27 @@ class DrawGUI extends JFrame {
             }
         });
 
-        // Define mouseListener for autoDrawing
-        autoDraw.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                autoDraw();
-            }
-        });
-
-        // Define mouseListener for clear
-        clear.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                clear();
-            }
-        });
-
         // Define mouseListener for quitting
         quit.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
+            public void mousePressed(MouseEvent e) {
                 System.exit(0);
+            }
+        });
+
+        // Define mouseListener for undoing
+        undo.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                cQ.undoLastDrawingAction();
+            }
+        });
+
+        // Define mouseListener for redoing
+        redo.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                cQ.redoLastDrawingAction();
             }
         });
 
@@ -453,6 +493,108 @@ class DrawGUI extends JFrame {
     }
 
     /**
+     * API method: repaint the previously drawn drawables on BG color-change
+     */
+    public void repaintOnBackgroundChange() {
+        // clear redoList so previously undone drawables are not considered
+        cQ.repaintList.addAll(cQ.redoList);
+        cQ.redoList.clear();
+        // add all drawables from redoList to undoList
+        cQ.redoList.addAll(cQ.undoList);
+        // can both be done in one forEach loop?
+        cQ.redoList.forEach(drawable ->
+                drawable.setDrawingColor(drawable.getLegacyColor()));
+        cQ.redoList.forEach(drawable ->
+                drawable.draw(bufferG));
+        // clear redoList so its empty
+        cQ.redoList.clear();
+        // add all drawables from repaintList to redoList
+        cQ.redoList.addAll(cQ.repaintList);
+        // clear repaintList for further color-changes
+        cQ.repaintList.clear();
+    }
+
+    /**
+     * API: paint a rectangle automatically on canvas
+     *
+     * @param upper_left  the upper left point of the rectangle
+     * @param lower_right the lower right point of the rectangle
+     */
+    public void drawRectangle(Point upper_left, Point lower_right) {
+        Drawable rectangle = new RectangleDrawer(upper_left.x, upper_left.y, lower_right.x, lower_right.y, fgColor);
+        cQ.addToRequestQueue(rectangle);
+    }
+
+    /**
+     * API: paint a polyline/scribble on canvas
+     *
+     * @param points List of points to draw
+     */
+    public void drawPolyLine(java.util.List<Point> points) {
+        ArrayList<Point> pointArrayList = (ArrayList<Point>) points;
+
+        Drawable scribble = new ScribbleDrawer(pointArrayList, fgColor);
+        cQ.addToRequestQueue(scribble);
+    }
+
+
+    /**
+     * API: paint an oval automatically on canvas
+     *
+     * @param upper_left  the upper left point of the rectangle
+     * @param lower_right the lower right point of the rectangle
+     */
+    public void drawOval(Point upper_left, Point lower_right) {
+        Drawable oval = new OvalDrawer(upper_left.x, upper_left.y, lower_right.x, lower_right.y, fgColor);
+        cQ.addToRequestQueue(oval);
+    }
+
+    /**
+     * API: paint a filled 3D-rectangle automatically on canvas
+     *
+     * @param upper_left  the upper left point of the rectangle
+     * @param lower_right the lower right point of the rectangle
+     */
+    public void drawFilled3DRectangle(Point upper_left, Point lower_right) {
+        Drawable filled3DRect = new Filled3DRectDrawer(upper_left.x, upper_left.y, lower_right.x, lower_right.y, fgColor, true);
+        cQ.addToRequestQueue(filled3DRect);
+    }
+
+    /**
+     * API: paint a round rectangle automatically on canvas
+     *
+     * @param upper_left  the upper left point of the rectangle
+     * @param lower_right the lower right point of the rectangle
+     */
+    public void drawRoundRectangle(Point upper_left, Point lower_right) {
+        Drawable roundRect = new RoundRectDrawer(upper_left.x, upper_left.y, lower_right.x, lower_right.y, fgColor, 50, 50);
+        cQ.addToRequestQueue(roundRect);
+    }
+
+    /**
+     * API: paint a triangle automatically on canvas
+     *
+     * @param startingPoint  the starting point for drawing the triangle
+     * @param finishingPoint the finishing point for drawing the triangle
+     */
+    public void drawTriangle(Point startingPoint, Point finishingPoint) {
+        Drawable triangle = new TriangleDrawer(startingPoint.x, startingPoint.y, finishingPoint.x, finishingPoint.y, fgColor);
+        cQ.addToRequestQueue(triangle);
+    }
+
+    /**
+     * API: paint a triangle automatically on canvas
+     *
+     * @param startingPoint  the starting point for drawing the triangle
+     * @param finishingPoint the finishing point for drawing the triangle
+     */
+    public void drawIsoscelesTriangle(Point startingPoint, Point finishingPoint) {
+        Drawable isoscelesTriangle = new IsoscelesTriangleDrawer(startingPoint.x, startingPoint.y, finishingPoint.x, finishingPoint.y, fgColor);
+        cQ.addToRequestQueue(isoscelesTriangle);
+    }
+
+
+    /**
      * API - test method: automatically paint an image
      */
     public void autoDraw() {
@@ -463,7 +605,7 @@ class DrawGUI extends JFrame {
         int fakePI = (int) Math.PI;
 
         // for every available color from java.awt.Color draw all available "shapes"
-        for (int x = 0; x < 13; x++) {
+        for (int x = 0; x < availableColorsArray.length; x++) {
             fgColor = availableColorsArray[x];
             int offset = fakePI * x;
 
@@ -472,13 +614,13 @@ class DrawGUI extends JFrame {
             // auto draw oval
             drawOval(new Point(100 + offset, 100 + offset), new Point(210 + offset, 210 + offset));
             // auto draw filled 3D-rectangle
-            drawFilled3DRectangle(new Point(3 * 100 + offset, 2*100 + offset), new Point(2 * 210 + offset, 2*210 + offset));
+            drawFilled3DRectangle(new Point(3 * 100 + offset, 2 * 100 + offset), new Point(2 * 210 + offset, 2 * 210 + offset));
             // auto draw round rectangle
             drawRoundRectangle(new Point(100 + offset, 3 * 100 + offset), new Point(210 + offset, 2 * 210 + offset));
             // auto draw triangle
             drawTriangle(new Point(5 * 100 + offset, 2 * 100 + offset), new Point(3 * 210 + offset, 210 + offset));
             // auto draw isosceles triangle
-            drawIsoscelesTriangle(new Point(3 * 100 + offset, 2*100 + offset), new Point(2 * 210 + offset, 2*210 + offset));
+            drawIsoscelesTriangle(new Point(3 * 100 + offset, 2 * 100 + offset), new Point(2 * 210 + offset, 2 * 210 + offset));
 
             List<Point> pointList = new ArrayList<>();
             // auto-fill pointList
@@ -490,131 +632,5 @@ class DrawGUI extends JFrame {
         }
         // after autoDraw set back color to default
         fgColor = Color.black;
-    }
-
-    /**
-     * API: paint a polyline/scribble on canvas
-     *
-     * @param points List of points to draw
-     */
-    public void drawPolyLine(java.util.List<Point> points) {
-        // iterate over all points
-        for (int i = 0; i < points.size() - 1; i++) {
-            bufferG.drawLine(points.get(i).x, points.get(i).y, points.get(i + 1).x, points.get(i + 1).y);
-        }
-        // set color
-        bufferG.setColor(this.fgColor);
-        // draw image from buffer to gui
-        drawingPanel.getGraphics().drawImage(bufferImg, -9, -67, null);
-    }
-
-    /**
-     * API: paint a rectangle automatically on canvas
-     *
-     * @param upper_left  the upper left point of the rectangle
-     * @param lower_right the lower right point of the rectangle
-     */
-    public void drawRectangle(Point upper_left, Point lower_right) {
-        // calculate width/height of rectangle
-        int w = lower_right.x - upper_left.x;
-        int h = lower_right.y - upper_left.y;
-        // set color
-        bufferG.setColor(this.fgColor);
-        // draw rectangle
-        bufferG.drawRect(upper_left.x, upper_left.y, w, h);
-        // draw image from buffer to gui
-        drawingPanel.getGraphics().drawImage(bufferImg, -9, -67, null);
-    }
-
-    /**
-     * API: paint an oval automatically on canvas
-     *
-     * @param upper_left  the upper left point of the rectangle
-     * @param lower_right the lower right point of the rectangle
-     */
-    public void drawOval(Point upper_left, Point lower_right) {
-        // calculate width/height of rectangle
-        int w = lower_right.x - upper_left.x;
-        int h = lower_right.y - upper_left.y;
-        // set color
-        bufferG.setColor(this.fgColor);
-        // draw rectangle
-        bufferG.drawOval(upper_left.x, upper_left.y, w, h);
-        // draw image from buffer to gui
-        drawingPanel.getGraphics().drawImage(bufferImg, -9, -67, null);
-    }
-
-    /**
-     * API: paint a filled 3D-rectangle automatically on canvas
-     *
-     * @param upper_left  the upper left point of the rectangle
-     * @param lower_right the lower right point of the rectangle
-     */
-    public void drawFilled3DRectangle(Point upper_left, Point lower_right) {
-        // calculate width/height of rectangle
-        int w = lower_right.x - upper_left.x;
-        int h = lower_right.y - upper_left.y;
-        // set color
-        bufferG.setColor(this.fgColor);
-        // draw rectangle
-        bufferG.fill3DRect(upper_left.x, upper_left.y, w, h, true);
-        // draw image from buffer to gui
-        drawingPanel.getGraphics().drawImage(bufferImg, -9, -67, null);
-    }
-
-    /**
-     * API: paint a round rectangle automatically on canvas
-     *
-     * @param upper_left  the upper left point of the rectangle
-     * @param lower_right the lower right point of the rectangle
-     */
-    public void drawRoundRectangle(Point upper_left, Point lower_right) {
-        // calculate width/height of rectangle
-        int w = lower_right.x - upper_left.x;
-        int h = lower_right.y - upper_left.y;
-        // set color
-        bufferG.setColor(this.fgColor);
-        // draw rectangle
-        bufferG.drawRoundRect(upper_left.x, upper_left.y, w, h, 50, 50);
-        // draw image from buffer to gui
-        drawingPanel.getGraphics().drawImage(bufferImg, -9, -67, null);
-    }
-
-    /**
-     * API: paint a triangle automatically on canvas
-     *
-     * @param startingPoint  the starting point for drawing the triangle
-     * @param finishingPoint the finishing point for drawing the triangle
-     */
-    public void drawTriangle(Point startingPoint, Point finishingPoint) {
-        // calculate height of triangle
-        int heightX = (startingPoint.x + (finishingPoint.x - startingPoint.x) / 2);
-        int heightY = startingPoint.y - finishingPoint.x + startingPoint.x;
-
-        // set color
-        bufferG.setColor(this.fgColor);
-        // draw rectangle
-        bufferG.drawPolygon(new int[]{startingPoint.x, finishingPoint.x, heightX}, new int[]{startingPoint.y, finishingPoint.y, heightY}, 3);
-        // draw image from buffer to gui
-        drawingPanel.getGraphics().drawImage(bufferImg, -9, -67, null);
-    }
-
-    /**
-     * API: paint a triangle automatically on canvas
-     *
-     * @param startingPoint  the starting point for drawing the triangle
-     * @param finishingPoint the finishing point for drawing the triangle
-     */
-    public void drawIsoscelesTriangle(Point startingPoint, Point finishingPoint) {
-        // calculate height of triangle
-        int heightX = (startingPoint.x + (finishingPoint.x - startingPoint.x) / 2);
-        int heightY = startingPoint.y - finishingPoint.x + startingPoint.x;
-
-        // set color
-        bufferG.setColor(this.fgColor);
-        // draw rectangle
-        bufferG.drawPolygon(new int[]{startingPoint.x, finishingPoint.x, heightX}, new int[]{startingPoint.y, startingPoint.y, heightY}, 3);
-        // draw image from buffer to gui
-        drawingPanel.getGraphics().drawImage(bufferImg, -9, -67, null);
     }
 }

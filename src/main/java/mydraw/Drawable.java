@@ -6,15 +6,21 @@ import java.util.ArrayList;
 
 interface Drawable {
     void draw(Graphics g);
+
+    void setDrawingColor(Color newColor);
+
+    Color getLegacyColor();
 }
 
 
 class ScribbleDrawer implements Drawable {
     private ArrayList<Point> drawingPoints;
     private Color drawingColor;
+    private Color legacyColor;
 
     public ScribbleDrawer(ArrayList<Point> pointArrayList, Color color) {
         drawingColor = color;
+        legacyColor = color;
         drawingPoints = pointArrayList;
     }
 
@@ -26,6 +32,14 @@ class ScribbleDrawer implements Drawable {
             g.drawLine(drawingPoints.get(i).x, drawingPoints.get(i).y, drawingPoints.get(i + 1).x, drawingPoints.get(i + 1).y);
         }
     }
+
+    public void setDrawingColor(Color newColor) {
+        drawingColor = newColor;
+    }
+
+    public Color getLegacyColor() {
+        return legacyColor;
+    }
 }
 
 class RectangleDrawer implements Drawable {
@@ -34,6 +48,7 @@ class RectangleDrawer implements Drawable {
     private int rectangleWidth;
     private int rectangleHeight;
     private Color drawingColor;
+    private Color legacyColor;
 
     public RectangleDrawer(int upperLeftX, int upperLeftY, int lowerRightX, int lowerRightY, Color color) {
         startingPointX = Math.min(upperLeftX, lowerRightX);
@@ -41,6 +56,7 @@ class RectangleDrawer implements Drawable {
         rectangleWidth = Math.abs(lowerRightX - upperLeftX);
         rectangleHeight = Math.abs(lowerRightY - upperLeftY);
         drawingColor = color;
+        legacyColor = color;
     }
 
     public void draw(Graphics g) {
@@ -48,6 +64,14 @@ class RectangleDrawer implements Drawable {
         g.setColor(drawingColor);
         // draw rectangle
         g.drawRect(startingPointX, startingPointY, rectangleWidth, rectangleHeight);
+    }
+
+    public void setDrawingColor(Color newColor) {
+        drawingColor = newColor;
+    }
+
+    public Color getLegacyColor() {
+        return legacyColor;
     }
 }
 
@@ -57,6 +81,7 @@ class OvalDrawer implements Drawable {
     private int rectangleWidth;
     private int rectangleHeight;
     private Color drawingColor;
+    private Color legacyColor;
 
     public OvalDrawer(int upperLeftX, int upperLeftY, int lowerRightX, int lowerRightY, Color color) {
         startingPointX = Math.min(upperLeftX, lowerRightX);
@@ -64,6 +89,7 @@ class OvalDrawer implements Drawable {
         rectangleWidth = Math.abs(lowerRightX - upperLeftX);
         rectangleHeight = Math.abs(lowerRightY - upperLeftY);
         drawingColor = color;
+        legacyColor = color;
     }
 
     public void draw(Graphics g) {
@@ -71,6 +97,14 @@ class OvalDrawer implements Drawable {
         g.setColor(drawingColor);
         // draw oval
         g.drawOval(startingPointX, startingPointY, rectangleWidth, rectangleHeight);
+    }
+
+    public void setDrawingColor(Color newColor) {
+        drawingColor = newColor;
+    }
+
+    public Color getLegacyColor() {
+        return legacyColor;
     }
 }
 
@@ -80,6 +114,7 @@ class Filled3DRectDrawer implements Drawable {
     private int rectangleWidth;
     private int rectangleHeight;
     private Color drawingColor;
+    private Color legacyColor;
     private boolean raisedBool;
 
     public Filled3DRectDrawer(int upperLeftX, int upperLeftY, int lowerRightX, int lowerRightY, Color color, boolean raised) {
@@ -88,6 +123,7 @@ class Filled3DRectDrawer implements Drawable {
         rectangleWidth = Math.abs(lowerRightX - upperLeftX);
         rectangleHeight = Math.abs(lowerRightY - upperLeftY);
         drawingColor = color;
+        legacyColor = color;
         raisedBool = raised;
     }
 
@@ -97,6 +133,14 @@ class Filled3DRectDrawer implements Drawable {
         // draw filled 3d-rectangle
         g.fill3DRect(startingPointX, startingPointY, rectangleWidth, rectangleHeight, raisedBool);
     }
+
+    public void setDrawingColor(Color newColor) {
+        drawingColor = newColor;
+    }
+
+    public Color getLegacyColor() {
+        return legacyColor;
+    }
 }
 
 class RoundRectDrawer implements Drawable {
@@ -105,6 +149,7 @@ class RoundRectDrawer implements Drawable {
     private int rectangleWidth;
     private int rectangleHeight;
     private Color drawingColor;
+    private Color legacyColor;
     private int arcWidth;
     private int arcHeight;
 
@@ -114,6 +159,7 @@ class RoundRectDrawer implements Drawable {
         rectangleWidth = Math.abs(lowerRightX - upperLeftX);
         rectangleHeight = Math.abs(lowerRightY - upperLeftY);
         drawingColor = color;
+        legacyColor = color;
         arcWidth = arcW;
         arcHeight = arcH;
     }
@@ -123,6 +169,14 @@ class RoundRectDrawer implements Drawable {
         g.setColor(drawingColor);
         // draw round rectangle
         g.drawRoundRect(startingPointX, startingPointY, rectangleWidth, rectangleHeight, arcWidth, arcHeight);
+    }
+
+    public void setDrawingColor(Color newColor) {
+        drawingColor = newColor;
+    }
+
+    public Color getLegacyColor() {
+        return legacyColor;
     }
 }
 
@@ -134,6 +188,7 @@ class TriangleDrawer implements Drawable {
     private int heightX;
     private int heightY;
     private Color drawingColor;
+    private Color legacyColor;
 
     public TriangleDrawer(int startingPointX, int startingPointY, int draggingPointX, int draggingPointY, Color color) {
         startX = startingPointX;
@@ -143,6 +198,7 @@ class TriangleDrawer implements Drawable {
         heightX = (startX + (dragX - startX) / 2);
         heightY = startY - dragX + startX;
         drawingColor = color;
+        legacyColor = color;
     }
 
     public void draw(Graphics g) {
@@ -150,6 +206,14 @@ class TriangleDrawer implements Drawable {
         g.setColor(drawingColor);
         // draw triangle
         g.drawPolygon(new int[]{startX, dragX, heightX}, new int[]{startY, dragY, heightY}, 3);
+    }
+
+    public void setDrawingColor(Color newColor) {
+        drawingColor = newColor;
+    }
+
+    public Color getLegacyColor() {
+        return legacyColor;
     }
 }
 
@@ -161,6 +225,7 @@ class IsoscelesTriangleDrawer implements Drawable {
     private int heightX;
     private int heightY;
     private Color drawingColor;
+    private Color legacyColor;
 
     public IsoscelesTriangleDrawer(int startingPointX, int startingPointY, int draggingPointX, int draggingPointY, Color color) {
         startX = startingPointX;
@@ -170,6 +235,7 @@ class IsoscelesTriangleDrawer implements Drawable {
         heightX = (startX + (dragX - startX) / 2);
         heightY = startY - dragX + startX;
         drawingColor = color;
+        legacyColor = color;
     }
 
     public void draw(Graphics g) {
@@ -177,5 +243,13 @@ class IsoscelesTriangleDrawer implements Drawable {
         g.setColor(drawingColor);
         // draw isosceles triangle
         g.drawPolygon(new int[]{startX, dragX, heightX}, new int[]{startY, startY, heightY}, 3);
+    }
+
+    public void setDrawingColor(Color newColor) {
+        drawingColor = newColor;
+    }
+
+    public Color getLegacyColor() {
+        return legacyColor;
     }
 }

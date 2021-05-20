@@ -8,9 +8,10 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 public class DrawTest {
-    // init Draw and GUI
+    // init Draw, DrawGUI and CommandQueue
     Draw drawTest = new Draw();
     DrawGUI drawTestGUI = new DrawGUI(drawTest);
+    CommandQueue commandQueue = new CommandQueue(drawTestGUI);
 
     @Test
     void getHeightTest() {
@@ -115,17 +116,22 @@ public class DrawTest {
     }
 
     /**
-     * Tests methods: autoDraw, drawRectangle, drawOval, drawPolyLine and getDrawing
+     * Tests methods: autoDraw and all available shapes
      */
     @Test
     void autoDrawTestPositive() {
+        // execute autoDraw()
         drawTestGUI.autoDraw();
         try {
-            drawTestGUI.writeImage(drawTestGUI.getDrawing(), "testing.bmp");
+            // read referenceImg from file
             Image referenceImg = drawTestGUI.readImage("reference.bmp");
             BufferedImage bufferedReferenceImg = imgToBufferedImageHelper(referenceImg);
-            Image compareImg = drawTestGUI.readImage("testing.bmp");
+
+            // create comparison image from current gui
+            Image compareImg = drawTestGUI.getDrawing();
             BufferedImage bufferedCompareImg = imgToBufferedImageHelper(compareImg);
+
+            // assert that they are the same
             Assertions.assertTrue(drawTestGUI.isImgSameAsReference(bufferedReferenceImg, bufferedCompareImg));
         } catch (IOException e) {
             Assertions.fail();
@@ -134,18 +140,28 @@ public class DrawTest {
     }
 
     /**
-     * Tests methods: autoDraw, drawRectangle, drawOval, drawPolyLine and getDrawing
+     * Tests methods: autoDraw and all available shapes
      */
     @Test
     void autoDrawTestNegative() {
+        // execute autoDraw()
         drawTestGUI.autoDraw();
         try {
-            drawTestGUI.writeImage(drawTestGUI.getDrawing(), "testing.bmp");
-            Image referenceImg = drawTestGUI.readImage("wrongReference.bmp");
+            // read referenceImg from file
+            Image referenceImg = drawTestGUI.readImage("reference.bmp");
             BufferedImage bufferedReferenceImg = imgToBufferedImageHelper(referenceImg);
-            Image compareImg = drawTestGUI.readImage("testing.bmp");
-            BufferedImage bufferedCompareImg = imgToBufferedImageHelper(compareImg);
-            Assertions.assertFalse(drawTestGUI.isImgSameAsReference(bufferedReferenceImg, bufferedCompareImg));
+
+            // read differentDrawingReference from file
+            Image differentDrawingReference = drawTestGUI.readImage("differentDrawingReference.bmp");
+            BufferedImage bufferedCompareImg0 = imgToBufferedImageHelper(differentDrawingReference);
+
+            // read differentSizeReference from file
+            Image differentSizeReference = drawTestGUI.readImage("differentSizeReference.bmp");
+            BufferedImage bufferedCompareImg1 = imgToBufferedImageHelper(differentSizeReference);
+
+            // test wrong size AND wrong painting
+            Assertions.assertFalse(drawTestGUI.isImgSameAsReference(bufferedReferenceImg, bufferedCompareImg0));
+            Assertions.assertFalse(drawTestGUI.isImgSameAsReference(bufferedReferenceImg, bufferedCompareImg1));
         } catch (IOException e) {
             Assertions.fail();
 
@@ -161,14 +177,33 @@ public class DrawTest {
      */
     public static BufferedImage imgToBufferedImageHelper(Image img) {
         // Create a buffered image with transparency
-        BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+        BufferedImage bImage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
 
         // Draw the image on to the buffered image
-        Graphics2D bGr = bimage.createGraphics();
+        Graphics2D bGr = bImage.createGraphics();
         bGr.drawImage(img, 0, 0, null);
         bGr.dispose();
 
         // Return the buffered image
-        return bimage;
+        return bImage;
+    }
+
+    @Test
+    // TODO FIX TEST AND TEST REDO TOO
+    void undoTestPositive() {
+        // create comparison image from current gui (empty canvas)
+        Image emptyImg = drawTestGUI.getDrawing();
+        BufferedImage bufferedEmptyImg = imgToBufferedImageHelper(emptyImg);
+        // auto draw rectangle
+        drawTestGUI.drawRectangle(new Point(100, 100), new Point(200, 200));
+        // undo drawing of rectangle
+        commandQueue.undoLastDrawingAction();
+
+        // create image from current gui
+        Image compareImg = drawTestGUI.getDrawing();
+        BufferedImage bufferedCompareImg = imgToBufferedImageHelper(compareImg);
+
+        // assert that they are the same
+        Assertions.assertTrue(drawTestGUI.isImgSameAsReference(bufferedEmptyImg, bufferedCompareImg));
     }
 }

@@ -1,5 +1,6 @@
 package mydraw;
 
+import javax.swing.*;
 import java.awt.event.*;
 import java.util.HashMap;
 
@@ -12,7 +13,6 @@ abstract class ShapeDrawer extends MouseAdapter implements MouseMotionListener {
 // depending on the shape mode currently set
 class ShapeManager implements ItemListener {
     DrawGUI gui;
-    CommandQueue cQ;
     ScribbleDrawerLogic scribbleDrawerLogic;
     RectangleDrawerLogic rectangleDrawerLogic;
     OvalDrawerLogic ovalDrawerLogic;
@@ -23,10 +23,7 @@ class ShapeManager implements ItemListener {
     ShapeDrawer currentDrawer;
 
     // constructor
-    public ShapeManager(DrawGUI itsGui) {
-        // create new CommandQueue
-        cQ = new CommandQueue(itsGui);
-
+    public ShapeManager(DrawGUI itsGui, CommandQueue cQ) {
         scribbleDrawerLogic = new ScribbleDrawerLogic(itsGui, cQ);
         rectangleDrawerLogic = new RectangleDrawerLogic(itsGui, cQ);
         ovalDrawerLogic = new OvalDrawerLogic(itsGui, cQ);

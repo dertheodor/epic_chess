@@ -207,9 +207,9 @@ class RoundRectDrawerLogic extends RectangleDrawerLogic {
 
     @Override
     public void drawForRealNow(int x0, int y0, int x1, int y1) {
-        // create threeDRect
+        // create roundRect
         Drawable threeDRect = new RoundRectDrawer(x0, y0, x1, y1, gui.fgColor, 50, 50);
-        // add threeDRect to queue
+        // add roundRect to queue
         cQ.addToRequestQueue(threeDRect);
     }
 }
