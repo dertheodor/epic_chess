@@ -16,6 +16,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -93,7 +94,7 @@ class DrawGUI extends JFrame {
         app = application;    // Remember the application reference
         fgColor = Color.black;  // the current drawing color
         bgColor = Color.white;  // the current background color
-        windowWidth = 900;
+        windowWidth = 950;
         windowHeight = 550;
         // instantiate public undo and redo buttons
         undo = new JButton("Undo");
@@ -102,6 +103,7 @@ class DrawGUI extends JFrame {
         cQ = new CommandQueue(this);
         // instantiate ShapeManager
         shapeManager = new ShapeManager(this, cQ);
+        final FileWriter[] fileWriter = new FileWriter[1];
 
         // Set a LayoutManager, and add the choosers and buttons to the window.
         this.setLayout(new BorderLayout());
@@ -147,12 +149,24 @@ class DrawGUI extends JFrame {
 
 
         // header JButtons
+        // save button
         JButton save = new JButton("Save");
         JFileChooser saveFileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
         // set default name
-        saveFileChooser.setSelectedFile(new File("drawing.bmp"));
+        File saveModalSelectedFile = new File("drawing.txt");
+        saveFileChooser.setSelectedFile(saveModalSelectedFile);
         // only show bmp files
         saveFileChooser.setFileFilter(new FileNameExtensionFilter("Bitmap (BMP)", "bmp"));
+        saveFileChooser.setFileFilter(new FileNameExtensionFilter("Text file (TXT)", "txt"));
+
+        // open button
+        JButton open = new JButton("Open");
+        JFileChooser openFileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+        // set default name
+        openFileChooser.setSelectedFile(new File("last_drawing.txt"));
+        // only show txt files
+        openFileChooser.setFileFilter(new FileNameExtensionFilter("Text file (TXT)", "txt"));
+
         JButton quit = new JButton("Quit");
         JButton clear = new JButton("Clear");
         JButton autoDraw = new JButton("Auto");
@@ -170,6 +184,7 @@ class DrawGUI extends JFrame {
         headerPanel.add(clear);
         headerPanel.add(autoDraw);
         headerPanel.add(save);
+        headerPanel.add(open);
         headerPanel.add(quit);
         headerPanel.add(undo);
         headerPanel.add(redo);
@@ -225,15 +240,46 @@ class DrawGUI extends JFrame {
                 // triggered when save button is pressed
                 if (returnValue == JFileChooser.APPROVE_OPTION) {
                     String filename = saveFileChooser.getSelectedFile().toString();
-                    // ensure that the file is saved as a bitmap
-                    if (!filename.endsWith(".bmp")) {
-                        filename += ".bmp";
+
+                    // ensure that the file is saved as a bitmap or txt
+                    if (filename.endsWith(".bmp") || filename.endsWith(".txt")) {
+                        if (filename.endsWith(".bmp")) {
+                            try {
+                                writeImage(getDrawing(), filename);
+                            } catch (IOException ioException) {
+                                ioException.printStackTrace();
+                            }
+                        }
+                        if (filename.endsWith(".txt")) {
+                            File file = new File(filename);
+                            try {
+                                fileWriter[0] = new FileWriter(file, true);
+                                fileWriter[0].write(String.valueOf(cQ.stringBuffer));
+                                fileWriter[0].close();
+                            } catch (IOException ioException) {
+                                ioException.printStackTrace();
+                            }
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null,
+                                "Drawings can only be saved as .bmp and .txt files",
+                                "Warning",
+                                JOptionPane.WARNING_MESSAGE);
                     }
-                    try {
-                        writeImage(getDrawing(), filename);
-                    } catch (IOException ioException) {
-                        ioException.printStackTrace();
-                    }
+                }
+            }
+        });
+
+        // Define mouseListener for opening past drawing
+        open.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                // init modal on button press and save its return value for further processing
+                int returnValue = openFileChooser.showOpenDialog(drawingPanel);
+
+                // triggered when save button is pressed
+                if (returnValue == JFileChooser.APPROVE_OPTION) {
+                    // TODO open old drawing as txt file
                 }
             }
         });

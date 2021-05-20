@@ -1,10 +1,6 @@
 // Purpose.  Command design pattern - decoupling producer from consumer
 package mydraw;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.*;
 import java.util.List;
 
@@ -18,6 +14,7 @@ public class CommandQueue {
     ArrayList<Drawable> redoList;
     ArrayList<Drawable> repaintList;
     DrawGUI drawGUI;
+    StringBuffer stringBuffer = new StringBuffer();
 
     public CommandQueue(DrawGUI itsGui) {
         requestQueue = new LinkedList<Drawable>();
@@ -103,6 +100,10 @@ public class CommandQueue {
 //
     public void workOffRequests(List<Drawable> queue) {
         for (Drawable drawable : queue) {
+            // add drawable to stringBuffer
+            stringBuffer.append(drawable.getRedrawMetaInfo());
+            stringBuffer.append(System.getProperty("line.separator"));
+
             // draw drawable object
             drawable.draw(drawGUI.bufferG);
             drawGUI.updateCanvas();
