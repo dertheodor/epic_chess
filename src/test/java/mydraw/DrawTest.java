@@ -121,7 +121,7 @@ public class DrawTest {
     @Test
     void autoDrawTestPositive() {
         // execute autoDraw()
-        commandQueue.autoDraw();
+        drawTestGUI.autoDraw();
         try {
             // read referenceImg from file
             Image referenceImg = drawTestGUI.readImage("reference.bmp");
@@ -145,7 +145,7 @@ public class DrawTest {
     @Test
     void autoDrawTestNegative() {
         // execute autoDraw()
-        commandQueue.autoDraw();
+        drawTestGUI.autoDraw();
         try {
             // read referenceImg from file
             Image referenceImg = drawTestGUI.readImage("reference.bmp");
@@ -195,7 +195,7 @@ public class DrawTest {
         Image emptyImg = drawTestGUI.getDrawing();
         BufferedImage bufferedEmptyImg = imgToBufferedImageHelper(emptyImg);
         // auto draw rectangle
-        commandQueue.drawRectangle(new Point(100, 100), new Point(200, 200));
+        drawTestGUI.drawRectangle(new Point(100, 100), new Point(200, 200));
         // undo drawing of rectangle
         commandQueue.undoLastDrawingAction();
 
