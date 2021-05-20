@@ -27,10 +27,13 @@ class ScribbleDrawer implements Drawable {
         drawingPoints = pointArrayList;
         redrawMetaInfo = new StringBuilder()
                 .append("scribble")
-                .append("#")
-                .append(pointArrayList)
-                .append("#")
-                .append(color);
+                .append("#");
+        // add all points x-values
+        pointArrayList.forEach(point -> redrawMetaInfo.append("x").append(point.x));
+
+        // add all points y-values
+        pointArrayList.forEach(point -> redrawMetaInfo.append("y").append(point.y));
+        redrawMetaInfo.append("#").append(color);
     }
 
     public void draw(Graphics g) {

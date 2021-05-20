@@ -716,26 +716,45 @@ class DrawGUI extends JFrame {
 
         switch (separatedEntries[0]) {
             case "scribble":
-                System.out.println(separatedEntries);
-                System.out.println(separatedEntries[1]);
-                //TODO extract points and call shapeManager.scribbleDrawerLogic with points for redraw
+                // init new pointArrayList where the extracted points will get into
+                ArrayList<Point> pointArrayList = new ArrayList<>();
+                // set color
+                drawingColor = colorSwitchHelper(colorHashMapHelper(separatedEntries[2]));
+
+                // separate x and y values
+                String[] separatedXValues = separatedEntries[1].split("x");
+                String[] separatedYValues = separatedEntries[1].split("y");
+
+                // recreate initial scribble line (consisting of an Array of Points)
+                for (int i = 1; i < separatedXValues.length - 1; i++) {
+                    pointArrayList.add(new Point(Integer.parseInt(separatedXValues[i]), Integer.parseInt(separatedYValues[i])));
+                }
+
+                // redraw
+                shapeManager.scribbleDrawerLogic.drawForRealNow(pointArrayList, drawingColor);
                 break;
             case "rectangle":
+                // redraw
                 shapeManager.rectangleDrawerLogic.drawForRealNow(arg1, arg2, arg3, arg4, drawingColor);
                 break;
             case "oval":
+                // redraw
                 shapeManager.ovalDrawerLogic.drawForRealNow(arg1, arg2, arg3, arg4, drawingColor);
                 break;
             case "filled3drect":
+                // redraw
                 shapeManager.threeDRectDrawerLogic.drawForRealNow(arg1, arg2, arg3, arg4, drawingColor);
                 break;
             case "roundrect":
+                // redraw
                 shapeManager.roundRectDrawerLogic.drawForRealNow(arg1, arg2, arg3, arg4, drawingColor);
                 break;
             case "triangle":
+                // redraw
                 shapeManager.triangleDrawerLogic.drawForRealNow(arg1, arg2, arg3, arg4, drawingColor);
                 break;
             case "isoscelestriangle":
+                // redraw
                 shapeManager.isoscelesTriangleDrawerLogic.drawForRealNow(arg1, arg2, arg3, arg4, drawingColor);
                 break;
         }
