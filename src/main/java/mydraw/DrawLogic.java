@@ -38,12 +38,18 @@ class ScribbleDrawerLogic extends ShapeDrawer {
     public void mouseReleased(MouseEvent e) {
         // undraw "rubberband" line which was drawn whilst dragging mouse
         gui.bufferG.setColor(gui.getBackground());
+        drawForRealNow(pointArrayList, gui.fgColor);
+    }
+
+    public void drawForRealNow(ArrayList<Point> pointArrayList, Color fgColor) {
         // iterate trough drawn points and draw them
         for (int i = 0; i < pointArrayList.size() - 1; i++) {
             gui.bufferG.drawLine(pointArrayList.get(i).x, pointArrayList.get(i).y, pointArrayList.get(i + 1).x, pointArrayList.get(i + 1).y);
         }
 
-        Drawable scribble = new ScribbleDrawer(pointArrayList, gui.fgColor);
+        // create scribble
+        Drawable scribble = new ScribbleDrawer(pointArrayList, fgColor);
+        // add scribble to queue
         cQ.addToRequestQueue(scribble);
     }
 }
@@ -82,7 +88,7 @@ class RectangleDrawerLogic extends ShapeDrawer {
         gui.bufferG.setColor(gui.fgColor);
         // draw the final rectangle
         //doDraw(pressx, pressy, e.getX(), e.getY());
-        drawForRealNow(pressx, pressy, e.getX(), e.getY());
+        drawForRealNow(pressx, pressy, e.getX(), e.getY(), gui.fgColor);
     }
 
     // mouse released => temporarily set second corner of rectangle
@@ -113,9 +119,9 @@ class RectangleDrawerLogic extends ShapeDrawer {
         gui.drawingPanel.getGraphics().drawImage(gui.bufferImg, -9, -67, null);
     }
 
-    public void drawForRealNow(int x0, int y0, int x1, int y1) {
+    public void drawForRealNow(int x0, int y0, int x1, int y1, Color fgColor) {
         // create rectangle
-        Drawable rectangle = new RectangleDrawer(x0, y0, x1, y1, gui.fgColor);
+        Drawable rectangle = new RectangleDrawer(x0, y0, x1, y1, fgColor);
         // add rectangle to queue
         cQ.addToRequestQueue(rectangle);
     }
@@ -144,9 +150,9 @@ class OvalDrawerLogic extends RectangleDrawerLogic {
     }
 
     @Override
-    public void drawForRealNow(int x0, int y0, int x1, int y1) {
+    public void drawForRealNow(int x0, int y0, int x1, int y1, Color fgColor) {
         // create oval
-        Drawable oval = new OvalDrawer(x0, y0, x1, y1, gui.fgColor);
+        Drawable oval = new OvalDrawer(x0, y0, x1, y1, fgColor);
         // add oval to queue
         cQ.addToRequestQueue(oval);
     }
@@ -175,9 +181,9 @@ class Filled3DRectDrawerLogic extends RectangleDrawerLogic {
     }
 
     @Override
-    public void drawForRealNow(int x0, int y0, int x1, int y1) {
+    public void drawForRealNow(int x0, int y0, int x1, int y1, Color fgColor) {
         // create threeDRect
-        Drawable threeDRect = new Filled3DRectDrawer(x0, y0, x1, y1, gui.fgColor, true);
+        Drawable threeDRect = new Filled3DRectDrawer(x0, y0, x1, y1, fgColor, true);
         // add threeDRect to queue
         cQ.addToRequestQueue(threeDRect);
     }
@@ -206,9 +212,9 @@ class RoundRectDrawerLogic extends RectangleDrawerLogic {
     }
 
     @Override
-    public void drawForRealNow(int x0, int y0, int x1, int y1) {
+    public void drawForRealNow(int x0, int y0, int x1, int y1, Color fgColor) {
         // create roundRect
-        Drawable threeDRect = new RoundRectDrawer(x0, y0, x1, y1, gui.fgColor, 50, 50);
+        Drawable threeDRect = new RoundRectDrawer(x0, y0, x1, y1, fgColor, 50, 50);
         // add roundRect to queue
         cQ.addToRequestQueue(threeDRect);
     }
@@ -236,9 +242,9 @@ class TriangleDrawerLogic extends RectangleDrawerLogic {
     }
 
     @Override
-    public void drawForRealNow(int x0, int y0, int x1, int y1) {
+    public void drawForRealNow(int x0, int y0, int x1, int y1, Color fgColor) {
         // create oval
-        Drawable triangle = new TriangleDrawer(x0, y0, x1, y1, gui.fgColor);
+        Drawable triangle = new TriangleDrawer(x0, y0, x1, y1, fgColor);
         // add oval to queue
         cQ.addToRequestQueue(triangle);
     }
@@ -266,9 +272,9 @@ class IsoscelesTriangleDrawerLogic extends RectangleDrawerLogic {
     }
 
     @Override
-    public void drawForRealNow(int x0, int y0, int x1, int y1) {
+    public void drawForRealNow(int x0, int y0, int x1, int y1, Color fgColor) {
         // create oval
-        Drawable isoscelesTriangle = new IsoscelesTriangleDrawer(x0, y0, x1, y1, gui.fgColor);
+        Drawable isoscelesTriangle = new IsoscelesTriangleDrawer(x0, y0, x1, y1, fgColor);
         // add oval to queue
         cQ.addToRequestQueue(isoscelesTriangle);
     }

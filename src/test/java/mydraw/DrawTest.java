@@ -5,7 +5,9 @@ import org.junit.jupiter.api.Test;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
+import java.util.Scanner;
 
 public class DrawTest {
     // init Draw, DrawGUI and CommandQueue
@@ -189,13 +191,14 @@ public class DrawTest {
     }
 
     @Test
-    // TODO FIX TEST AND TEST REDO TOO
+        // TODO why does this test fail.. when saved both images are the same
     void undoTestPositive() {
         // create comparison image from current gui (empty canvas)
+        drawTestGUI.clear();
         Image emptyImg = drawTestGUI.getDrawing();
         BufferedImage bufferedEmptyImg = imgToBufferedImageHelper(emptyImg);
         // auto draw rectangle
-        drawTestGUI.drawRectangle(new Point(100, 100), new Point(200, 200));
+        drawTestGUI.shapeManager.rectangleDrawerLogic.drawForRealNow(100, 100, 200, 200, Color.black);
         // undo drawing of rectangle
         commandQueue.undoLastDrawingAction();
 
@@ -205,5 +208,55 @@ public class DrawTest {
 
         // assert that they are the same
         Assertions.assertTrue(drawTestGUI.isImgSameAsReference(bufferedEmptyImg, bufferedCompareImg));
+    }
+
+    @Test
+    void readPastDrawingPositive() throws IOException {
+        // read txt file of reference_drawing
+        File pastDrawing = new File("reference_drawing.txt");
+
+        // redraw reference drawing from its txt file
+        Scanner input = new Scanner(pastDrawing);
+        while (input.hasNextLine()) {
+            String line = input.nextLine();
+            drawTestGUI.readLineAndDrawDrawable(line);
+        }
+        input.close();
+
+        // create redrawnImage from current gui
+        Image redrawnImage = drawTestGUI.getDrawing();
+        BufferedImage redrawnCompareImg = imgToBufferedImageHelper(redrawnImage);
+
+        // read referenceImg from file
+        Image referenceImg = drawTestGUI.readImage("reference.bmp");
+        BufferedImage bufferedReferenceImg = imgToBufferedImageHelper(referenceImg);
+
+        // assert that they are the same
+        Assertions.assertTrue(drawTestGUI.isImgSameAsReference(redrawnCompareImg, bufferedReferenceImg));
+    }
+
+    @Test
+    void readPastDrawingNegative() throws IOException {
+        // read txt file of wrong_drawing
+        File pastDrawing = new File("wrong_drawing.txt");
+
+        // redraw wrong drawing from its txt file
+        Scanner input = new Scanner(pastDrawing);
+        while (input.hasNextLine()) {
+            String line = input.nextLine();
+            drawTestGUI.readLineAndDrawDrawable(line);
+        }
+        input.close();
+
+        // create redrawnImage from current gui
+        Image redrawnImage = drawTestGUI.getDrawing();
+        BufferedImage redrawnCompareImg = imgToBufferedImageHelper(redrawnImage);
+
+        // read referenceImg from file
+        Image referenceImg = drawTestGUI.readImage("reference.bmp");
+        BufferedImage bufferedReferenceImg = imgToBufferedImageHelper(referenceImg);
+
+        // assert that they are the same
+        Assertions.assertFalse(drawTestGUI.isImgSameAsReference(redrawnCompareImg, bufferedReferenceImg));
     }
 }

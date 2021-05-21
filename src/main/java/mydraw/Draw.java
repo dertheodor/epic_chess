@@ -15,11 +15,11 @@ import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * The application class.  Processes high-level commands sent by GUI
@@ -72,7 +72,6 @@ class DrawGUI extends JFrame {
             if (windowHeight != getHeight() || windowWidth != getWidth()) {
                 BufferedImage newBufferImg = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
                 Graphics newBufferG = newBufferImg.getGraphics();
-                //newBufferG.setColor(Color.white); TODO is this needed?
                 newBufferG.fillRect(0, 0, newBufferImg.getWidth(), newBufferImg.getHeight());
                 newBufferG.drawImage(bufferImg, 0, 0, null);
                 bufferImg = newBufferImg;
@@ -93,7 +92,7 @@ class DrawGUI extends JFrame {
         app = application;    // Remember the application reference
         fgColor = Color.black;  // the current drawing color
         bgColor = Color.white;  // the current background color
-        windowWidth = 900;
+        windowWidth = 950;
         windowHeight = 550;
         // instantiate public undo and redo buttons
         undo = new JButton("Undo");
@@ -102,6 +101,7 @@ class DrawGUI extends JFrame {
         cQ = new CommandQueue(this);
         // instantiate ShapeManager
         shapeManager = new ShapeManager(this, cQ);
+        final FileWriter[] fileWriter = new FileWriter[1];
 
         // Set a LayoutManager, and add the choosers and buttons to the window.
         this.setLayout(new BorderLayout());
@@ -147,12 +147,24 @@ class DrawGUI extends JFrame {
 
 
         // header JButtons
+        // save button
         JButton save = new JButton("Save");
         JFileChooser saveFileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
         // set default name
-        saveFileChooser.setSelectedFile(new File("drawing.bmp"));
+        File saveModalSelectedFile = new File("drawing.txt");
+        saveFileChooser.setSelectedFile(saveModalSelectedFile);
         // only show bmp files
         saveFileChooser.setFileFilter(new FileNameExtensionFilter("Bitmap (BMP)", "bmp"));
+        saveFileChooser.setFileFilter(new FileNameExtensionFilter("Text file (TXT)", "txt"));
+
+        // open button
+        JButton open = new JButton("Open");
+        JFileChooser openFileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+        // set default name
+        openFileChooser.setSelectedFile(new File("drawing.txt"));
+        // only show txt files
+        openFileChooser.setFileFilter(new FileNameExtensionFilter("Text file (TXT)", "txt"));
+
         JButton quit = new JButton("Quit");
         JButton clear = new JButton("Clear");
         JButton autoDraw = new JButton("Auto");
@@ -170,6 +182,7 @@ class DrawGUI extends JFrame {
         headerPanel.add(clear);
         headerPanel.add(autoDraw);
         headerPanel.add(save);
+        headerPanel.add(open);
         headerPanel.add(quit);
         headerPanel.add(undo);
         headerPanel.add(redo);
@@ -194,7 +207,7 @@ class DrawGUI extends JFrame {
         clear.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                // clear drawings TODO maybe make clear() so it also can be undone
+                // clear drawings
                 clear();
                 // clear undo queue and set button to disabled
                 cQ.undoList.clear();
@@ -219,22 +232,15 @@ class DrawGUI extends JFrame {
         save.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                // init modal on button press and save its return value for further processing
-                int returnValue = saveFileChooser.showSaveDialog(drawingPanel);
+                saveOnMousePressed(fileWriter, saveFileChooser);
+            }
+        });
 
-                // triggered when save button is pressed
-                if (returnValue == JFileChooser.APPROVE_OPTION) {
-                    String filename = saveFileChooser.getSelectedFile().toString();
-                    // ensure that the file is saved as a bitmap
-                    if (!filename.endsWith(".bmp")) {
-                        filename += ".bmp";
-                    }
-                    try {
-                        writeImage(getDrawing(), filename);
-                    } catch (IOException ioException) {
-                        ioException.printStackTrace();
-                    }
-                }
+        // Define mouseListener for opening past drawing
+        open.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                readOnMousePressed(openFileChooser);
             }
         });
 
@@ -632,5 +638,153 @@ class DrawGUI extends JFrame {
         }
         // after autoDraw set back color to default
         fgColor = Color.black;
+    }
+
+    /**
+     * @param fileWriter      fileWriter responsible for writing file to disk
+     * @param saveFileChooser JFileChooser responsible for selecting the directory and file name
+     */
+    public void saveOnMousePressed(FileWriter[] fileWriter, JFileChooser saveFileChooser) {
+        // init modal on button press and save its return value for further processing
+        int returnValue = saveFileChooser.showSaveDialog(drawingPanel);
+
+        // triggered when save button is pressed
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            String filename = saveFileChooser.getSelectedFile().toString();
+
+            // ensure that the file is saved as a bitmap or txt
+            if (filename.endsWith(".bmp") || filename.endsWith(".txt")) {
+                if (filename.endsWith(".bmp")) {
+                    try {
+                        writeImage(getDrawing(), filename);
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    }
+                }
+                if (filename.endsWith(".txt")) {
+                    File file = new File(filename);
+                    try {
+                        fileWriter[0] = new FileWriter(file, true);
+                        fileWriter[0].write(String.valueOf(cQ.stringBuffer));
+                        fileWriter[0].close();
+                        JOptionPane.showMessageDialog(drawingPanel,
+                                "File successfully saved!",
+                                "Success",
+                                JOptionPane.WARNING_MESSAGE);
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    }
+                }
+            } else {
+                JOptionPane.showMessageDialog(drawingPanel,
+                        "Drawings can only be saved as .bmp and .txt files",
+                        "Warning",
+                        JOptionPane.WARNING_MESSAGE);
+            }
+        }
+    }
+
+    /**
+     * @param openFileChooser JFileChooser responsible for selecting the directory and file name of to be read file
+     */
+    public void readOnMousePressed(JFileChooser openFileChooser) {
+        // init modal on button press and save its return value for further processing
+        int returnValue = openFileChooser.showOpenDialog(drawingPanel);
+
+        // triggered when save button is pressed
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            File toBeReadFile = openFileChooser.getSelectedFile();
+            try {
+                Scanner input = new Scanner(toBeReadFile);
+
+                while (input.hasNextLine()) {
+                    String line = input.nextLine();
+                    readLineAndDrawDrawable(line);
+                }
+                input.close();
+
+            } catch (FileNotFoundException fileNotFoundException) {
+                fileNotFoundException.printStackTrace();
+            }
+        }
+    }
+
+
+    /**
+     * @param line the to be read line of the input-buffer
+     */
+    public void readLineAndDrawDrawable(String line) {
+        // stringArray of comma separated values previously delimited by a ","
+        String[] separatedEntries = line.split("#");
+
+        // init params for later function calls
+        int arg1 = 0;
+        int arg2 = 0;
+        int arg3 = 0;
+        int arg4 = 0;
+        Color drawingColor = Color.black;
+
+        // this needs to be done all other shapes except scribble use the same params
+        if (!separatedEntries[0].equals("scribble")) {
+            // parse all arguments needed for drawings into Integers
+            arg1 = Integer.parseInt(separatedEntries[1]);
+            arg2 = Integer.parseInt(separatedEntries[2]);
+            arg3 = Integer.parseInt(separatedEntries[3]);
+            arg4 = Integer.parseInt(separatedEntries[4]);
+            drawingColor = colorSwitchHelper(colorHashMapHelper(separatedEntries[5]));
+        }
+
+        switch (separatedEntries[0]) {
+            case "scribble":
+                // init new pointArrayList where the extracted points will get into
+                ArrayList<Point> pointArrayList = new ArrayList<>();
+                // set color
+                drawingColor = colorSwitchHelper(colorHashMapHelper(separatedEntries[2]));
+
+                // separate x and y values
+                String[] separatedXValues = separatedEntries[1].split("x");
+                String[] separatedYValues = separatedEntries[1].split("y");
+
+                // last point x-value
+                String lastXValue = separatedXValues[separatedXValues.length - 1].split("<")[0];
+                // last point y-value
+                String lastYValue = separatedYValues[separatedYValues.length - 1];
+
+                // recreate initial scribble line (consisting of an Array of Points)
+                for (int i = 1; i < separatedXValues.length - 1; i++) {
+                    pointArrayList.add(new Point(Integer.parseInt(separatedXValues[i]), Integer.parseInt(separatedYValues[i])));
+                }
+
+                // add last point
+                pointArrayList.add(new Point(Integer.parseInt(lastXValue), Integer.parseInt(lastYValue)));
+
+                // redraw
+                shapeManager.scribbleDrawerLogic.drawForRealNow(pointArrayList, drawingColor);
+                break;
+            case "rectangle":
+                // redraw
+                shapeManager.rectangleDrawerLogic.drawForRealNow(arg1, arg2, arg3, arg4, drawingColor);
+                break;
+            case "oval":
+                // redraw
+                shapeManager.ovalDrawerLogic.drawForRealNow(arg1, arg2, arg3, arg4, drawingColor);
+                break;
+            case "filled3drect":
+                // redraw
+                shapeManager.threeDRectDrawerLogic.drawForRealNow(arg1, arg2, arg3, arg4, drawingColor);
+                break;
+            case "roundrect":
+                // redraw
+                shapeManager.roundRectDrawerLogic.drawForRealNow(arg1, arg2, arg3, arg4, drawingColor);
+                break;
+            case "triangle":
+                // redraw
+                shapeManager.triangleDrawerLogic.drawForRealNow(arg1, arg2, arg3, arg4, drawingColor);
+                break;
+            case "isoscelestriangle":
+                // redraw
+                shapeManager.isoscelesTriangleDrawerLogic.drawForRealNow(arg1, arg2, arg3, arg4, drawingColor);
+                break;
+        }
     }
 }
