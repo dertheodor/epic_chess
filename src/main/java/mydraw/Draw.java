@@ -254,6 +254,10 @@ class DrawGUI extends JFrame {
                                 fileWriter[0] = new FileWriter(file, true);
                                 fileWriter[0].write(String.valueOf(cQ.stringBuffer));
                                 fileWriter[0].close();
+                                JOptionPane.showMessageDialog(drawingPanel,
+                                        "File successfully saved!",
+                                        "Success",
+                                        JOptionPane.WARNING_MESSAGE);
                             } catch (IOException ioException) {
                                 ioException.printStackTrace();
                             }
