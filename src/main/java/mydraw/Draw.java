@@ -232,43 +232,7 @@ class DrawGUI extends JFrame {
         save.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                // init modal on button press and save its return value for further processing
-                int returnValue = saveFileChooser.showSaveDialog(drawingPanel);
-
-                // triggered when save button is pressed
-                if (returnValue == JFileChooser.APPROVE_OPTION) {
-                    String filename = saveFileChooser.getSelectedFile().toString();
-
-                    // ensure that the file is saved as a bitmap or txt
-                    if (filename.endsWith(".bmp") || filename.endsWith(".txt")) {
-                        if (filename.endsWith(".bmp")) {
-                            try {
-                                writeImage(getDrawing(), filename);
-                            } catch (IOException ioException) {
-                                ioException.printStackTrace();
-                            }
-                        }
-                        if (filename.endsWith(".txt")) {
-                            File file = new File(filename);
-                            try {
-                                fileWriter[0] = new FileWriter(file, true);
-                                fileWriter[0].write(String.valueOf(cQ.stringBuffer));
-                                fileWriter[0].close();
-                                JOptionPane.showMessageDialog(drawingPanel,
-                                        "File successfully saved!",
-                                        "Success",
-                                        JOptionPane.WARNING_MESSAGE);
-                            } catch (IOException ioException) {
-                                ioException.printStackTrace();
-                            }
-                        }
-                    } else {
-                        JOptionPane.showMessageDialog(drawingPanel,
-                                "Drawings can only be saved as .bmp and .txt files",
-                                "Warning",
-                                JOptionPane.WARNING_MESSAGE);
-                    }
-                }
+                saveOnMousePressed(fileWriter, saveFileChooser);
             }
         });
 
@@ -276,25 +240,7 @@ class DrawGUI extends JFrame {
         open.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                // init modal on button press and save its return value for further processing
-                int returnValue = openFileChooser.showOpenDialog(drawingPanel);
-
-                // triggered when save button is pressed
-                if (returnValue == JFileChooser.APPROVE_OPTION) {
-                    File toBeReadFile = openFileChooser.getSelectedFile();
-                    try {
-                        Scanner input = new Scanner(toBeReadFile);
-
-                        while (input.hasNextLine()) {
-                            String line = input.nextLine();
-                            readLineAndDrawDrawable(line);
-                        }
-                        input.close();
-
-                    } catch (FileNotFoundException fileNotFoundException) {
-                        fileNotFoundException.printStackTrace();
-                    }
-                }
+                readOnMousePressed(openFileChooser);
             }
         });
 
@@ -695,6 +641,76 @@ class DrawGUI extends JFrame {
     }
 
     /**
+     * @param fileWriter      fileWriter responsible for writing file to disk
+     * @param saveFileChooser JFileChooser responsible for selecting the directory and file name
+     */
+    public void saveOnMousePressed(FileWriter[] fileWriter, JFileChooser saveFileChooser) {
+        // init modal on button press and save its return value for further processing
+        int returnValue = saveFileChooser.showSaveDialog(drawingPanel);
+
+        // triggered when save button is pressed
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            String filename = saveFileChooser.getSelectedFile().toString();
+
+            // ensure that the file is saved as a bitmap or txt
+            if (filename.endsWith(".bmp") || filename.endsWith(".txt")) {
+                if (filename.endsWith(".bmp")) {
+                    try {
+                        writeImage(getDrawing(), filename);
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    }
+                }
+                if (filename.endsWith(".txt")) {
+                    File file = new File(filename);
+                    try {
+                        fileWriter[0] = new FileWriter(file, true);
+                        fileWriter[0].write(String.valueOf(cQ.stringBuffer));
+                        fileWriter[0].close();
+                        JOptionPane.showMessageDialog(drawingPanel,
+                                "File successfully saved!",
+                                "Success",
+                                JOptionPane.WARNING_MESSAGE);
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    }
+                }
+            } else {
+                JOptionPane.showMessageDialog(drawingPanel,
+                        "Drawings can only be saved as .bmp and .txt files",
+                        "Warning",
+                        JOptionPane.WARNING_MESSAGE);
+            }
+        }
+    }
+
+    /**
+     * @param openFileChooser JFileChooser responsible for selecting the directory and file name of to be read file
+     */
+    public void readOnMousePressed(JFileChooser openFileChooser) {
+        // init modal on button press and save its return value for further processing
+        int returnValue = openFileChooser.showOpenDialog(drawingPanel);
+
+        // triggered when save button is pressed
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            File toBeReadFile = openFileChooser.getSelectedFile();
+            try {
+                Scanner input = new Scanner(toBeReadFile);
+
+                while (input.hasNextLine()) {
+                    String line = input.nextLine();
+                    readLineAndDrawDrawable(line);
+                }
+                input.close();
+
+            } catch (FileNotFoundException fileNotFoundException) {
+                fileNotFoundException.printStackTrace();
+            }
+        }
+    }
+
+
+    /**
      * @param line the to be read line of the input-buffer
      */
     public void readLineAndDrawDrawable(String line) {
@@ -729,10 +745,18 @@ class DrawGUI extends JFrame {
                 String[] separatedXValues = separatedEntries[1].split("x");
                 String[] separatedYValues = separatedEntries[1].split("y");
 
+                // last point x-value
+                String lastXValue = separatedXValues[separatedXValues.length - 1].split("<")[0];
+                // last point y-value
+                String lastYValue = separatedYValues[separatedYValues.length - 1];
+
                 // recreate initial scribble line (consisting of an Array of Points)
                 for (int i = 1; i < separatedXValues.length - 1; i++) {
                     pointArrayList.add(new Point(Integer.parseInt(separatedXValues[i]), Integer.parseInt(separatedYValues[i])));
                 }
+
+                // add last point
+                pointArrayList.add(new Point(Integer.parseInt(lastXValue), Integer.parseInt(lastYValue)));
 
                 // redraw
                 shapeManager.scribbleDrawerLogic.drawForRealNow(pointArrayList, drawingColor);
