@@ -126,7 +126,7 @@ public class DrawTest {
         drawTestGUI.autoDraw();
         try {
             // read referenceImg from file
-            Image referenceImg = drawTestGUI.readImage("reference.bmp");
+            Image referenceImg = drawTestGUI.readImage("DrawExternalFiles/reference.bmp");
             BufferedImage bufferedReferenceImg = imgToBufferedImageHelper(referenceImg);
 
             // create comparison image from current gui
@@ -150,15 +150,15 @@ public class DrawTest {
         drawTestGUI.autoDraw();
         try {
             // read referenceImg from file
-            Image referenceImg = drawTestGUI.readImage("reference.bmp");
+            Image referenceImg = drawTestGUI.readImage("DrawExternalFiles/reference.bmp");
             BufferedImage bufferedReferenceImg = imgToBufferedImageHelper(referenceImg);
 
             // read differentDrawingReference from file
-            Image differentDrawingReference = drawTestGUI.readImage("differentDrawingReference.bmp");
+            Image differentDrawingReference = drawTestGUI.readImage("DrawExternalFiles/differentDrawingReference.bmp");
             BufferedImage bufferedCompareImg0 = imgToBufferedImageHelper(differentDrawingReference);
 
             // read differentSizeReference from file
-            Image differentSizeReference = drawTestGUI.readImage("differentSizeReference.bmp");
+            Image differentSizeReference = drawTestGUI.readImage("DrawExternalFiles/differentSizeReference.bmp");
             BufferedImage bufferedCompareImg1 = imgToBufferedImageHelper(differentSizeReference);
 
             // test wrong size AND wrong painting
@@ -213,7 +213,7 @@ public class DrawTest {
     @Test
     void readPastDrawingPositive() throws IOException {
         // read txt file of reference_drawing
-        File pastDrawing = new File("reference_drawing.txt");
+        File pastDrawing = new File("DrawExternalFiles/reference_drawing.txt");
 
         // redraw reference drawing from its txt file
         Scanner input = new Scanner(pastDrawing);
@@ -228,7 +228,7 @@ public class DrawTest {
         BufferedImage redrawnCompareImg = imgToBufferedImageHelper(redrawnImage);
 
         // read referenceImg from file
-        Image referenceImg = drawTestGUI.readImage("reference.bmp");
+        Image referenceImg = drawTestGUI.readImage("DrawExternalFiles/reference.bmp");
         BufferedImage bufferedReferenceImg = imgToBufferedImageHelper(referenceImg);
 
         // assert that they are the same
@@ -238,7 +238,7 @@ public class DrawTest {
     @Test
     void readPastDrawingNegative() throws IOException {
         // read txt file of wrong_drawing
-        File pastDrawing = new File("wrong_drawing.txt");
+        File pastDrawing = new File("DrawExternalFiles/wrong_drawing.txt");
 
         // redraw wrong drawing from its txt file
         Scanner input = new Scanner(pastDrawing);
@@ -253,7 +253,7 @@ public class DrawTest {
         BufferedImage redrawnCompareImg = imgToBufferedImageHelper(redrawnImage);
 
         // read referenceImg from file
-        Image referenceImg = drawTestGUI.readImage("reference.bmp");
+        Image referenceImg = drawTestGUI.readImage("DrawExternalFiles/reference.bmp");
         BufferedImage bufferedReferenceImg = imgToBufferedImageHelper(referenceImg);
 
         // assert that they are the same
