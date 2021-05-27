@@ -1,7 +1,6 @@
 package epicchess;
 
 public enum Figure {
-
     PAWN,
     KNIGHT,
     BISHOP,
