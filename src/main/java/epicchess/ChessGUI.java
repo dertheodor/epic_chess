@@ -89,12 +89,13 @@ public class ChessGUI {
             boardPanel.add(newButton);
         }
 
-        // init starting formation
+        // init starting formation in board
         board.initStartingFigures();
 
-        // add rook to 0,0 as test and set font
-        buttonArray[0][0].setText(board.getTile(0, 0).getCurrentFigure().getUniCodePicture());
-        buttonArray[0][0].setFont(new Font("Arial Unicode MS", Font.BOLD, 90));
+        // fill correct buttons with black figures from board
+        initFillButtonsWithPieces(0, 1);
+        // fill correct buttons with white figures from board
+        initFillButtonsWithPieces(6, 7);
 
         //Add board to Window and make window visible
         gameUI.add(boardPanel);
@@ -161,6 +162,22 @@ public class ChessGUI {
                 button.setText("h");
                 break;
             default:
+        }
+    }
+
+    /**
+     * Fills the buttons with the initial pieces
+     *
+     * @param startingRow row for which filling should start
+     * @param endingRow   row for which filling should end
+     */
+    private void initFillButtonsWithPieces(int startingRow, int endingRow) {
+        for (int row = startingRow; row <= endingRow; row++) {
+            for (int column = 0; column < 8; column++) {
+                // set "text" (picture) and font size
+                buttonArray[row][column].setText(board.getTile(row, column).getCurrentFigure().getUniCodePicture());
+                buttonArray[row][column].setFont(new Font("Arial Unicode MS", Font.BOLD, 90));
+            }
         }
     }
 
