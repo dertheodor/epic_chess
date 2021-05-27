@@ -89,6 +89,13 @@ public class ChessGUI {
             boardPanel.add(newButton);
         }
 
+        // init starting formation
+        board.initStartingFigures();
+
+        // add rook to 0,0 as test and set font
+        buttonArray[0][0].setText(board.getTile(0, 0).getCurrentFigure().getUniCodePicture());
+        buttonArray[0][0].setFont(new Font("Arial Unicode MS", Font.BOLD, 90));
+
         //Add board to Window and make window visible
         gameUI.add(boardPanel);
         gameUI.setVisible(true);
