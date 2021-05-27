@@ -2,6 +2,7 @@ package epicchess;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Arrays;
 
 public class ChessGUI {
 
@@ -17,6 +18,8 @@ public class ChessGUI {
     Color darkTileColor;
     Color lightTileColor;
 
+    JButton[][] buttonArray;
+
     public ChessGUI(ChessEngine engineReference, ChessBoard boardReference) {
         //Initialise Components
         engine = engineReference;
@@ -25,6 +28,7 @@ public class ChessGUI {
         board = boardReference;
         menuBar = new JMenuBar();
         menu = new JMenu("Options");
+        buttonArray = new JButton[8][8];
 
         //Initialise Window
         gameUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -56,9 +60,29 @@ public class ChessGUI {
                 // set edge-buttons size
                 newButton.setFont(new Font("Arial Unicode MS", Font.BOLD, 30));
             } else {
+                // fill buttonArray for the actual board
+                if (i < 9) { // first row
+                    buttonArray[0][i - 1] = newButton;
+                } else if (i < 18) { // second row
+                    buttonArray[1][i - 10] = newButton;
+                } else if (i < 27) { // third row
+                    buttonArray[2][i - 19] = newButton;
+                } else if (i < 36) { // fourth row
+                    buttonArray[3][i - 28] = newButton;
+                } else if (i < 45) { // fifth row
+                    buttonArray[4][i - 37] = newButton;
+                } else if (i < 54) { // sixth row
+                    buttonArray[5][i - 46] = newButton;
+                } else if (i < 63) { // seventh row
+                    buttonArray[6][i - 55] = newButton;
+                } else { // eight row
+                    buttonArray[7][i - 64] = newButton;
+                }
+
+                // set dark tiles
                 if (i % 2 == 0) {
                     newButton.setBackground(darkTileColor);
-                } else {
+                } else { // set light tiles
                     newButton.setBackground(lightTileColor);
                 }
             }
