@@ -7,10 +7,12 @@ public class Chess {
 
     ChessGUI window;
     ChessEngine engine;
+    ChessBoard board;
 
 
     public Chess() {
-        engine = new ChessEngine();
-        window = new ChessGUI(engine);
+        board = new ChessBoard();
+        engine = new ChessEngine(board);
+        window = new ChessGUI(engine, board);
     }
 }

@@ -6,9 +6,10 @@ import java.awt.*;
 public class ChessGUI {
 
     ChessEngine engine;
+    ChessBoard board;
 
     JFrame gameUI;
-    JPanel board;
+    JPanel boardPanel;
 
     JMenuBar menuBar;
     JMenu menu;
@@ -16,11 +17,12 @@ public class ChessGUI {
     Color darkTileColor;
     Color lightTileColor;
 
-    public ChessGUI(ChessEngine engineReference) {
+    public ChessGUI(ChessEngine engineReference, ChessBoard boardReference) {
         //Initialise Components
         engine = engineReference;
         gameUI = new JFrame();
-        board = new JPanel();
+        boardPanel = new JPanel();
+        board = boardReference;
         menuBar = new JMenuBar();
         menu = new JMenu("Options");
 
@@ -42,7 +44,7 @@ public class ChessGUI {
         //lightTileColor = new Color(232, 235, 239);
 
         //Set layout
-        board.setLayout(new GridLayout(0, 9));
+        boardPanel.setLayout(new GridLayout(0, 9));
 
         //Fill board
         for (int i = 0; i < 81; i++) {
@@ -56,18 +58,15 @@ public class ChessGUI {
             } else {
                 if (i % 2 == 0) {
                     newButton.setBackground(darkTileColor);
-                    // TODO init board with correct pieces
-                    newButton.setFont(new Font("Arial Unicode MS", Font.BOLD, 90));
-                    newButton.setText("\u2655");
                 } else {
                     newButton.setBackground(lightTileColor);
                 }
             }
-            board.add(newButton);
+            boardPanel.add(newButton);
         }
 
         //Add board to Window and make window visible
-        gameUI.add(board);
+        gameUI.add(boardPanel);
         gameUI.setVisible(true);
     }
 

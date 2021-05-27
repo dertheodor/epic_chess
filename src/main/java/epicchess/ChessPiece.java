@@ -5,5 +5,11 @@ public class ChessPiece {
     Figure type;
     String uniCodePicture;
 
+    public ChessPiece(boolean colorOfPiece, Figure pieceType, String picture) {
+        color = colorOfPiece;
+        type = pieceType;
+        uniCodePicture = picture;
+    }
+
 
 }
