@@ -2,6 +2,10 @@ package epicchess;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ChessGUI {
 
@@ -19,6 +23,10 @@ public class ChessGUI {
 
     JButton[][] buttonArray;
 
+    ArrayPosition currentlyHighlightedPosition;
+
+    List<JButton> currentlyHighlightedButtonList;
+
     public ChessGUI(ChessEngine engineReference, ChessBoard boardReference) {
         //Initialise Components
         engine = engineReference;
@@ -28,6 +36,8 @@ public class ChessGUI {
         menuBar = new JMenuBar();
         menu = new JMenu("Options");
         buttonArray = new JButton[8][8];
+        currentlyHighlightedPosition = null;
+        currentlyHighlightedButtonList = new ArrayList<>();
 
         //Initialise Window
         gameUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -177,8 +187,112 @@ public class ChessGUI {
                 // set "text" (picture) and font size
                 buttonArray[row][column].setText(board.getTile(row, column).getCurrentPiece().getUniCodePicture());
                 buttonArray[row][column].setFont(new Font("Arial Unicode MS", Font.BOLD, 90));
+                // add initial mousePressed-listeners to only the white pieces
+                if (board.getTile(row, column).getCurrentPiece().color.equals("white")) {
+                    int finalRow = row;
+                    int finalColumn = column;
+                    buttonArray[row][column].addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mousePressed(MouseEvent e) {
+                            // save currentlyHighlightedPosition of selected piece
+                            currentlyHighlightedPosition = new ArrayPosition(finalRow, finalColumn);
+                            // call further logic for moving
+                            setMouseListenerForPossibleMoves(board.highlightNextValidMoves(new ArrayPosition(finalRow, finalColumn)));
+                        }
+                    });
+                }
             }
         }
     }
 
+    // TODO REMOVE LISTENERS FROM OLD POSITION BUTTONS
+
+    /**
+     * adds mousePressed-listeners for next possible moves so we know where the user clicked
+     *
+     * @param arrayPositionList the positions of next possible moves
+     */
+    private void setMouseListenerForPossibleMoves(List<ArrayPosition> arrayPositionList) {
+        // revert old possible moves
+        if (currentlyHighlightedButtonList != null) {
+            removeOldHighlightedButtons();
+        }
+
+        // highlight in gui to where a move is possible
+        highlightPossibleMoves(arrayPositionList);
+
+        arrayPositionList.forEach(arrayPosition ->
+                buttonArray[arrayPosition.getRow()][arrayPosition.getColumn()].addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mousePressed(MouseEvent e) {
+                        // make move
+                        board.makeMove(currentlyHighlightedPosition, arrayPosition);
+                        // remove oldHighlightedButtons
+                        removeOldHighlightedButtons();
+                        // move piece on board
+                        movePieceToNewPosition(currentlyHighlightedPosition, arrayPosition);
+                        // reset currently currentlyHighlightedPosition
+                        currentlyHighlightedPosition = null;
+                    }
+                }));
+    }
+
+    /**
+     * helper method for reverting next possible moves highlight
+     */
+    private void removeOldHighlightedButtons() {
+        for (JButton button : currentlyHighlightedButtonList) {
+            if (button.getText().equals("\u2B24")) {
+                button.setText("");
+                button.setForeground(Color.black);
+            }
+        }
+        currentlyHighlightedButtonList = new ArrayList<>();
+    }
+
+    /**
+     * highlights next possible moves
+     *
+     * @param arrayPositionList list of possible moves
+     */
+    private void highlightPossibleMoves(List<ArrayPosition> arrayPositionList) {
+        for (ArrayPosition position : arrayPositionList) {
+            JButton currentButton = buttonArray[position.getRow()][position.getColumn()];
+            // set text to dot, resize font and add to highlightedButtonList
+            currentButton.setText("\u2B24");
+            currentButton.setFont(new Font("Arial Unicode MS", Font.BOLD, 30));
+            currentButton.setForeground(Color.darkGray);
+            currentlyHighlightedButtonList.add(currentButton);
+        }
+    }
+
+    /**
+     * moves piece to new position
+     *
+     * @param oldPosition old position of piece
+     * @param newPosition new position of piece
+     */
+    private void movePieceToNewPosition(ArrayPosition oldPosition, ArrayPosition newPosition) {
+        JButton oldButton = buttonArray[oldPosition.getRow()][oldPosition.getColumn()];
+        oldButton.setText("");
+
+        // TODO add new click listener for moved piece
+        JButton newButton = buttonArray[newPosition.getRow()][newPosition.getColumn()];
+        newButton.setText(board.getTile(newPosition.getRow(), newPosition.getColumn()).getCurrentPiece().getUniCodePicture());
+        newButton.setFont(new Font("Arial Unicode MS", Font.BOLD, 90));
+    }
+
+    /**
+     * TODO turn-changing
+     */
+    private void setMousePressedListenerForNextMove() {
+
+    }
+
+    /**
+     * TODO turn-changing
+     */
+    private void removeMousePressedListenerForNextMove() {
+
+    }
 }
