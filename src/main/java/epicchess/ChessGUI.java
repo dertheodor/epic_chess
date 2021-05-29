@@ -109,57 +109,58 @@ public class ChessGUI {
      * @param button the button that needs to be described.
      */
     private void descriptionOfEdgeTiles(int i, JButton button) {
+        //TODO Change back to real Tile Description.
         switch (i) {
             case 0:
-                button.setText("8");
+                button.setText("0");
                 break;
             case 9:
-                button.setText("7");
+                button.setText("1");
                 break;
             case 18:
-                button.setText("6");
+                button.setText("2");
                 break;
             case 27:
-                button.setText("5");
+                button.setText("3");
                 break;
             case 36:
                 button.setText("4");
                 break;
             case 45:
-                button.setText("3");
+                button.setText("5");
                 break;
             case 54:
-                button.setText("2");
+                button.setText("6");
                 break;
             case 63:
-                button.setText("1");
+                button.setText("7");
                 break;
             case 72:
                 button.setText("");
                 break;
             case 73:
-                button.setText("a");
+                button.setText("0");
                 break;
             case 74:
-                button.setText("b");
+                button.setText("1");
                 break;
             case 75:
-                button.setText("c");
+                button.setText("2");
                 break;
             case 76:
-                button.setText("d");
+                button.setText("3");
                 break;
             case 77:
-                button.setText("e");
+                button.setText("4");
                 break;
             case 78:
-                button.setText("f");
+                button.setText("5");
                 break;
             case 79:
-                button.setText("g");
+                button.setText("6");
                 break;
             case 80:
-                button.setText("h");
+                button.setText("7");
                 break;
             default:
         }
