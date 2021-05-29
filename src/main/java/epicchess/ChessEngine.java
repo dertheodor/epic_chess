@@ -16,27 +16,27 @@ public class ChessEngine {
                 validMovesList = whitePawnMovement(position, piece, gameBoard);
             }
         }
-
         return validMovesList;
     }
 
     private List<ArrayPosition> whitePawnMovement(ArrayPosition position, ChessPiece piece, ChessTile[][] gameBoard) {
         List<ArrayPosition> validMovesList = new ArrayList<>();
         //check if pawn has moved before
-        if (!piece.movedBefore) {
+        if (!piece.getMovedBefore()) {
             //if pawn has not moved before and both of the tiles in front of him/her are free he/she can move two tiles at once.
-            if (gameBoard[position.getRow()][position.getColumn() - 2].tileState == TileState.FREE &&
-                    gameBoard[position.getRow()][position.getColumn() - 1].tileState == TileState.FREE) {
-                validMovesList.add(new ArrayPosition(position.getRow(), position.getColumn() - 2));
+            if (gameBoard[position.getRow() - 2][position.getColumn()].tileState == TileState.FREE &&
+                    gameBoard[position.getRow() - 1][position.getColumn()].tileState == TileState.FREE) {
+                validMovesList.add(new ArrayPosition(position.getRow() - 2, position.getColumn()));
             }
-            if (gameBoard[position.getRow()][position.getColumn() - 1].tileState == TileState.FREE) {
-                validMovesList.add(new ArrayPosition(position.getRow(), position.getColumn() - 1));
+            if (gameBoard[position.getRow() - 1][position.getColumn()].tileState == TileState.FREE) {
+                validMovesList.add(new ArrayPosition(position.getRow() - 1, position.getColumn()));
             }
             //pawn has moved now so he/she will never be able to move two tiles at once again.
+            // TODO do this in the method which is actually responsible for the movement
             piece.setMovedBeforeTrue();
         } else {
-            if (gameBoard[position.getRow()][position.getColumn() - 1].tileState == TileState.FREE) {
-                validMovesList.add(new ArrayPosition(position.getRow(), position.getColumn() - 1));
+            if (gameBoard[position.getRow() - 1][position.getColumn()].tileState == TileState.FREE) {
+                validMovesList.add(new ArrayPosition(position.getRow() - 1, position.getColumn()));
             }
         }
         return validMovesList;
@@ -45,20 +45,21 @@ public class ChessEngine {
     private List<ArrayPosition> blackPawnMovement(ArrayPosition position, ChessPiece piece, ChessTile[][] gameBoard) {
         List<ArrayPosition> validMovesList = new ArrayList<>();
         //check if pawn has moved before
-        if (!piece.movedBefore) {
+        if (!piece.getMovedBefore()) {
             //if pawn has not moved before and both of the tiles in front of him/her are free he/she can move two tiles at once.
-            if (gameBoard[position.getRow()][position.getColumn() + 2].tileState == TileState.FREE &&
-                    gameBoard[position.getRow()][position.getColumn() + 1].tileState == TileState.FREE) {
-                validMovesList.add(new ArrayPosition(position.getRow(), position.getColumn() + 2));
+            if (gameBoard[position.getRow() + 2][position.getColumn()].tileState == TileState.FREE &&
+                    gameBoard[position.getRow() + 1][position.getColumn()].tileState == TileState.FREE) {
+                validMovesList.add(new ArrayPosition(position.getRow() + 2, position.getColumn()));
             }
-            if (gameBoard[position.getRow()][position.getColumn() + 1].tileState == TileState.FREE) {
-                validMovesList.add(new ArrayPosition(position.getRow(), position.getColumn() + 1));
+            if (gameBoard[position.getRow() + 1][position.getColumn()].tileState == TileState.FREE) {
+                validMovesList.add(new ArrayPosition(position.getRow() + 1, position.getColumn()));
             }
             //pawn has moved now so he/she will never be able to move two tiles at once again.
+            // TODO do this in the method which is actually responsible for the movement
             piece.setMovedBeforeTrue();
         } else {
-            if (gameBoard[position.getRow()][position.getColumn() + 1].tileState == TileState.FREE) {
-                validMovesList.add(new ArrayPosition(position.getRow(), position.getColumn() + 1));
+            if (gameBoard[position.getRow() + 1][position.getColumn()].tileState == TileState.FREE) {
+                validMovesList.add(new ArrayPosition(position.getRow() + 1, position.getColumn()));
             }
         }
         return validMovesList;
