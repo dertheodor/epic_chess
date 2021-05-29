@@ -2,7 +2,7 @@ package epicchess;
 
 public class ChessTile {
     TileState tileState;
-    ChessPiece currentPiece;
+    private ChessPiece currentPiece;
 
     public ChessTile() {
         tileState = TileState.FREE;
