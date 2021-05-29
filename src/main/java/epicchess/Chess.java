@@ -11,8 +11,8 @@ public class Chess {
 
 
     public Chess() {
-        board = new ChessBoard();
-        engine = new ChessEngine(board);
+        engine = new ChessEngine();
+        board = new ChessBoard(engine);
         window = new ChessGUI(engine, board);
     }
 }

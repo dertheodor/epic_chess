@@ -1,9 +1,11 @@
 package epicchess;
 
 public class ChessBoard {
+    ChessEngine engine;
     ChessTile[][] gameBoard;
 
-    public ChessBoard() {
+    public ChessBoard(ChessEngine engineReference) {
+        engine = engineReference;
         // init board
         gameBoard = new ChessTile[8][8];
 
@@ -37,7 +39,7 @@ public class ChessBoard {
         gameBoard[1][5].setCurrentPiece(new ChessPiece("black", Figure.PAWN, "\u265F", "F7pawn"));
         gameBoard[1][6].setCurrentPiece(new ChessPiece("black", Figure.PAWN, "\u265F", "G7pawn"));
         gameBoard[1][7].setCurrentPiece(new ChessPiece("black", Figure.PAWN, "\u265F", "H7pawn"));
-        
+
         // white figures
         gameBoard[7][0].setCurrentPiece(new ChessPiece("white", Figure.ROOK, "\u2656", "A1rook"));
         gameBoard[7][1].setCurrentPiece(new ChessPiece("white", Figure.KNIGHT, "\u2658", "B1knight"));
@@ -66,4 +68,6 @@ public class ChessBoard {
     public ChessTile getTile(int row, int column) {
         return gameBoard[row][column];
     }
+    
+
 }

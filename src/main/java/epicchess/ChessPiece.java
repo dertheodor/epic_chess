@@ -5,12 +5,14 @@ public class ChessPiece {
     Figure type;
     String uniCodePicture;
     String figureID;
+    boolean movedBefore;
 
     public ChessPiece(String colorOfPiece, Figure pieceType, String picture, String id) {
         color = colorOfPiece;
         type = pieceType;
         uniCodePicture = picture;
         figureID = id;
+        movedBefore = false;
     }
 
     /**
@@ -20,5 +22,9 @@ public class ChessPiece {
      */
     public String getUniCodePicture() {
         return uniCodePicture;
+    }
+
+    public void setMovedBeforeTrue() {
+        movedBefore = true;
     }
 }

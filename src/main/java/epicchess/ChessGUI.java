@@ -2,7 +2,6 @@ package epicchess;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Arrays;
 
 public class ChessGUI {
 
@@ -176,7 +175,7 @@ public class ChessGUI {
         for (int row = startingRow; row <= endingRow; row++) {
             for (int column = 0; column < 8; column++) {
                 // set "text" (picture) and font size
-                buttonArray[row][column].setText(board.getTile(row, column).getCurrentFigure().getUniCodePicture());
+                buttonArray[row][column].setText(board.getTile(row, column).getCurrentPiece().getUniCodePicture());
                 buttonArray[row][column].setFont(new Font("Arial Unicode MS", Font.BOLD, 90));
             }
         }
