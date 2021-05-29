@@ -3,9 +3,9 @@ package epicchess;
 public class ChessPiece {
     String color;
     Figure type;
-    String uniCodePicture;
+    private final String uniCodePicture;
     String figureID;
-    boolean movedBefore;
+    private boolean movedBefore;
 
     public ChessPiece(String colorOfPiece, Figure pieceType, String picture, String id) {
         color = colorOfPiece;
@@ -24,6 +24,18 @@ public class ChessPiece {
         return uniCodePicture;
     }
 
+    /**
+     * getter method for movedBefore
+     *
+     * @return movedBefore state
+     */
+    public boolean getMovedBefore() {
+        return movedBefore;
+    }
+
+    /**
+     * sets movedBefore to true
+     */
     public void setMovedBeforeTrue() {
         movedBefore = true;
     }
