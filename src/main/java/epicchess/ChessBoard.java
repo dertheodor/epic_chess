@@ -1,5 +1,7 @@
 package epicchess;
 
+import java.util.List;
+
 public class ChessBoard {
     ChessEngine engine;
     ChessTile[][] gameBoard;
@@ -68,6 +70,27 @@ public class ChessBoard {
     public ChessTile getTile(int row, int column) {
         return gameBoard[row][column];
     }
-    
 
+    /**
+     * @param position of the current to be moved piece
+     * @return possible moves
+     */
+    public List<ArrayPosition> highlightNextValidMoves(ArrayPosition position) {
+        return engine.showNextValidMoves(position, gameBoard[position.getRow()][position.getColumn()].getCurrentPiece(), gameBoard);
+    }
+
+    /**
+     * making the actual move of the piece
+     *
+     * @param oldPosition old position of the piece
+     * @param newPosition new position of the piece
+     */
+    public void makeMove(ArrayPosition oldPosition, ArrayPosition newPosition) {
+        // memorize old piece
+        ChessPiece piece = gameBoard[oldPosition.getRow()][oldPosition.getColumn()].getCurrentPiece();
+        // remove piece from old position
+        gameBoard[oldPosition.getRow()][oldPosition.getColumn()].removeCurrentPiece();
+        // set piece to new position
+        gameBoard[newPosition.getRow()][newPosition.getColumn()].setCurrentPiece(piece);
+    }
 }
