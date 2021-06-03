@@ -1,7 +1,7 @@
 package epicchess;
 
 public class ChessTile {
-    TileState tileState;
+    private TileState tileState;
     private ChessPiece currentPiece;
 
     public ChessTile() {
@@ -9,17 +9,26 @@ public class ChessTile {
     }
 
     /**
-     * Setter method for chessPiece
+     * setter method for chessPiece
      *
      * @param chessPiece the new chessPiece
      */
     public void setCurrentPiece(ChessPiece chessPiece) {
         currentPiece = chessPiece;
-        if (currentPiece.color.equals("black")) {
+        if (currentPiece.getColor().equals("black")) {
             tileState = TileState.BLACK;
-        } else if (currentPiece.color.equals("white")) {
+        } else if (currentPiece.getColor().equals("white")) {
             tileState = TileState.WHITE;
         }
+    }
+
+    /**
+     * getter method for tileState
+     *
+     * @return tileState
+     */
+    public TileState getTileState() {
+        return tileState;
     }
 
     /**
@@ -31,7 +40,7 @@ public class ChessTile {
     }
 
     /**
-     * Getter method for currentPiece
+     * getter method for currentPiece
      *
      * @return the currentPiece
      */

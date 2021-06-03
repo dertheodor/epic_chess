@@ -1,5 +1,6 @@
 package epicchess;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ChessBoard {
@@ -96,5 +97,46 @@ public class ChessBoard {
         if (!piece.getMovedBefore()) {
             piece.setMovedBeforeTrue();
         }
+    }
+
+    /**
+     * @param pieceThatWasJustMoved just moved piece
+     * @return list of positions of the pieces that are now able to move
+     */
+    public List<ArrayPosition> returnNextPlayerPiecePositions(ArrayPosition pieceThatWasJustMoved) {
+        String color = gameBoard[pieceThatWasJustMoved.getRow()][pieceThatWasJustMoved.getColumn()].getCurrentPiece().getColor();
+
+        if (color.equals("black")) {
+            return helperPiecePositions(color);
+        } else {
+            return helperPiecePositions("white");
+        }
+    }
+
+    /**
+     * @param oppositeColor opposite-color
+     * @return list of positions of the pieces that are now able to move
+     */
+    private List<ArrayPosition> helperPiecePositions(String oppositeColor) {
+        List<ArrayPosition> piecePositionList = new ArrayList<>();
+
+        // introduce new variables so method makes sense
+        String color;
+        if (oppositeColor.equals("black")) {
+            color = "white";
+        } else {
+            color = "black";
+        }
+
+        // iterate whole board and get needed pieces of "opposite" color
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                // check that tile is not free and has correct color
+                if (gameBoard[i][j].getTileState() != TileState.FREE && gameBoard[i][j].getCurrentPiece().getColor().equals(color)) {
+                    piecePositionList.add(new ArrayPosition(i, j));
+                }
+            }
+        }
+        return piecePositionList;
     }
 }

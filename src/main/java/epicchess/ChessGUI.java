@@ -24,7 +24,7 @@ public class ChessGUI {
 
     JButton[][] buttonArray;
 
-    ArrayPosition currentlyHighlightedPosition;
+    ArrayPosition currentlySelectedPiecePosition;
 
     List<JButton> currentlyHighlightedButtonList;
 
@@ -37,7 +37,7 @@ public class ChessGUI {
         menuBar = new JMenuBar();
         menu = new JMenu("Options");
         buttonArray = new JButton[8][8];
-        currentlyHighlightedPosition = null;
+        currentlySelectedPiecePosition = null;
         currentlyHighlightedButtonList = new ArrayList<>();
 
         //Initialise Window
@@ -189,21 +189,30 @@ public class ChessGUI {
                 buttonArray[row][column].setText(board.getTile(row, column).getCurrentPiece().getUniCodePicture());
                 buttonArray[row][column].setFont(new Font("Arial Unicode MS", Font.BOLD, 90));
                 // add initial mousePressed-listeners to only the white pieces
-                if (board.getTile(row, column).getCurrentPiece().color.equals("white")) {
-                    int finalRow = row;
-                    int finalColumn = column;
-                    buttonArray[row][column].addMouseListener(new MouseAdapter() {
-                        @Override
-                        public void mousePressed(MouseEvent e) {
-                            // save currentlyHighlightedPosition of selected piece
-                            currentlyHighlightedPosition = new ArrayPosition(finalRow, finalColumn);
-                            // call further logic for moving
-                            setMouseListenerForPossibleMoves(board.highlightNextValidMoves(new ArrayPosition(finalRow, finalColumn)));
-                        }
-                    });
+                if (board.getTile(row, column).getCurrentPiece().getColor().equals("white")) {
+                    addMouseListenerForMoveablePieceButton(buttonArray[row][column], row, column);
                 }
             }
         }
+    }
+
+    /**
+     * makes button where the piece is clickable
+     *
+     * @param button the button
+     * @param row    row of the button
+     * @param column column of the button
+     */
+    private void addMouseListenerForMoveablePieceButton(JButton button, int row, int column) {
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                // save currentlyHighlightedPosition of selected piece
+                currentlySelectedPiecePosition = new ArrayPosition(row, column);
+                // call further logic for moving
+                setMouseListenerForPossibleMoves(board.highlightNextValidMoves(new ArrayPosition(row, column)));
+            }
+        });
     }
 
     /**
@@ -225,13 +234,15 @@ public class ChessGUI {
                     @Override
                     public void mousePressed(MouseEvent e) {
                         // make move
-                        board.makeMove(currentlyHighlightedPosition, arrayPosition);
+                        board.makeMove(currentlySelectedPiecePosition, arrayPosition);
                         // remove oldHighlightedButtons
                         removeOldHighlightedButtons();
+                        // remove all listeners for current color for turn-changing
+                        removeAllListenersAfterMove();
                         // move piece on board
-                        movePieceToNewPosition(currentlyHighlightedPosition, arrayPosition);
+                        movePieceToNewPosition(currentlySelectedPiecePosition, arrayPosition);
                         // reset currently currentlyHighlightedPosition
-                        currentlyHighlightedPosition = null;
+                        currentlySelectedPiecePosition = null;
                     }
                 }));
     }
@@ -276,6 +287,7 @@ public class ChessGUI {
      * @param newPosition new position of piece
      */
     private void movePieceToNewPosition(ArrayPosition oldPosition, ArrayPosition newPosition) {
+        // clear text of oldPositionButton
         JButton oldButton = buttonArray[oldPosition.getRow()][oldPosition.getColumn()];
         oldButton.setText("");
 
@@ -284,22 +296,38 @@ public class ChessGUI {
             oldButton.removeMouseListener(ml);
         }
 
-        JButton newButton = buttonArray[newPosition.getRow()][newPosition.getColumn()];
-        newButton.setText(board.getTile(newPosition.getRow(), newPosition.getColumn()).getCurrentPiece().getUniCodePicture());
-        newButton.setFont(new Font("Arial Unicode MS", Font.BOLD, 90));
+        // make moved piece visible on new position
+        JButton newPositionButton = buttonArray[newPosition.getRow()][newPosition.getColumn()];
+        newPositionButton.setText(board.getTile(newPosition.getRow(), newPosition.getColumn()).getCurrentPiece().getUniCodePicture());
+        newPositionButton.setFont(new Font("Arial Unicode MS", Font.BOLD, 90));
+
+        // add button-listeners for turn-changing
+        addAllListenersAfterMove(newPosition);
     }
 
     /**
-     * TODO turn-changing
+     * make pieces of next players who's turn it now is movable
      */
-    private void setMousePressedListenerForNextMove() {
+    private void addAllListenersAfterMove(ArrayPosition oldPiecePosition) {
+        List<ArrayPosition> nextTurnPiecePositions = board.returnNextPlayerPiecePositions(oldPiecePosition);
 
+        // add new button listeners after turn-changing
+        for (ArrayPosition position : nextTurnPiecePositions) {
+            addMouseListenerForMoveablePieceButton(buttonArray[position.getRow()][position.getColumn()], position.getRow(), position.getColumn());
+        }
     }
 
     /**
-     * TODO turn-changing
+     * all listeners on board get removed after a turn has been made
      */
-    private void removeMousePressedListenerForNextMove() {
-
+    private void removeAllListenersAfterMove() {
+        // remove all previously set listeners from board
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                for (MouseListener ml : buttonArray[i][j].getMouseListeners()) {
+                    buttonArray[i][j].removeMouseListener(ml);
+                }
+            }
+        }
     }
 }

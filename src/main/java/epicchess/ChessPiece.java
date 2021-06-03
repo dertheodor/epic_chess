@@ -1,10 +1,10 @@
 package epicchess;
 
 public class ChessPiece {
-    String color;
-    Figure type;
+    private final String color;
+    private final Figure type;
     private final String uniCodePicture;
-    String figureID;
+    private final String figureID;
     private boolean movedBefore;
 
     public ChessPiece(String colorOfPiece, Figure pieceType, String picture, String id) {
@@ -16,7 +16,7 @@ public class ChessPiece {
     }
 
     /**
-     * Getter method
+     * getter method for uniCodePicture
      *
      * @return the "image" of the chessPiece as unicode
      */
@@ -38,5 +38,28 @@ public class ChessPiece {
      */
     public void setMovedBeforeTrue() {
         movedBefore = true;
+    }
+
+    /**
+     * @return color state
+     */
+    public String getColor() {
+        return color;
+    }
+
+    /**
+     * @return type
+     */
+    public Figure getType() {
+        return type;
+    }
+
+    /**
+     * getter method for figureID
+     *
+     * @return figureID
+     */
+    public String getFigureID() {
+        return figureID;
     }
 }
