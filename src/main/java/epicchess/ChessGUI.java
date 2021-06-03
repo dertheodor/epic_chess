@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -205,8 +206,6 @@ public class ChessGUI {
         }
     }
 
-    // TODO REMOVE LISTENERS FROM OLD POSITION BUTTONS
-
     /**
      * adds mousePressed-listeners for next possible moves so we know where the user clicked
      *
@@ -245,6 +244,10 @@ public class ChessGUI {
             if (button.getText().equals("\u2B24")) {
                 button.setText("");
                 button.setForeground(Color.black);
+                // remove all previously set listeners for possible moves
+                for (MouseListener ml : button.getMouseListeners()) {
+                    button.removeMouseListener(ml);
+                }
             }
         }
         currentlyHighlightedButtonList = new ArrayList<>();
@@ -276,7 +279,11 @@ public class ChessGUI {
         JButton oldButton = buttonArray[oldPosition.getRow()][oldPosition.getColumn()];
         oldButton.setText("");
 
-        // TODO add new click listener for moved piece
+        // remove all previously set listeners for old position
+        for (MouseListener ml : oldButton.getMouseListeners()) {
+            oldButton.removeMouseListener(ml);
+        }
+
         JButton newButton = buttonArray[newPosition.getRow()][newPosition.getColumn()];
         newButton.setText(board.getTile(newPosition.getRow(), newPosition.getColumn()).getCurrentPiece().getUniCodePicture());
         newButton.setFont(new Font("Arial Unicode MS", Font.BOLD, 90));

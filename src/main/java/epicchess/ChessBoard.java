@@ -92,5 +92,9 @@ public class ChessBoard {
         gameBoard[oldPosition.getRow()][oldPosition.getColumn()].removeCurrentPiece();
         // set piece to new position
         gameBoard[newPosition.getRow()][newPosition.getColumn()].setCurrentPiece(piece);
+        // when piece has moved for first time, set movedBefore to true
+        if (!piece.getMovedBefore()) {
+            piece.setMovedBeforeTrue();
+        }
     }
 }

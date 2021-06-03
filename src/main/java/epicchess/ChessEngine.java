@@ -32,8 +32,6 @@ public class ChessEngine {
                 validMovesList.add(new ArrayPosition(position.getRow() - 1, position.getColumn()));
             }
             //pawn has moved now so he/she will never be able to move two tiles at once again.
-            // TODO do this in the method which is actually responsible for the movement
-            piece.setMovedBeforeTrue();
         } else {
             if (gameBoard[position.getRow() - 1][position.getColumn()].tileState == TileState.FREE) {
                 validMovesList.add(new ArrayPosition(position.getRow() - 1, position.getColumn()));
@@ -55,8 +53,6 @@ public class ChessEngine {
                 validMovesList.add(new ArrayPosition(position.getRow() + 1, position.getColumn()));
             }
             //pawn has moved now so he/she will never be able to move two tiles at once again.
-            // TODO do this in the method which is actually responsible for the movement
-            piece.setMovedBeforeTrue();
         } else {
             if (gameBoard[position.getRow() + 1][position.getColumn()].tileState == TileState.FREE) {
                 validMovesList.add(new ArrayPosition(position.getRow() + 1, position.getColumn()));
