@@ -53,14 +53,14 @@ public class ChessBoard {
         gameBoard[7][6].setCurrentPiece(new ChessPiece("white", Figure.KNIGHT, "\u2658", "G1knight"));
         gameBoard[7][7].setCurrentPiece(new ChessPiece("white", Figure.ROOK, "\u2656", "H1rook"));
         // pawns
-        gameBoard[6][0].setCurrentPiece(new ChessPiece("white", Figure.PAWN, "\u2659", "A7pawn"));
-        gameBoard[6][1].setCurrentPiece(new ChessPiece("white", Figure.PAWN, "\u2659", "B7pawn"));
-        gameBoard[6][2].setCurrentPiece(new ChessPiece("white", Figure.PAWN, "\u2659", "C7pawn"));
-        gameBoard[6][3].setCurrentPiece(new ChessPiece("white", Figure.PAWN, "\u2659", "D7pawn"));
-        gameBoard[6][4].setCurrentPiece(new ChessPiece("white", Figure.PAWN, "\u2659", "E7pawn"));
-        gameBoard[6][5].setCurrentPiece(new ChessPiece("white", Figure.PAWN, "\u2659", "F7pawn"));
-        gameBoard[6][6].setCurrentPiece(new ChessPiece("white", Figure.PAWN, "\u2659", "G7pawn"));
-        gameBoard[6][7].setCurrentPiece(new ChessPiece("white", Figure.PAWN, "\u2659", "H7pawn"));
+        gameBoard[6][0].setCurrentPiece(new ChessPiece("white", Figure.PAWN, "\u2659", "A2pawn"));
+        gameBoard[6][1].setCurrentPiece(new ChessPiece("white", Figure.PAWN, "\u2659", "B2pawn"));
+        gameBoard[6][2].setCurrentPiece(new ChessPiece("white", Figure.PAWN, "\u2659", "C2pawn"));
+        gameBoard[6][3].setCurrentPiece(new ChessPiece("white", Figure.PAWN, "\u2659", "D2pawn"));
+        gameBoard[6][4].setCurrentPiece(new ChessPiece("white", Figure.PAWN, "\u2659", "E2pawn"));
+        gameBoard[6][5].setCurrentPiece(new ChessPiece("white", Figure.PAWN, "\u2659", "F2pawn"));
+        gameBoard[6][6].setCurrentPiece(new ChessPiece("white", Figure.PAWN, "\u2659", "G2pawn"));
+        gameBoard[6][7].setCurrentPiece(new ChessPiece("white", Figure.PAWN, "\u2659", "H2pawn"));
     }
 
     /**
