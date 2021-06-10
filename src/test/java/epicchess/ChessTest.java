@@ -69,10 +69,9 @@ public class ChessTest {
 
     }
 
-
     @Test
     void pieceStartingPositionModelTest() {
-        //White Pieces
+        //Black Pieces
         Assertions.assertEquals("A8rook", board.gameBoard[0][0].getCurrentPiece().getFigureID());
         Assertions.assertEquals("B8knight", board.gameBoard[0][1].getCurrentPiece().getFigureID());
         Assertions.assertEquals("C8bishop", board.gameBoard[0][2].getCurrentPiece().getFigureID());
@@ -91,7 +90,7 @@ public class ChessTest {
         Assertions.assertEquals("G7pawn", board.gameBoard[1][6].getCurrentPiece().getFigureID());
         Assertions.assertEquals("H7pawn", board.gameBoard[1][7].getCurrentPiece().getFigureID());
 
-        //Black Pieces
+        //White Pieces
         Assertions.assertEquals("A1rook", board.gameBoard[7][0].getCurrentPiece().getFigureID());
         Assertions.assertEquals("B1knight", board.gameBoard[7][1].getCurrentPiece().getFigureID());
         Assertions.assertEquals("C1bishop", board.gameBoard[7][2].getCurrentPiece().getFigureID());
@@ -109,6 +108,22 @@ public class ChessTest {
         Assertions.assertEquals("F2pawn", board.gameBoard[6][5].getCurrentPiece().getFigureID());
         Assertions.assertEquals("G2pawn", board.gameBoard[6][6].getCurrentPiece().getFigureID());
         Assertions.assertEquals("H2pawn", board.gameBoard[6][7].getCurrentPiece().getFigureID());
+    }
+
+    @Test
+    void pawnMovementGUITest() {
+        window.buttonArray[6][0].doClick(1);
+        System.out.println(window.buttonArray[6][0].getText());
+        System.out.println(window.buttonArray[6][0].getMouseListeners());
+        window.buttonArray[5][0].doClick(500);
+        System.out.println(window.buttonArray[4][0].getText());
+        System.out.println(window.buttonArray[4][0].getMouseListeners());
+
+
+    }
+
+    @Test
+    void pawnMovementModelTest() {
 
     }
 }

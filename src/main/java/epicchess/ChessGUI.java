@@ -233,16 +233,7 @@ public class ChessGUI {
                 buttonArray[arrayPosition.getRow()][arrayPosition.getColumn()].addMouseListener(new MouseAdapter() {
                     @Override
                     public void mousePressed(MouseEvent e) {
-                        // make move
-                        board.makeMove(currentlySelectedPiecePosition, arrayPosition);
-                        // remove oldHighlightedButtons
-                        removeOldHighlightedButtons();
-                        // remove all listeners for current color for turn-changing
-                        removeAllListenersAfterMove();
-                        // move piece on board
-                        movePieceToNewPosition(currentlySelectedPiecePosition, arrayPosition);
-                        // reset currently currentlyHighlightedPosition
-                        currentlySelectedPiecePosition = null;
+                        mouseListenerBodyForPossibleMoves(arrayPosition);
                     }
                 }));
     }
@@ -252,6 +243,7 @@ public class ChessGUI {
      */
     private void removeOldHighlightedButtons() {
         for (JButton button : currentlyHighlightedButtonList) {
+            // \u2B24 stands for the black dot we use to indicate a piece can move to this position
             if (button.getText().equals("\u2B24")) {
                 button.setText("");
                 button.setForeground(Color.black);
@@ -329,5 +321,23 @@ public class ChessGUI {
                 }
             }
         }
+    }
+
+    /**
+     * Body of the MouseListeners for the Positions where a selected Piece could move.
+     *
+     * @param arrayPosition The Position of the Button, where the selected Piece could move.
+     */
+    private void mouseListenerBodyForPossibleMoves(ArrayPosition arrayPosition) {
+        // make move
+        board.makeMove(currentlySelectedPiecePosition, arrayPosition);
+        // remove oldHighlightedButtons
+        removeOldHighlightedButtons();
+        // remove all listeners for current color for turn-changing
+        removeAllListenersAfterMove();
+        // move piece on board
+        movePieceToNewPosition(currentlySelectedPiecePosition, arrayPosition);
+        // reset currently currentlyHighlightedPosition
+        currentlySelectedPiecePosition = null;
     }
 }
