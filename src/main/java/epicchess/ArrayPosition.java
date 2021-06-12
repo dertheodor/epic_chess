@@ -3,7 +3,7 @@ package epicchess;
 public class ArrayPosition {
     private int row;
     private int column;
-    boolean isOccupied;
+    private boolean isOccupied;
 
     public ArrayPosition(int rowPos, int columnPos, boolean occupation) {
         row = rowPos;
@@ -17,5 +17,9 @@ public class ArrayPosition {
 
     public int getColumn() {
         return column;
+    }
+
+    public boolean getIsOccupied() {
+        return isOccupied;
     }
 }
