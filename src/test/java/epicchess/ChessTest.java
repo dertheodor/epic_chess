@@ -10,13 +10,14 @@ public class ChessTest {
     ChessEngine engine;
     ChessBoard board;
 
-
+    // init needed components
     public ChessTest() {
         engine = new ChessEngine();
         board = new ChessBoard(engine);
         window = new ChessGUI(engine, board);
     }
 
+    // check if gui buttons have correct size for the visual representation of the board
     @Test
     void buttonArraySizeTest() {
 
@@ -27,6 +28,7 @@ public class ChessTest {
         Assertions.assertEquals(8, buttonArrayLength2);
     }
 
+    // check if internal representation of the board has correct size
     @Test
     void modelArraySizeTest() {
 
@@ -37,9 +39,9 @@ public class ChessTest {
         Assertions.assertEquals(8, modelArrayLength2);
     }
 
+    // check if all starting pieces are on the correct position in buttons of the gui
     @Test
     void pieceStartingPositionButtonsTest() {
-
         //Black Pieces
         for (int i = 0; i < 8; i++) {
             Assertions.assertEquals("\u265F", window.buttonArray[1][i].getText());
@@ -53,7 +55,6 @@ public class ChessTest {
         Assertions.assertEquals("\u265E", window.buttonArray[0][6].getText());
         Assertions.assertEquals("\u265C", window.buttonArray[0][7].getText());
 
-
         //White Pieces
         for (int i = 0; i < 8; i++) {
             Assertions.assertEquals("\u2659", window.buttonArray[6][i].getText());
@@ -66,9 +67,9 @@ public class ChessTest {
         Assertions.assertEquals("\u2657", window.buttonArray[7][5].getText());
         Assertions.assertEquals("\u2658", window.buttonArray[7][6].getText());
         Assertions.assertEquals("\u2656", window.buttonArray[7][7].getText());
-
     }
 
+    // check if internal representation of the starting pieces is correct
     @Test
     void pieceStartingPositionModelTest() {
         //Black Pieces
@@ -110,6 +111,7 @@ public class ChessTest {
         Assertions.assertEquals("H2pawn", board.gameBoard[6][7].getCurrentPiece().getFigureID());
     }
 
+    // TODO test for moving pieces
     @Test
     void pawnMovementGUITest() {
         window.buttonArray[6][0].doClick(1);
@@ -118,8 +120,6 @@ public class ChessTest {
         window.buttonArray[5][0].doClick(500);
         System.out.println(window.buttonArray[4][0].getText());
         System.out.println(window.buttonArray[4][0].getMouseListeners());
-
-
     }
 
     @Test
