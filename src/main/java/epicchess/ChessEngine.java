@@ -26,15 +26,15 @@ public class ChessEngine {
             //if pawn has not moved before and both of the tiles in front of him/her are free he/she can move two tiles at once.
             if (gameBoard[position.getRow() - 2][position.getColumn()].getTileState() == TileState.FREE &&
                     gameBoard[position.getRow() - 1][position.getColumn()].getTileState() == TileState.FREE) {
-                validMovesList.add(new ArrayPosition(position.getRow() - 2, position.getColumn()));
+                validMovesList.add(new ArrayPosition(position.getRow() - 2, position.getColumn(), false));
             }
             if (gameBoard[position.getRow() - 1][position.getColumn()].getTileState() == TileState.FREE) {
-                validMovesList.add(new ArrayPosition(position.getRow() - 1, position.getColumn()));
+                validMovesList.add(new ArrayPosition(position.getRow() - 1, position.getColumn(), false));
             }
             //pawn has moved now so he/she will never be able to move two tiles at once again.
         } else {
             if (gameBoard[position.getRow() - 1][position.getColumn()].getTileState() == TileState.FREE) {
-                validMovesList.add(new ArrayPosition(position.getRow() - 1, position.getColumn()));
+                validMovesList.add(new ArrayPosition(position.getRow() - 1, position.getColumn(), false));
             }
         }
         return validMovesList;
@@ -47,15 +47,15 @@ public class ChessEngine {
             //if pawn has not moved before and both of the tiles in front of him/her are free he/she can move two tiles at once.
             if (gameBoard[position.getRow() + 2][position.getColumn()].getTileState() == TileState.FREE &&
                     gameBoard[position.getRow() + 1][position.getColumn()].getTileState() == TileState.FREE) {
-                validMovesList.add(new ArrayPosition(position.getRow() + 2, position.getColumn()));
+                validMovesList.add(new ArrayPosition(position.getRow() + 2, position.getColumn(), false));
             }
             if (gameBoard[position.getRow() + 1][position.getColumn()].getTileState() == TileState.FREE) {
-                validMovesList.add(new ArrayPosition(position.getRow() + 1, position.getColumn()));
+                validMovesList.add(new ArrayPosition(position.getRow() + 1, position.getColumn(), false));
             }
             //pawn has moved now so he/she will never be able to move two tiles at once again.
         } else {
             if (gameBoard[position.getRow() + 1][position.getColumn()].getTileState() == TileState.FREE) {
-                validMovesList.add(new ArrayPosition(position.getRow() + 1, position.getColumn()));
+                validMovesList.add(new ArrayPosition(position.getRow() + 1, position.getColumn(), false));
             }
         }
         return validMovesList;

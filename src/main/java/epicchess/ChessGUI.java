@@ -208,9 +208,9 @@ public class ChessGUI {
             @Override
             public void mousePressed(MouseEvent e) {
                 // save currentlyHighlightedPosition of selected piece
-                currentlySelectedPiecePosition = new ArrayPosition(row, column);
+                currentlySelectedPiecePosition = new ArrayPosition(row, column, true);
                 // call further logic for moving
-                setMouseListenerForPossibleMoves(board.highlightNextValidMoves(new ArrayPosition(row, column)));
+                setMouseListenerForPossibleMoves(board.highlightNextValidMoves(new ArrayPosition(row, column, true)));
             }
         });
     }
