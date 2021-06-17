@@ -28,6 +28,11 @@ public class ChessEngine {
             validMovesList = knightMovement(position, piece, gameBoard);
         } else if (piece.getType() == Figure.ROOK) {
             validMovesList = rookMovement(position, piece, gameBoard);
+        } else if (piece.getType() == Figure.BISHOP) {
+            validMovesList = bishopMovement(position, piece, gameBoard);
+        } else if (piece.getType() == Figure.QUEEN) {
+            validMovesList = rookMovement(position, piece, gameBoard);
+            validMovesList.addAll(bishopMovement(position, piece, gameBoard));
         }
         return validMovesList;
     }
@@ -296,6 +301,83 @@ public class ChessEngine {
                 //can not move past friendly piece
             } else if (gameBoard[row][i - 1].getTileState() == TileState.BLACK && pieceColor.equals("black") ||
                     gameBoard[row][i - 1].getTileState() == TileState.WHITE && pieceColor.equals("white")) {
+                break;
+            }
+        }
+
+        return validMovesList;
+    }
+
+    private List<ArrayPosition> bishopMovement(ArrayPosition position, ChessPiece piece, ChessTile[][] gameBoard) {
+        List<ArrayPosition> validMovesList = new ArrayList<>();
+        int row = position.getRow();
+        int column = position.getColumn();
+        String pieceColor = piece.getColor();
+
+        //loop for right downwards diagonal movement
+        for (int r = row, c = column; r < 7 && c < 7; r++, c++) {
+            //moving
+            if (gameBoard[r + 1][c + 1].getTileState() == TileState.FREE) {
+                validMovesList.add(new ArrayPosition(r + 1, c + 1, false));
+                //capturing
+            } else if (gameBoard[r + 1][c + 1].getTileState() == TileState.BLACK && pieceColor.equals("white") ||
+                    gameBoard[r + 1][c + 1].getTileState() == TileState.WHITE && pieceColor.equals("black")) {
+                validMovesList.add(new ArrayPosition(r + 1, c + 1, true));
+                break;
+                //can not move past friendly piece
+            } else if (gameBoard[r + 1][c + 1].getTileState() == TileState.BLACK && pieceColor.equals("black") ||
+                    gameBoard[r + 1][c + 1].getTileState() == TileState.WHITE && pieceColor.equals("white")) {
+                break;
+            }
+        }
+
+        //loop for right upwards diagonal movement
+        for (int r = row, c = column; r < 7 && c > 0; r++, c--) {
+            //moving
+            if (gameBoard[r + 1][c - 1].getTileState() == TileState.FREE) {
+                validMovesList.add(new ArrayPosition(r + 1, c - 1, false));
+                //capturing
+            } else if (gameBoard[r + 1][c - 1].getTileState() == TileState.BLACK && pieceColor.equals("white") ||
+                    gameBoard[r + 1][c - 1].getTileState() == TileState.WHITE && pieceColor.equals("black")) {
+                validMovesList.add(new ArrayPosition(r + 1, c - 1, true));
+                break;
+                //can not move past friendly piece
+            } else if (gameBoard[r + 1][c - 1].getTileState() == TileState.BLACK && pieceColor.equals("black") ||
+                    gameBoard[r + 1][c - 1].getTileState() == TileState.WHITE && pieceColor.equals("white")) {
+                break;
+            }
+        }
+
+        //loop for left downwards movement
+        for (int r = row, c = column; r > 0 && c < 7; r--, c++) {
+            //moving
+            if (gameBoard[r - 1][c + 1].getTileState() == TileState.FREE) {
+                validMovesList.add(new ArrayPosition(r - 1, c + 1, false));
+                //capturing
+            } else if (gameBoard[r - 1][c + 1].getTileState() == TileState.BLACK && pieceColor.equals("white") ||
+                    gameBoard[r - 1][c + 1].getTileState() == TileState.WHITE && pieceColor.equals("black")) {
+                validMovesList.add(new ArrayPosition(r - 1, c + 1, true));
+                break;
+                //can not move past friendly piece
+            } else if (gameBoard[r - 1][c + 1].getTileState() == TileState.BLACK && pieceColor.equals("black") ||
+                    gameBoard[r - 1][c + 1].getTileState() == TileState.WHITE && pieceColor.equals("white")) {
+                break;
+            }
+        }
+
+        //loop for left upwards diagonal movement
+        for (int r = row, c = column; r > 0 && c > 0; r--, c--) {
+            //moving
+            if (gameBoard[r - 1][c - 1].getTileState() == TileState.FREE) {
+                validMovesList.add(new ArrayPosition(r - 1, c - 1, false));
+                //capturing
+            } else if (gameBoard[r - 1][c - 1].getTileState() == TileState.BLACK && pieceColor.equals("white") ||
+                    gameBoard[r - 1][c - 1].getTileState() == TileState.WHITE && pieceColor.equals("black")) {
+                validMovesList.add(new ArrayPosition(r - 1, c - 1, true));
+                break;
+                //can not move past friendly piece
+            } else if (gameBoard[r - 1][c - 1].getTileState() == TileState.BLACK && pieceColor.equals("black") ||
+                    gameBoard[r - 1][c - 1].getTileState() == TileState.WHITE && pieceColor.equals("white")) {
                 break;
             }
         }
