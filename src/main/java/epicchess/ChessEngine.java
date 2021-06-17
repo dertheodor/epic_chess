@@ -1,11 +1,19 @@
 package epicchess;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class ChessEngine {
 
-
+    /**
+     * Tests which Piece wants to move and correctly calls the ...Movement method of Piece.
+     *
+     * @param position  The Position of the currently selected Piece.
+     * @param piece     The Piece which is currently selected.
+     * @param gameBoard The current State of our Gameboard.
+     * @return A list with all the possible moves for the Selected Piece.
+     */
     public List<ArrayPosition> showNextValidMoves(ArrayPosition position, ChessPiece piece, ChessTile[][] gameBoard) {
         List<ArrayPosition> validMovesList;
         validMovesList = new ArrayList<>();
@@ -15,10 +23,16 @@ public class ChessEngine {
             } else {
                 validMovesList = whitePawnMovement(position, piece, gameBoard);
             }
+
+        } else if (piece.getType() == Figure.KNIGHT) {
+            validMovesList = knightMovement(position, piece, gameBoard);
+        } else if (piece.getType() == Figure.ROOK) {
+            validMovesList = rookMovement(position, piece, gameBoard);
         }
         return validMovesList;
     }
 
+    //TODO fix it so pawns cant move past the border of the gameBoard
     private List<ArrayPosition> whitePawnMovement(ArrayPosition position, ChessPiece piece, ChessTile[][] gameBoard) {
         List<ArrayPosition> validMovesList = new ArrayList<>();
         //check if pawn has moved before
@@ -113,5 +127,180 @@ public class ChessEngine {
         return validCaptureMovesList;
     }
 
+
+    private List<ArrayPosition> knightMovement(ArrayPosition position, ChessPiece piece, ChessTile[][] gameBoard) {
+        List<ArrayPosition> validMovesList = new ArrayList<>();
+        int column = position.getColumn();
+        int row = position.getRow();
+        String pieceColor = piece.getColor();
+
+        //test if move is out of bounds
+        if (row >= 2 && column >= 1) {
+            //moving
+            if (gameBoard[row - 2][column - 1].getTileState() == TileState.FREE) {
+                validMovesList.add(new ArrayPosition(row - 2, column - 1, false));
+                //capturing
+            } else if (gameBoard[row - 2][column - 1].getTileState() == TileState.BLACK && pieceColor.equals("white")
+                    || gameBoard[row - 2][column - 1].getTileState() == TileState.WHITE && pieceColor.equals("black")) {
+                validMovesList.add(new ArrayPosition(row - 2, column - 1, true));
+            }
+        }
+        //test if move is out of bounds
+        if (row >= 2 && column <= 6) {
+            //moving
+            if (gameBoard[row - 2][column + 1].getTileState() == TileState.FREE) {
+                validMovesList.add(new ArrayPosition(row - 2, column + 1, false));
+                //capturing
+            } else if (gameBoard[row - 2][column + 1].getTileState() == TileState.BLACK && pieceColor.equals("white")
+                    || gameBoard[row - 2][column + 1].getTileState() == TileState.WHITE && pieceColor.equals("black")) {
+                validMovesList.add(new ArrayPosition(row - 2, column + 1, true));
+            }
+        }
+        //test if move is out of bounds
+        if (row <= 5 && column >= 1) {
+            //moving
+            if (gameBoard[row + 2][column - 1].getTileState() == TileState.FREE) {
+                validMovesList.add(new ArrayPosition(row + 2, column - 1, false));
+                //capturing
+            } else if (gameBoard[row + 2][column - 1].getTileState() == TileState.BLACK && pieceColor.equals("white")
+                    || gameBoard[row + 2][column - 1].getTileState() == TileState.WHITE && pieceColor.equals("black")) {
+                validMovesList.add(new ArrayPosition(row + 2, column - 1, true));
+            }
+        }
+
+        //test if move is out of bounds
+        if (row <= 5 && column <= 6) {
+            //moving
+            if (gameBoard[row + 2][column + 1].getTileState() == TileState.FREE) {
+                validMovesList.add(new ArrayPosition(row + 2, column + 1, false));
+                //capturing
+            } else if (gameBoard[row + 2][column + 1].getTileState() == TileState.BLACK && pieceColor.equals("white")
+                    || gameBoard[row + 2][column + 1].getTileState() == TileState.WHITE && pieceColor.equals("black")) {
+                validMovesList.add(new ArrayPosition(row + 2, column + 1, true));
+            }
+        }
+
+        //test if move is out of bounds
+        if (row >= 1 && column >= 2) {
+            //moving
+            if (gameBoard[row - 1][column - 2].getTileState() == TileState.FREE) {
+                validMovesList.add(new ArrayPosition(row - 1, column - 2, false));
+                //capturing
+            } else if (gameBoard[row - 1][column - 2].getTileState() == TileState.BLACK && pieceColor.equals("white")
+                    || gameBoard[row - 1][column - 2].getTileState() == TileState.WHITE && pieceColor.equals("black")) {
+                validMovesList.add(new ArrayPosition(row - 1, column - 2, true));
+            }
+        }
+
+        //test if move is out of bounds
+        if (row <= 6 && column >= 2) {
+            //moving
+            if (gameBoard[row + 1][column - 2].getTileState() == TileState.FREE) {
+                validMovesList.add(new ArrayPosition(row + 1, column - 2, false));
+                //capturing
+            } else if (gameBoard[row + 1][column - 2].getTileState() == TileState.BLACK && pieceColor.equals("white")
+                    || gameBoard[row + 1][column - 2].getTileState() == TileState.WHITE && pieceColor.equals("black")) {
+                validMovesList.add(new ArrayPosition(row + 1, column - 2, true));
+            }
+        }
+
+        //test if move is out of bounds
+        if (row >= 1 && column <= 5) {
+            //moving
+            if (gameBoard[row - 1][column + 2].getTileState() == TileState.FREE) {
+                validMovesList.add(new ArrayPosition(row - 1, column + 2, false));
+                //capturing
+            } else if (gameBoard[row - 1][column + 2].getTileState() == TileState.BLACK && pieceColor.equals("white")
+                    || gameBoard[row - 1][column + 2].getTileState() == TileState.WHITE && pieceColor.equals("black")) {
+                validMovesList.add(new ArrayPosition(row - 1, column + 2, true));
+            }
+        }
+
+        //test if move is out of bounds
+        if (row <= 6 && column <= 5) {
+            //moving
+            if (gameBoard[row + 1][column + 2].getTileState() == TileState.FREE) {
+                validMovesList.add(new ArrayPosition(row + 1, column + 2, false));
+                //capturing
+            } else if (gameBoard[row + 1][column + 2].getTileState() == TileState.BLACK && pieceColor.equals("white")
+                    || gameBoard[row + 1][column + 2].getTileState() == TileState.WHITE && pieceColor.equals("black")) {
+                validMovesList.add(new ArrayPosition(row + 1, column + 2, true));
+            }
+        }
+        return validMovesList;
+    }
+
+    private List<ArrayPosition> rookMovement(ArrayPosition position, ChessPiece piece, ChessTile[][] gameBoard) {
+        List<ArrayPosition> validMovesList = new ArrayList<>();
+        int row = position.getRow();
+        int column = position.getColumn();
+        String pieceColor = piece.getColor();
+
+        for (int i = row; i < 7; i++) {
+            //moving
+            if (gameBoard[i + 1][column].getTileState() == TileState.FREE) {
+                validMovesList.add(new ArrayPosition(i + 1, column, false));
+                //capturing
+            } else if (gameBoard[i + 1][column].getTileState() == TileState.BLACK && pieceColor.equals("white") ||
+                    gameBoard[i + 1][column].getTileState() == TileState.WHITE && pieceColor.equals("black")) {
+                validMovesList.add(new ArrayPosition(i + 1, column, true));
+                break;
+                //can not move past friendly piece
+            } else if (gameBoard[i + 1][column].getTileState() == TileState.BLACK && pieceColor.equals("black") ||
+                    gameBoard[i + 1][column].getTileState() == TileState.WHITE && pieceColor.equals("white")) {
+                break;
+            }
+        }
+
+        for (int i = row; i > 0; i--) {
+            //moving
+            if (gameBoard[i - 1][column].getTileState() == TileState.FREE) {
+                validMovesList.add(new ArrayPosition(i - 1, column, false));
+                //capturing
+            } else if (gameBoard[i - 1][column].getTileState() == TileState.BLACK && pieceColor.equals("white") ||
+                    gameBoard[i - 1][column].getTileState() == TileState.WHITE && pieceColor.equals("black")) {
+                validMovesList.add(new ArrayPosition(i - 1, column, true));
+                break;
+                //can not move past friendly piece
+            } else if (gameBoard[i - 1][column].getTileState() == TileState.BLACK && pieceColor.equals("black") ||
+                    gameBoard[i - 1][column].getTileState() == TileState.WHITE && pieceColor.equals("white")) {
+                break;
+            }
+        }
+
+        for (int i = column; i < 7; i++) {
+            //moving
+            if (gameBoard[row][i + 1].getTileState() == TileState.FREE) {
+                validMovesList.add(new ArrayPosition(row, i + 1, false));
+                //capturing
+            } else if (gameBoard[row][i + 1].getTileState() == TileState.BLACK && pieceColor.equals("white") ||
+                    gameBoard[row][i + 1].getTileState() == TileState.WHITE && pieceColor.equals("black")) {
+                validMovesList.add(new ArrayPosition(row, i + 1, true));
+                break;
+                //can not move past friendly piece
+            } else if (gameBoard[row][i + 1].getTileState() == TileState.BLACK && pieceColor.equals("black") ||
+                    gameBoard[row][i + 1].getTileState() == TileState.WHITE && pieceColor.equals("white")) {
+                break;
+            }
+        }
+
+        for (int i = column; i > 0; i--) {
+            //moving
+            if (gameBoard[row][i - 1].getTileState() == TileState.FREE) {
+                validMovesList.add(new ArrayPosition(row, i - 1, false));
+                //capturing
+            } else if (gameBoard[row][i - 1].getTileState() == TileState.BLACK && pieceColor.equals("white") ||
+                    gameBoard[row][i - 1].getTileState() == TileState.WHITE && pieceColor.equals("black")) {
+                validMovesList.add(new ArrayPosition(row, i - 1, true));
+                break;
+                //can not move past friendly piece
+            } else if (gameBoard[row][i - 1].getTileState() == TileState.BLACK && pieceColor.equals("black") ||
+                    gameBoard[row][i - 1].getTileState() == TileState.WHITE && pieceColor.equals("white")) {
+                break;
+            }
+        }
+
+        return validMovesList;
+    }
 
 }
