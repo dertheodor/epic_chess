@@ -21,12 +21,13 @@ public class ChessGUI {
 
     Color darkTileColor;
     Color lightTileColor;
+    Color captureColor;
 
     JButton[][] buttonArray;
 
     ArrayPosition currentlySelectedPiecePosition;
 
-    List<JButton> currentlyHighlightedButtonList;
+    List<ArrayPosition> currentlyHighlightedArrayPositionList;
 
     public ChessGUI(ChessEngine engineReference, ChessBoard boardReference) {
         //Initialise Components
@@ -38,7 +39,7 @@ public class ChessGUI {
         menu = new JMenu("Options");
         buttonArray = new JButton[8][8];
         currentlySelectedPiecePosition = null;
-        currentlyHighlightedButtonList = new ArrayList<>();
+        currentlyHighlightedArrayPositionList = new ArrayList<>();
 
         //Initialise Window
         gameUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -48,6 +49,9 @@ public class ChessGUI {
         //Add MenuBar to our Window
         menuBar.add(menu);
         gameUI.setJMenuBar(menuBar);
+
+        // color for highlighting possible capture of enemy figure
+        captureColor = new Color(245, 160, 147);
 
         //Initialise board
         darkTileColor = new Color(118, 150, 86);
@@ -208,27 +212,28 @@ public class ChessGUI {
             @Override
             public void mousePressed(MouseEvent e) {
                 // save currentlyHighlightedPosition of selected piece
-                currentlySelectedPiecePosition = new ArrayPosition(row, column);
+                currentlySelectedPiecePosition = new ArrayPosition(row, column, true);
                 // call further logic for moving
-                setMouseListenerForPossibleMoves(board.highlightNextValidMoves(new ArrayPosition(row, column)));
+                setMouseListenerForPossibleMoves(board.highlightNextValidMoves(new ArrayPosition(row, column, true)));
             }
         });
     }
 
     /**
-     * adds mousePressed-listeners for next possible moves so we know where the user clicked
+     * adds mousePressed-listeners for next possible moves so we know where the user wants to move
      *
      * @param arrayPositionList the positions of next possible moves
      */
     private void setMouseListenerForPossibleMoves(List<ArrayPosition> arrayPositionList) {
         // revert old possible moves
-        if (currentlyHighlightedButtonList != null) {
+        if (currentlyHighlightedArrayPositionList != null) {
             removeOldHighlightedButtons();
         }
 
         // highlight in gui to where a move is possible
         highlightPossibleMoves(arrayPositionList);
 
+        // listener for turn-taking
         arrayPositionList.forEach(arrayPosition ->
                 buttonArray[arrayPosition.getRow()][arrayPosition.getColumn()].addMouseListener(new MouseAdapter() {
                     @Override
@@ -242,7 +247,16 @@ public class ChessGUI {
      * helper method for reverting next possible moves highlight
      */
     private void removeOldHighlightedButtons() {
-        for (JButton button : currentlyHighlightedButtonList) {
+        for (ArrayPosition aP : currentlyHighlightedArrayPositionList) {
+            // create button out of its arrayPosition
+            JButton button = buttonArray[aP.getRow()][aP.getColumn()];
+
+            // check if button is not highlighted
+            if (button.getBackground().equals(captureColor)) {
+                // set button color to initial color
+                setButtonColorToDefault(aP.getRow(), aP.getColumn());
+            }
+
             // \u2B24 stands for the black dot we use to indicate a piece can move to this position
             if (button.getText().equals("\u2B24")) {
                 button.setText("");
@@ -253,7 +267,7 @@ public class ChessGUI {
                 }
             }
         }
-        currentlyHighlightedButtonList = new ArrayList<>();
+        currentlyHighlightedArrayPositionList = new ArrayList<>();
     }
 
     /**
@@ -263,12 +277,21 @@ public class ChessGUI {
      */
     private void highlightPossibleMoves(List<ArrayPosition> arrayPositionList) {
         for (ArrayPosition position : arrayPositionList) {
+            // variable for button at hand
             JButton currentButton = buttonArray[position.getRow()][position.getColumn()];
-            // set text to dot, resize font and add to highlightedButtonList
-            currentButton.setText("\u2B24");
-            currentButton.setFont(new Font("Arial Unicode MS", Font.BOLD, 30));
-            currentButton.setForeground(Color.darkGray);
-            currentlyHighlightedButtonList.add(currentButton);
+
+            // position of possible move is occupied
+            if (position.getIsOccupied()) {
+                // set color to light-red so user knows that enemy piece can be taken
+                currentButton.setBackground(captureColor);
+            } else /*position is not occupied*/ {
+                // set text to dot, resize font and add to highlightedButtonList
+                currentButton.setText("\u2B24");
+                currentButton.setFont(new Font("Arial Unicode MS", Font.BOLD, 30));
+                currentButton.setForeground(Color.darkGray);
+            }
+            // button is now highlighted (dot or lightly red colored)
+            currentlyHighlightedArrayPositionList.add(position);
         }
     }
 
@@ -293,8 +316,26 @@ public class ChessGUI {
         newPositionButton.setText(board.getTile(newPosition.getRow(), newPosition.getColumn()).getCurrentPiece().getUniCodePicture());
         newPositionButton.setFont(new Font("Arial Unicode MS", Font.BOLD, 90));
 
+        // set button color to initial color
+        setButtonColorToDefault(newPosition.getRow(), newPosition.getColumn());
+
         // add button-listeners for turn-changing
         addAllListenersAfterMove(newPosition);
+    }
+
+    /**
+     * sets color back to initial coloring
+     *
+     * @param row    row of the button
+     * @param column column of the button
+     */
+    private void setButtonColorToDefault(int row, int column) {
+        // light field
+        if ((row + column) % 2 == 0) {
+            buttonArray[row][column].setBackground(lightTileColor);
+        } else /*dark field*/ {
+            buttonArray[row][column].setBackground(darkTileColor);
+        }
     }
 
     /**

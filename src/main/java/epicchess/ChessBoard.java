@@ -133,7 +133,7 @@ public class ChessBoard {
             for (int j = 0; j < 8; j++) {
                 // check that tile is not free and has correct color
                 if (gameBoard[i][j].getTileState() != TileState.FREE && gameBoard[i][j].getCurrentPiece().getColor().equals(color)) {
-                    piecePositionList.add(new ArrayPosition(i, j));
+                    piecePositionList.add(new ArrayPosition(i, j, true));
                 }
             }
         }
