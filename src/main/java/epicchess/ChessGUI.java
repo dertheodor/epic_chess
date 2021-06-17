@@ -220,7 +220,7 @@ public class ChessGUI {
     }
 
     /**
-     * adds mousePressed-listeners for next possible moves so we know where the user clicked
+     * adds mousePressed-listeners for next possible moves so we know where the user wants to move
      *
      * @param arrayPositionList the positions of next possible moves
      */
