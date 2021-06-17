@@ -17,6 +17,7 @@ public class ChessEngine {
     public List<ArrayPosition> showNextValidMoves(ArrayPosition position, ChessPiece piece, ChessTile[][] gameBoard) {
         List<ArrayPosition> validMovesList;
         validMovesList = new ArrayList<>();
+        // pawn movement
         if (piece.getType() == Figure.PAWN) {
             if (piece.getColor().equals("black")) {
                 validMovesList = blackPawnMovement(position, piece, gameBoard);
@@ -24,19 +25,32 @@ public class ChessEngine {
                 validMovesList = whitePawnMovement(position, piece, gameBoard);
             }
 
+            // knight movement
         } else if (piece.getType() == Figure.KNIGHT) {
             validMovesList = knightMovement(position, piece, gameBoard);
+            // rook movement
         } else if (piece.getType() == Figure.ROOK) {
             validMovesList = rookMovement(position, piece, gameBoard);
+            // bishop movement
         } else if (piece.getType() == Figure.BISHOP) {
             validMovesList = bishopMovement(position, piece, gameBoard);
+            // queen movement
         } else if (piece.getType() == Figure.QUEEN) {
+            // queen is a mix of rook and bishop so she can use their methods
             validMovesList = rookMovement(position, piece, gameBoard);
             validMovesList.addAll(bishopMovement(position, piece, gameBoard));
         }
         return validMovesList;
     }
 
+    /**
+     * movement logic for white pawns
+     *
+     * @param position  current position of the white pawn
+     * @param piece     pawn
+     * @param gameBoard gameBoard
+     * @return validMovesList - list of valid moves
+     */
     //TODO fix it so pawns cant move past the border of the gameBoard
     private List<ArrayPosition> whitePawnMovement(ArrayPosition position, ChessPiece piece, ChessTile[][] gameBoard) {
         List<ArrayPosition> validMovesList = new ArrayList<>();
@@ -63,6 +77,15 @@ public class ChessEngine {
         return validMovesList;
     }
 
+    /**
+     * movement logic for black pawns
+     *
+     * @param position  current position of the black pawn
+     * @param piece     pawn
+     * @param gameBoard gameBoard
+     * @return validMovesList - list of valid moves
+     */
+    //TODO fix it so pawns cant move past the border of the gameBoard
     private List<ArrayPosition> blackPawnMovement(ArrayPosition position, ChessPiece piece, ChessTile[][] gameBoard) {
         List<ArrayPosition> validMovesList = new ArrayList<>();
         //check if pawn has moved before
@@ -133,6 +156,14 @@ public class ChessEngine {
     }
 
 
+    /**
+     * movement logic for knights
+     *
+     * @param position  current position of the knight
+     * @param piece     knight
+     * @param gameBoard gameBoard
+     * @return validMovesList - list of valid moves
+     */
     private List<ArrayPosition> knightMovement(ArrayPosition position, ChessPiece piece, ChessTile[][] gameBoard) {
         List<ArrayPosition> validMovesList = new ArrayList<>();
         int column = position.getColumn();
@@ -235,6 +266,14 @@ public class ChessEngine {
         return validMovesList;
     }
 
+    /**
+     * movement logic for rooks
+     *
+     * @param position  current position of the rook
+     * @param piece     rook
+     * @param gameBoard gameBoard
+     * @return validMovesList - list of valid moves
+     */
     private List<ArrayPosition> rookMovement(ArrayPosition position, ChessPiece piece, ChessTile[][] gameBoard) {
         List<ArrayPosition> validMovesList = new ArrayList<>();
         int row = position.getRow();
@@ -308,6 +347,14 @@ public class ChessEngine {
         return validMovesList;
     }
 
+    /**
+     * movement logic for bishops
+     *
+     * @param position  current position of the bishop
+     * @param piece     bishop
+     * @param gameBoard gameBoard
+     * @return validMovesList - list of valid moves
+     */
     private List<ArrayPosition> bishopMovement(ArrayPosition position, ChessPiece piece, ChessTile[][] gameBoard) {
         List<ArrayPosition> validMovesList = new ArrayList<>();
         int row = position.getRow();
