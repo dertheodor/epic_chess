@@ -17,7 +17,16 @@ public class ChessGUI {
     JPanel boardPanel;
 
     JMenuBar menuBar;
-    JMenu menu;
+
+    JMenu fileMenu;
+    JMenuItem exitItem;
+
+    JMenu editMenu;
+    JMenuItem greenBoard;
+    JMenuItem greyBoard;
+
+    JMenu helpMenu;
+    JMenuItem aboutItem;
 
     Color darkTileColor;
     Color lightTileColor;
@@ -36,7 +45,13 @@ public class ChessGUI {
         boardPanel = new JPanel();
         board = boardReference;
         menuBar = new JMenuBar();
-        menu = new JMenu("Options");
+        fileMenu = new JMenu("File");
+        exitItem = new JMenuItem("Exit");
+        editMenu = new JMenu("Edit");
+        greenBoard = new JMenuItem("Green themed board");
+        greyBoard = new JMenuItem("Grey themed board");
+        helpMenu = new JMenu("Help");
+        aboutItem = new JMenuItem("About");
         buttonArray = new JButton[8][8];
         currentlySelectedPiecePosition = null;
         currentlyHighlightedArrayPositionList = new ArrayList<>();
@@ -46,9 +61,56 @@ public class ChessGUI {
         gameUI.setSize(1200, 1000);
         gameUI.setLayout(new BorderLayout());
 
-        //Add MenuBar to our Window
-        menuBar.add(menu);
+        //Add menuBar to our Window
         gameUI.setJMenuBar(menuBar);
+        //Add menuBar components
+        menuBar.add(fileMenu);
+        fileMenu.add(exitItem);
+        menuBar.add(editMenu);
+        editMenu.add(greenBoard);
+        editMenu.add(greyBoard);
+        menuBar.add(helpMenu);
+        helpMenu.add(aboutItem);
+
+        // add listener for exit submenu-entry
+        exitItem.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                System.exit(0);
+            }
+        });
+
+        // add listener for board theme change
+        greenBoard.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                darkTileColor = new Color(118, 150, 86);
+                lightTileColor = new Color(238, 238, 210);
+                initBoardColorChange();
+            }
+        });
+
+        // add listener for board theme change
+        greyBoard.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                darkTileColor = new Color(125, 135, 150);
+                lightTileColor = new Color(232, 235, 239);
+                initBoardColorChange();
+            }
+        });
+
+        // add listener for about submenu-entry
+        aboutItem.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                JOptionPane.showMessageDialog(gameUI,
+                        "This chess game has been made by Lars Penning(8penning) and Theodor Bajusz(8bajusz) " +
+                                "as part of PTP_2021 at the University of Hamburg",
+                        "About",
+                        JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
 
         // color for highlighting possible capture of enemy figure
         captureColor = new Color(245, 160, 147);
@@ -56,10 +118,6 @@ public class ChessGUI {
         //Initialise board
         darkTileColor = new Color(118, 150, 86);
         lightTileColor = new Color(238, 238, 210);
-
-        // TODO grey board option
-        //darkTileColor = new Color(125, 135, 150);
-        //lightTileColor = new Color(232, 235, 239);
 
         //Set layout
         boardPanel.setLayout(new GridLayout(0, 9));
@@ -324,7 +382,7 @@ public class ChessGUI {
     }
 
     /**
-     * sets color back to initial coloring
+     * sets color back to current default tile color
      *
      * @param row    row of the button
      * @param column column of the button
@@ -335,6 +393,17 @@ public class ChessGUI {
             buttonArray[row][column].setBackground(lightTileColor);
         } else /*dark field*/ {
             buttonArray[row][column].setBackground(darkTileColor);
+        }
+    }
+
+    /**
+     * initializes the board color change by calling helper function, tile colors need to be set before function call
+     */
+    private void initBoardColorChange() {
+        for (int row = 0; row < 8; row++) {
+            for (int column = 0; column < 8; column++) {
+                setButtonColorToDefault(row, column);
+            }
         }
     }
 
