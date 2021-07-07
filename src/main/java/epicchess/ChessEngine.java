@@ -542,73 +542,224 @@ public class ChessEngine {
      * @return
      */
     private boolean isMovePossibleWithoutCheckingOwnKing(int row, int column, String colorOfCurrentPlayer, ChessTile[][] testBoard) {
+        // BISHOP AND QUEEN
+
         //loop for right downwards diagonal movement, imitating the bishop
         for (int r = row, c = column; r < 7 && c < 7; r++, c++) {
-            if (testBoard[row][column].getTileState() != TileState.FREE) {
-                //capturing
-                if (testBoard[r + 1][c + 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") ||
-                        testBoard[r + 1][c + 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
-                                testBoard[r + 1][c + 1].getCurrentPiece().getType() == Figure.BISHOP ||
-                        testBoard[r + 1][c + 1].getCurrentPiece().getType() == Figure.QUEEN) {
-                    return false;
-                    //can not move past friendly piece
-                } else if (testBoard[r + 1][c + 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("black") ||
+            // skip free tiles
+            if (testBoard[r + 1][c + 1].getTileState() != TileState.FREE) {
+                // own piece is in way
+                if (testBoard[r + 1][c + 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("black") ||
                         testBoard[r + 1][c + 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("white")) {
                     break;
+                }
+                // king is in check
+                else if (testBoard[r + 1][c + 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") &&
+                        testBoard[r + 1][c + 1].getCurrentPiece().getType() == Figure.BISHOP ||
+                        testBoard[r + 1][c + 1].getCurrentPiece().getType() == Figure.QUEEN) {
+                    return false;
+                }
+                // king is in check
+                else if (testBoard[r + 1][c + 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
+                        testBoard[r + 1][c + 1].getCurrentPiece().getType() == Figure.BISHOP ||
+                        testBoard[r + 1][c + 1].getCurrentPiece().getType() == Figure.QUEEN) {
+                    return false;
                 }
             }
         }
 
         //loop for right upwards diagonal movement, still imitating the bishop
         for (int r = row, c = column; r < 7 && c > 0; r++, c--) {
-            if (testBoard[row][column].getTileState() != TileState.FREE) {
-                //capturing
-                if (testBoard[r + 1][c - 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") ||
-                        testBoard[r + 1][c - 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
-                                testBoard[r + 1][c - 1].getCurrentPiece().getType() == Figure.BISHOP ||
-                        testBoard[r + 1][c - 1].getCurrentPiece().getType() == Figure.QUEEN) {
-                    return false;
-                    //can not move past friendly piece
-                } else if (testBoard[r + 1][c - 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("black") ||
+            // skip free tiles
+            if (testBoard[r + 1][c - 1].getTileState() != TileState.FREE) {
+                // own piece is in way
+                if (testBoard[r + 1][c - 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("black") ||
                         testBoard[r + 1][c - 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("white")) {
                     break;
+                }
+                // king is in check
+                else if (testBoard[r + 1][c - 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") &&
+                        testBoard[r + 1][c - 1].getCurrentPiece().getType() == Figure.BISHOP ||
+                        testBoard[r + 1][c - 1].getCurrentPiece().getType() == Figure.QUEEN) {
+                    return false;
+                }
+                // king is in check
+                else if (testBoard[r + 1][c - 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
+                        testBoard[r + 1][c - 1].getCurrentPiece().getType() == Figure.BISHOP ||
+                        testBoard[r + 1][c - 1].getCurrentPiece().getType() == Figure.QUEEN) {
+                    return false;
                 }
             }
         }
 
         //loop for left downwards movement, still imitating the bishop
         for (int r = row, c = column; r > 0 && c < 7; r--, c++) {
-            if (testBoard[row][column].getTileState() != TileState.FREE) {
-                //capturing
-                if (testBoard[r - 1][c + 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") ||
-                        testBoard[r - 1][c + 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
-                                testBoard[r - 1][c + 1].getCurrentPiece().getType() == Figure.BISHOP ||
-                        testBoard[r - 1][c + 1].getCurrentPiece().getType() == Figure.QUEEN) {
-                    return false;
-                    //can not move past friendly piece
-                } else if (testBoard[r - 1][c + 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("black") ||
+            // skip free tiles
+            if (testBoard[r - 1][c + 1].getTileState() != TileState.FREE) {
+                // own piece is in way
+                if (testBoard[r - 1][c + 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("black") ||
                         testBoard[r - 1][c + 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("white")) {
                     break;
+                }
+                // king is in check
+                else if (testBoard[r - 1][c + 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") &&
+                        testBoard[r - 1][c + 1].getCurrentPiece().getType() == Figure.BISHOP ||
+                        testBoard[r - 1][c + 1].getCurrentPiece().getType() == Figure.QUEEN) {
+                    return false;
+                }
+                // king is in check
+                else if (testBoard[r - 1][c + 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
+                        testBoard[r - 1][c + 1].getCurrentPiece().getType() == Figure.BISHOP ||
+                        testBoard[r - 1][c + 1].getCurrentPiece().getType() == Figure.QUEEN) {
+                    return false;
                 }
             }
         }
 
         //loop for left upwards diagonal movement, still imitating the bishop
         for (int r = row, c = column; r > 0 && c > 0; r--, c--) {
-            if (testBoard[row][column].getTileState() != TileState.FREE) {
-                //capturing
-                if (testBoard[r - 1][c - 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") ||
-                        testBoard[r - 1][c - 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
-                                testBoard[r - 1][c - 1].getCurrentPiece().getType() == Figure.BISHOP ||
-                        testBoard[r - 1][c - 1].getCurrentPiece().getType() == Figure.QUEEN) {
-                    return false;
-                    //can not move past friendly piece
-                } else if (testBoard[r - 1][c - 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("black") ||
+            // skip free tiles
+            if (testBoard[r - 1][c - 1].getTileState() != TileState.FREE) {
+                // own piece is in way
+                if (testBoard[r - 1][c - 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("black") ||
                         testBoard[r - 1][c - 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("white")) {
                     break;
                 }
+                // king is in check
+                else if (testBoard[r - 1][c - 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") &&
+                        testBoard[r - 1][c - 1].getCurrentPiece().getType() == Figure.BISHOP ||
+                        testBoard[r - 1][c - 1].getCurrentPiece().getType() == Figure.QUEEN) {
+                    return false;
+                }
+                // king is in check
+                else if (testBoard[r - 1][c - 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
+                        testBoard[r - 1][c - 1].getCurrentPiece().getType() == Figure.BISHOP ||
+                        testBoard[r - 1][c - 1].getCurrentPiece().getType() == Figure.QUEEN) {
+                    return false;
+                }
             }
         }
+
+        // ROOK AND QUEEN
+
+        //loop for left straight movement, imitating the rook
+        for (int c = column; c > 0; c--) {
+            // skip free tiles
+            if (testBoard[row][c - 1].getTileState() != TileState.FREE) {
+                // own piece is in way
+                if (testBoard[row][c - 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("black") ||
+                        testBoard[row][c - 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("white")) {
+                    break;
+                }
+                // king is in check
+                else if (testBoard[row][c - 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") &&
+                        testBoard[row][c - 1].getCurrentPiece().getType() == Figure.ROOK ||
+                        testBoard[row][c - 1].getCurrentPiece().getType() == Figure.QUEEN) {
+                    return false;
+                }
+                // king is in check
+                else if (testBoard[row][c - 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
+                        testBoard[row][c - 1].getCurrentPiece().getType() == Figure.ROOK ||
+                        testBoard[row][c - 1].getCurrentPiece().getType() == Figure.QUEEN) {
+                    return false;
+                }
+            }
+        }
+
+        //loop for right straight movement, imitating the rook
+        for (int c = column; c < 7; c++) {
+            // skip free tiles
+            if (testBoard[row][c + 1].getTileState() != TileState.FREE) {
+                // own piece is in way
+                if (testBoard[row][c + 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("black") ||
+                        testBoard[row][c + 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("white")) {
+                    break;
+                }
+                // king is in check
+                else if (testBoard[row][c + 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") &&
+                        testBoard[row][c + 1].getCurrentPiece().getType() == Figure.ROOK ||
+                        testBoard[row][c + 1].getCurrentPiece().getType() == Figure.QUEEN) {
+                    return false;
+                }
+                // king is in check
+                else if (testBoard[row][c + 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
+                        testBoard[row][c + 1].getCurrentPiece().getType() == Figure.ROOK ||
+                        testBoard[row][c + 1].getCurrentPiece().getType() == Figure.QUEEN) {
+                    return false;
+                }
+            }
+        }
+
+        //loop for upwards straight movement, imitating the rook
+        for (int r = row; r > 0; r--) {
+            // skip free tiles
+            if (testBoard[r - 1][column].getTileState() != TileState.FREE) {
+                // own piece is in way
+                if (testBoard[r - 1][column].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("black") ||
+                        testBoard[r - 1][column].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("white")) {
+                    break;
+                }
+                // king is in check
+                else if (testBoard[r - 1][column].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") &&
+                        testBoard[r - 1][column].getCurrentPiece().getType() == Figure.ROOK ||
+                        testBoard[r - 1][column].getCurrentPiece().getType() == Figure.QUEEN) {
+                    return false;
+                }
+                // king is in check
+                else if (testBoard[r - 1][column].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
+                        testBoard[r - 1][column].getCurrentPiece().getType() == Figure.ROOK ||
+                        testBoard[r - 1][column].getCurrentPiece().getType() == Figure.QUEEN) {
+                    return false;
+                }
+            }
+        }
+
+        //loop for downwards straight movement, imitating the rook
+        for (int r = row; r < 7; r++) {
+            // skip free tiles
+            if (testBoard[r + 1][column].getTileState() != TileState.FREE) {
+                // own piece is in way
+                if (testBoard[r + 1][column].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("black") ||
+                        testBoard[r + 1][column].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("white")) {
+                    break;
+                }
+                // king is in check
+                else if (testBoard[r + 1][column].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") &&
+                        testBoard[r + 1][column].getCurrentPiece().getType() == Figure.ROOK ||
+                        testBoard[r + 1][column].getCurrentPiece().getType() == Figure.QUEEN) {
+                    return false;
+                }
+                // king is in check
+                else if (testBoard[r + 1][column].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
+                        testBoard[r + 1][column].getCurrentPiece().getType() == Figure.ROOK ||
+                        testBoard[r + 1][column].getCurrentPiece().getType() == Figure.QUEEN) {
+                    return false;
+                }
+            }
+        }
+
         return true;
     }
 }
+
+/*
+        //loop for left upwards diagonal movement, still imitating the bishop
+        for (int r = row, c = column; r > 0 && c > 0; r--, c--) {
+            if (testBoard[row][column].getTileState() != TileState.FREE) {
+                // null-check
+                if (testBoard[r - 1][c - 1].getCurrentPiece() != null) {
+                    //capturing
+                    if (testBoard[r - 1][c - 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") ||
+                            testBoard[r - 1][c - 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
+                            testBoard[r - 1][c - 1].getCurrentPiece().getType() == Figure.BISHOP ||
+                            testBoard[r - 1][c - 1].getCurrentPiece().getType() == Figure.QUEEN) {
+                        return false;
+                        //can not move past friendly piece
+                    } else if (testBoard[r - 1][c - 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("black") ||
+                            testBoard[r - 1][c - 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("white")) {
+                        break;
+                    }
+                }
+            }
+        }
+*/
