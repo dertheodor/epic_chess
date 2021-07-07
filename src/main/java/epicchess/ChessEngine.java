@@ -31,20 +31,18 @@ public class ChessEngine {
             validMovesList = knightMovement(position, piece, gameBoard);
             // rook movement
         } else if (piece.getType() == Figure.ROOK) {
-            validMovesList = rookMovement(position, piece, gameBoard, false);
+            validMovesList = rookMovement(position, piece, gameBoard);
             // bishop movement
         } else if (piece.getType() == Figure.BISHOP) {
-            validMovesList = bishopMovement(position, piece, gameBoard, false);
+            validMovesList = bishopMovement(position, piece, gameBoard);
             // queen movement
         } else if (piece.getType() == Figure.QUEEN) {
             // queen is a mix of rook and bishop so she can use their methods
-            validMovesList = rookMovement(position, piece, gameBoard, false);
-            validMovesList.addAll(bishopMovement(position, piece, gameBoard, false));
+            validMovesList = rookMovement(position, piece, gameBoard);
+            validMovesList.addAll(bishopMovement(position, piece, gameBoard));
             // king movement
-        } else {
-            // king is a mix of rook and bishop but with the limitation of only being able to move one field at a time
-            validMovesList = rookMovement(position, piece, gameBoard, true);
-            validMovesList.addAll(bishopMovement(position, piece, gameBoard, true));
+        } else if (piece.getType() == Figure.KING) {
+            validMovesList = kingMovement(position, piece, gameBoard);
         }
 
         // check if next move would result in checking own king
@@ -281,10 +279,9 @@ public class ChessEngine {
      * @param position  current position of the rook
      * @param piece     rook
      * @param gameBoard gameBoard
-     * @param isKing    boolean used only for the king to limit the move distance to one tile
      * @return validMovesList - list of valid moves
      */
-    private List<ArrayPosition> rookMovement(ArrayPosition position, ChessPiece piece, ChessTile[][] gameBoard, boolean isKing) {
+    private List<ArrayPosition> rookMovement(ArrayPosition position, ChessPiece piece, ChessTile[][] gameBoard) {
         List<ArrayPosition> validMovesList = new ArrayList<>();
         int row = position.getRow();
         int column = position.getColumn();
@@ -294,10 +291,6 @@ public class ChessEngine {
             //moving
             if (gameBoard[i + 1][column].getTileState() == TileState.FREE) {
                 validMovesList.add(new ArrayPosition(i + 1, column, false));
-                // exit for loop as king can only move one tile at a time
-                if (isKing) {
-                    break;
-                }
                 //capturing
             } else if (gameBoard[i + 1][column].getTileState() == TileState.BLACK && pieceColor.equals("white") ||
                     gameBoard[i + 1][column].getTileState() == TileState.WHITE && pieceColor.equals("black")) {
@@ -314,10 +307,6 @@ public class ChessEngine {
             //moving
             if (gameBoard[i - 1][column].getTileState() == TileState.FREE) {
                 validMovesList.add(new ArrayPosition(i - 1, column, false));
-                // exit for loop as king can only move one tile at a time
-                if (isKing) {
-                    break;
-                }
                 //capturing
             } else if (gameBoard[i - 1][column].getTileState() == TileState.BLACK && pieceColor.equals("white") ||
                     gameBoard[i - 1][column].getTileState() == TileState.WHITE && pieceColor.equals("black")) {
@@ -334,10 +323,6 @@ public class ChessEngine {
             //moving
             if (gameBoard[row][i + 1].getTileState() == TileState.FREE) {
                 validMovesList.add(new ArrayPosition(row, i + 1, false));
-                // exit for loop as king can only move one tile at a time
-                if (isKing) {
-                    break;
-                }
                 //capturing
             } else if (gameBoard[row][i + 1].getTileState() == TileState.BLACK && pieceColor.equals("white") ||
                     gameBoard[row][i + 1].getTileState() == TileState.WHITE && pieceColor.equals("black")) {
@@ -354,10 +339,6 @@ public class ChessEngine {
             //moving
             if (gameBoard[row][i - 1].getTileState() == TileState.FREE) {
                 validMovesList.add(new ArrayPosition(row, i - 1, false));
-                // exit for loop as king can only move one tile at a time
-                if (isKing) {
-                    break;
-                }
                 //capturing
             } else if (gameBoard[row][i - 1].getTileState() == TileState.BLACK && pieceColor.equals("white") ||
                     gameBoard[row][i - 1].getTileState() == TileState.WHITE && pieceColor.equals("black")) {
@@ -379,10 +360,9 @@ public class ChessEngine {
      * @param position  current position of the bishop
      * @param piece     bishop
      * @param gameBoard gameBoard
-     * @param isKing    boolean used only for the king to limit the move distance to one tile
      * @return validMovesList - list of valid moves
      */
-    private List<ArrayPosition> bishopMovement(ArrayPosition position, ChessPiece piece, ChessTile[][] gameBoard, boolean isKing) {
+    private List<ArrayPosition> bishopMovement(ArrayPosition position, ChessPiece piece, ChessTile[][] gameBoard) {
         List<ArrayPosition> validMovesList = new ArrayList<>();
         int row = position.getRow();
         int column = position.getColumn();
@@ -393,10 +373,6 @@ public class ChessEngine {
             //moving
             if (gameBoard[r + 1][c + 1].getTileState() == TileState.FREE) {
                 validMovesList.add(new ArrayPosition(r + 1, c + 1, false));
-                // exit for loop as king can only move one tile at a time
-                if (isKing) {
-                    break;
-                }
                 //capturing
             } else if (gameBoard[r + 1][c + 1].getTileState() == TileState.BLACK && pieceColor.equals("white") ||
                     gameBoard[r + 1][c + 1].getTileState() == TileState.WHITE && pieceColor.equals("black")) {
@@ -414,10 +390,6 @@ public class ChessEngine {
             //moving
             if (gameBoard[r + 1][c - 1].getTileState() == TileState.FREE) {
                 validMovesList.add(new ArrayPosition(r + 1, c - 1, false));
-                // exit for loop as king can only move one tile at a time
-                if (isKing) {
-                    break;
-                }
                 //capturing
             } else if (gameBoard[r + 1][c - 1].getTileState() == TileState.BLACK && pieceColor.equals("white") ||
                     gameBoard[r + 1][c - 1].getTileState() == TileState.WHITE && pieceColor.equals("black")) {
@@ -435,10 +407,6 @@ public class ChessEngine {
             //moving
             if (gameBoard[r - 1][c + 1].getTileState() == TileState.FREE) {
                 validMovesList.add(new ArrayPosition(r - 1, c + 1, false));
-                // exit for loop as king can only move one tile at a time
-                if (isKing) {
-                    break;
-                }
                 //capturing
             } else if (gameBoard[r - 1][c + 1].getTileState() == TileState.BLACK && pieceColor.equals("white") ||
                     gameBoard[r - 1][c + 1].getTileState() == TileState.WHITE && pieceColor.equals("black")) {
@@ -456,10 +424,6 @@ public class ChessEngine {
             //moving
             if (gameBoard[r - 1][c - 1].getTileState() == TileState.FREE) {
                 validMovesList.add(new ArrayPosition(r - 1, c - 1, false));
-                // exit for loop as king can only move one tile at a time
-                if (isKing) {
-                    break;
-                }
                 //capturing
             } else if (gameBoard[r - 1][c - 1].getTileState() == TileState.BLACK && pieceColor.equals("white") ||
                     gameBoard[r - 1][c - 1].getTileState() == TileState.WHITE && pieceColor.equals("black")) {
@@ -476,11 +440,119 @@ public class ChessEngine {
     }
 
     /**
-     * @param tileOfMovingPiece
-     * @param piece
-     * @param gameBoard
-     * @param validMovesWithSelfChecking
-     * @return
+     * movement Logic for Kings
+     *
+     * @param position  the current position of the King
+     * @param piece     the King
+     * @param gameBoard the current State of our Game
+     * @return all the possible moves of the King
+     */
+    private List<ArrayPosition> kingMovement(ArrayPosition position, ChessPiece piece, ChessTile[][] gameBoard) {
+        List<ArrayPosition> validMovesList = new ArrayList<>();
+        int row = position.getRow();
+        int column = position.getColumn();
+        String pieceColor = piece.getColor();
+
+        //left upwards diagonal move
+        if (row > 0 && column > 0) {
+            if (gameBoard[row - 1][column - 1].getTileState() == TileState.FREE) {
+                validMovesList.add(new ArrayPosition(row - 1, column - 1, false));
+            }//capturing in the same direction
+            else if (gameBoard[row - 1][column - 1].getTileState() == TileState.BLACK && pieceColor.equals("white") ||
+                    gameBoard[row - 1][column - 1].getTileState() == TileState.WHITE && pieceColor.equals("black")) {
+                validMovesList.add(new ArrayPosition(row - 1, column - 1, true));
+            }
+        }
+
+        //straight upwards move
+        if (row > 0) {
+            if (gameBoard[row - 1][column].getTileState() == TileState.FREE) {
+                validMovesList.add(new ArrayPosition(row - 1, column, false));
+            }//capturing in the same direction
+            else if (gameBoard[row - 1][column].getTileState() == TileState.BLACK && pieceColor.equals("white") ||
+                    gameBoard[row - 1][column].getTileState() == TileState.WHITE && pieceColor.equals("black")) {
+                validMovesList.add(new ArrayPosition(row - 1, column, true));
+            }
+        }
+
+        //right upwards diagonal move
+        if (row > 0 && column < 7) {
+            if (gameBoard[row - 1][column + 1].getTileState() == TileState.FREE) {
+                validMovesList.add(new ArrayPosition(row - 1, column + 1, false));
+            }//capturing in the same direction
+            else if (gameBoard[row - 1][column + 1].getTileState() == TileState.BLACK && pieceColor.equals("white") ||
+                    gameBoard[row - 1][column + 1].getTileState() == TileState.WHITE && pieceColor.equals("black")) {
+                validMovesList.add(new ArrayPosition(row - 1, column + 1, true));
+            }
+        }
+
+        //straight right move
+        if (column < 7) {
+            if (gameBoard[row][column + 1].getTileState() == TileState.FREE) {
+                validMovesList.add(new ArrayPosition(row, column + 1, false));
+            }//capturing in the same direction
+            else if (gameBoard[row][column + 1].getTileState() == TileState.BLACK && pieceColor.equals("white") ||
+                    gameBoard[row][column + 1].getTileState() == TileState.WHITE && pieceColor.equals("black")) {
+                validMovesList.add(new ArrayPosition(row, column + 1, true));
+            }
+        }
+
+        //right downwards diagonal move
+        if (row < 7 && column < 7) {
+            if (gameBoard[row + 1][column + 1].getTileState() == TileState.FREE) {
+                validMovesList.add(new ArrayPosition(row + 1, column + 1, false));
+            }//capturing in the same direction
+            else if (gameBoard[row + 1][column + 1].getTileState() == TileState.BLACK && pieceColor.equals("white") ||
+                    gameBoard[row + 1][column + 1].getTileState() == TileState.WHITE && pieceColor.equals("black")) {
+                validMovesList.add(new ArrayPosition(row + 1, column + 1, true));
+            }
+        }
+
+        //straight down move
+        if (row < 7) {
+            if (gameBoard[row + 1][column].getTileState() == TileState.FREE) {
+                validMovesList.add(new ArrayPosition(row + 1, column, false));
+            }//capturing in the same direction
+            else if (gameBoard[row + 1][column].getTileState() == TileState.BLACK && pieceColor.equals("white") ||
+                    gameBoard[row + 1][column].getTileState() == TileState.WHITE && pieceColor.equals("black")) {
+                validMovesList.add(new ArrayPosition(row + 1, column, true));
+            }
+        }
+
+        //left downwards diagonal move
+        if (row < 7 && column > 0) {
+            if (gameBoard[row + 1][column - 1].getTileState() == TileState.FREE) {
+                validMovesList.add(new ArrayPosition(row + 1, column - 1, false));
+            }//capturing in the same direction
+            else if (gameBoard[row + 1][column - 1].getTileState() == TileState.BLACK && pieceColor.equals("white") ||
+                    gameBoard[row + 1][column - 1].getTileState() == TileState.WHITE && pieceColor.equals("black")) {
+                validMovesList.add(new ArrayPosition(row + 1, column - 1, true));
+            }
+        }
+
+        //straight left move
+        if (column > 0) {
+            if (gameBoard[row][column - 1].getTileState() == TileState.FREE) {
+                validMovesList.add(new ArrayPosition(row, column - 1, false));
+            }//capturing in the same direction
+            else if (gameBoard[row][column - 1].getTileState() == TileState.BLACK && pieceColor.equals("white") ||
+                    gameBoard[row][column - 1].getTileState() == TileState.WHITE && pieceColor.equals("black")) {
+                validMovesList.add(new ArrayPosition(row, column - 1, true));
+            }
+        }
+
+        return validMovesList;
+    }
+
+    /**
+     * Takes the list with all the available moves and deletes those, which would check the King of the Player
+     * whose turn it currently is
+     *
+     * @param tileOfMovingPiece          the Tile where the Piece which is currently moved resides.
+     * @param piece                      The Piece which is currently moved.
+     * @param gameBoard                  Our current Gameboard state.
+     * @param validMovesWithSelfChecking All moves which are available right now, for the piece that wants to move.
+     * @return Returns a list with all allowed moves.
      */
     private List<ArrayPosition> eradicateSelfChecking(ArrayPosition tileOfMovingPiece, ChessPiece piece, ChessTile[][] gameBoard, List<ArrayPosition> validMovesWithSelfChecking) {
         // set color of current player
@@ -489,15 +561,19 @@ public class ChessEngine {
         ArrayPosition tileOfKing = null;
         // init new validMovesList
         List<ArrayPosition> validMovesList = new ArrayList<>();
-
-        // iterate over board to find the king
-        for (int r = 0; r < 8; r++) {
-            for (int c = 0; c < 8; c++) {
-                // find king
-                if (gameBoard[r][c].getTileState() != TileState.FREE) {
-                    if (gameBoard[r][c].getCurrentPiece().getType() == Figure.KING &&
-                            gameBoard[r][c].getCurrentPiece().getColor().equals(colorOfCurrentPlayer)) {
-                        tileOfKing = new ArrayPosition(r, c, true);
+        //tests if Piece which is currently selected is in fact the King.
+        if (piece.getType() == Figure.KING) {
+            tileOfKing = tileOfMovingPiece;
+        } else {
+            // iterate over board to find the king
+            for (int r = 0; r < 8; r++) {
+                for (int c = 0; c < 8; c++) {
+                    // find king
+                    if (gameBoard[r][c].getTileState() != TileState.FREE) {
+                        if (gameBoard[r][c].getCurrentPiece().getType() == Figure.KING &&
+                                gameBoard[r][c].getCurrentPiece().getColor().equals(colorOfCurrentPlayer)) {
+                            tileOfKing = new ArrayPosition(r, c, true);
+                        }
                     }
                 }
             }
@@ -535,11 +611,13 @@ public class ChessEngine {
     }
 
     /**
-     * @param row
-     * @param column
-     * @param colorOfCurrentPlayer
-     * @param testBoard
-     * @return
+     * Tests if a move is allowed. It is not if the move checks the King of the Player currently moving.
+     *
+     * @param row                  The row of the Kings position
+     * @param column               The column of the Kings position
+     * @param colorOfCurrentPlayer the color of the player whose turn it currently is.
+     * @param testBoard            A fictional board, where the move which needs to be checked is made.
+     * @return Returns true if the tested move is allowed.
      */
     private boolean isMovePossibleWithoutCheckingOwnKing(int row, int column, String colorOfCurrentPlayer, ChessTile[][] testBoard) {
         // BISHOP AND QUEEN
