@@ -631,12 +631,31 @@ public class ChessEngine {
      * @return Returns true if the tested move is allowed.
      */
     private boolean isMovePossibleWithoutCheckingOwnKing(int row, int column, String colorOfCurrentPlayer, ChessTile[][] testBoard) {
+        // boolean used for eradicating king self-checking with enemy king and pawns
+        boolean firstIteration = true;
         // BISHOP AND QUEEN
 
         //loop for right downwards diagonal movement, imitating the bishop
         for (int r = row, c = column; r < 7 && c < 7; r++, c++) {
             // skip free tiles
             if (testBoard[r + 1][c + 1].getTileState() != TileState.FREE) {
+                if (firstIteration) {
+                    // king self-checking first option
+                    if (testBoard[r + 1][c + 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") &&
+                            testBoard[r + 1][c + 1].getCurrentPiece().getType() == Figure.KING) {
+                        return false;
+                    }
+                    // king self-checking second option
+                    if (testBoard[r + 1][c + 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
+                            testBoard[r + 1][c + 1].getCurrentPiece().getType() == Figure.KING) {
+                        return false;
+                    }
+                    // for pawns right downwards diagonal
+                    if (testBoard[r + 1][c + 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
+                            testBoard[r + 1][c + 1].getCurrentPiece().getType() == Figure.PAWN) {
+                        return false;
+                    }
+                }
                 // own piece is in way
                 if (testBoard[r + 1][c + 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("black") ||
                         testBoard[r + 1][c + 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("white")) {
@@ -651,7 +670,7 @@ public class ChessEngine {
                 // enemy piece is in way (second option)
                 if (testBoard[r + 1][c + 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
                         testBoard[r + 1][c + 1].getCurrentPiece().getType() != Figure.BISHOP &&
-                        testBoard[r + 1][c + 1].getCurrentPiece().getType() != Figure.QUEEN ) {
+                        testBoard[r + 1][c + 1].getCurrentPiece().getType() != Figure.QUEEN) {
                     break;
                 }
                 // king is in check
@@ -667,12 +686,33 @@ public class ChessEngine {
                     return false;
                 }
             }
+            firstIteration = false;
         }
 
-        //loop for right upwards diagonal movement, still imitating the bishop
+        // set firstIteration again to true for next loop
+        firstIteration = true;
+
+        //loop for left downwards diagonal movement, still imitating the bishop
         for (int r = row, c = column; r < 7 && c > 0; r++, c--) {
             // skip free tiles
             if (testBoard[r + 1][c - 1].getTileState() != TileState.FREE) {
+                if (firstIteration) {
+                    // king self-checking first option
+                    if (testBoard[r + 1][c - 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") &&
+                            testBoard[r + 1][c - 1].getCurrentPiece().getType() == Figure.KING) {
+                        return false;
+                    }
+                    // king self-checking second option
+                    if (testBoard[r + 1][c - 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
+                            testBoard[r + 1][c - 1].getCurrentPiece().getType() == Figure.KING) {
+                        return false;
+                    }
+                    // for pawns left downwards diagonal
+                    if (testBoard[r + 1][c - 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
+                            testBoard[r + 1][c - 1].getCurrentPiece().getType() == Figure.PAWN) {
+                        return false;
+                    }
+                }
                 // own piece is in way
                 if (testBoard[r + 1][c - 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("black") ||
                         testBoard[r + 1][c - 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("white")) {
@@ -687,7 +727,7 @@ public class ChessEngine {
                 // enemy piece is in way (second option)
                 if (testBoard[r + 1][c - 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
                         testBoard[r + 1][c - 1].getCurrentPiece().getType() != Figure.BISHOP &&
-                        testBoard[r + 1][c - 1].getCurrentPiece().getType() != Figure.QUEEN ) {
+                        testBoard[r + 1][c - 1].getCurrentPiece().getType() != Figure.QUEEN) {
                     break;
                 }
                 // king is in check
@@ -703,12 +743,33 @@ public class ChessEngine {
                     return false;
                 }
             }
+            firstIteration = false;
         }
 
-        //loop for left downwards movement, still imitating the bishop
+        // set firstIteration again to true for next loop
+        firstIteration = true;
+
+        //loop for right upwards movement, still imitating the bishop
         for (int r = row, c = column; r > 0 && c < 7; r--, c++) {
             // skip free tiles
             if (testBoard[r - 1][c + 1].getTileState() != TileState.FREE) {
+                if (firstIteration) {
+                    // king self-checking first option
+                    if (testBoard[r - 1][c + 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") &&
+                            testBoard[r - 1][c + 1].getCurrentPiece().getType() == Figure.KING) {
+                        return false;
+                    }
+                    // king self-checking second option
+                    if (testBoard[r - 1][c + 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
+                            testBoard[r - 1][c + 1].getCurrentPiece().getType() == Figure.KING) {
+                        return false;
+                    }
+                    // for pawns right upwards diagonal
+                    if (testBoard[r - 1][c + 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") &&
+                            testBoard[r - 1][c + 1].getCurrentPiece().getType() == Figure.PAWN) {
+                        return false;
+                    }
+                }
                 // own piece is in way
                 if (testBoard[r - 1][c + 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("black") ||
                         testBoard[r - 1][c + 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("white")) {
@@ -723,7 +784,7 @@ public class ChessEngine {
                 // enemy piece is in way (second option)
                 if (testBoard[r - 1][c + 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
                         testBoard[r - 1][c + 1].getCurrentPiece().getType() != Figure.BISHOP &&
-                        testBoard[r - 1][c + 1].getCurrentPiece().getType() != Figure.QUEEN ) {
+                        testBoard[r - 1][c + 1].getCurrentPiece().getType() != Figure.QUEEN) {
                     break;
                 }
                 // king is in check
@@ -739,12 +800,33 @@ public class ChessEngine {
                     return false;
                 }
             }
+            firstIteration = false;
         }
+
+        // set firstIteration again to true for next loop
+        firstIteration = true;
 
         //loop for left upwards diagonal movement, still imitating the bishop
         for (int r = row, c = column; r > 0 && c > 0; r--, c--) {
             // skip free tiles
             if (testBoard[r - 1][c - 1].getTileState() != TileState.FREE) {
+                if (firstIteration) {
+                    // king self-checking first option
+                    if (testBoard[r - 1][c - 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") &&
+                            testBoard[r - 1][c - 1].getCurrentPiece().getType() == Figure.KING) {
+                        return false;
+                    }
+                    // king self-checking second option
+                    if (testBoard[r - 1][c - 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
+                            testBoard[r - 1][c - 1].getCurrentPiece().getType() == Figure.KING) {
+                        return false;
+                    }
+                    // for pawns left upwards diagonal
+                    if (testBoard[r - 1][c - 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") &&
+                            testBoard[r - 1][c - 1].getCurrentPiece().getType() == Figure.PAWN) {
+                        return false;
+                    }
+                }
                 // own piece is in way
                 if (testBoard[r - 1][c - 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("black") ||
                         testBoard[r - 1][c - 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("white")) {
@@ -759,7 +841,7 @@ public class ChessEngine {
                 // enemy piece is in way (second option)
                 if (testBoard[r - 1][c - 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
                         testBoard[r - 1][c - 1].getCurrentPiece().getType() != Figure.BISHOP &&
-                        testBoard[r - 1][c - 1].getCurrentPiece().getType() != Figure.QUEEN ) {
+                        testBoard[r - 1][c - 1].getCurrentPiece().getType() != Figure.QUEEN) {
                     break;
                 }
                 // king is in check
@@ -775,7 +857,11 @@ public class ChessEngine {
                     return false;
                 }
             }
+            firstIteration = false;
         }
+
+        // set firstIteration again to true for next loop
+        firstIteration = true;
 
         // ROOK AND QUEEN
 
@@ -783,6 +869,18 @@ public class ChessEngine {
         for (int c = column; c > 0; c--) {
             // skip free tiles
             if (testBoard[row][c - 1].getTileState() != TileState.FREE) {
+                if (firstIteration) {
+                    // king self-checking first option
+                    if (testBoard[row][c - 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") &&
+                            testBoard[row][c - 1].getCurrentPiece().getType() == Figure.KING) {
+                        return false;
+                    }
+                    // king self-checking second option
+                    if (testBoard[row][c - 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
+                            testBoard[row][c - 1].getCurrentPiece().getType() == Figure.KING) {
+                        return false;
+                    }
+                }
                 // own piece is in way
                 if (testBoard[row][c - 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("black") ||
                         testBoard[row][c - 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("white")) {
@@ -797,7 +895,7 @@ public class ChessEngine {
                 // enemy piece is in way (second option)
                 if (testBoard[row][c - 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
                         testBoard[row][c - 1].getCurrentPiece().getType() != Figure.ROOK &&
-                        testBoard[row][c - 1].getCurrentPiece().getType() != Figure.QUEEN ) {
+                        testBoard[row][c - 1].getCurrentPiece().getType() != Figure.QUEEN) {
                     break;
                 }
                 // king is in check
@@ -813,12 +911,28 @@ public class ChessEngine {
                     return false;
                 }
             }
+            firstIteration = false;
         }
+
+        // set firstIteration again to true for next loop
+        firstIteration = true;
 
         //loop for right straight movement, imitating the rook
         for (int c = column; c < 7; c++) {
             // skip free tiles
             if (testBoard[row][c + 1].getTileState() != TileState.FREE) {
+                if (firstIteration) {
+                    // king self-checking first option
+                    if (testBoard[row][c + 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") &&
+                            testBoard[row][c + 1].getCurrentPiece().getType() == Figure.KING) {
+                        return false;
+                    }
+                    // king self-checking second option
+                    if (testBoard[row][c + 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
+                            testBoard[row][c + 1].getCurrentPiece().getType() == Figure.KING) {
+                        return false;
+                    }
+                }
                 // own piece is in way
                 if (testBoard[row][c + 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("black") ||
                         testBoard[row][c + 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("white")) {
@@ -833,7 +947,7 @@ public class ChessEngine {
                 // enemy piece is in way (second option)
                 if (testBoard[row][c + 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
                         testBoard[row][c + 1].getCurrentPiece().getType() != Figure.ROOK &&
-                        testBoard[row][c + 1].getCurrentPiece().getType() != Figure.QUEEN ) {
+                        testBoard[row][c + 1].getCurrentPiece().getType() != Figure.QUEEN) {
                     break;
                 }
                 // king is in check
@@ -849,12 +963,28 @@ public class ChessEngine {
                     return false;
                 }
             }
+            firstIteration = false;
         }
+
+        // set firstIteration again to true for next loop
+        firstIteration = true;
 
         //loop for upwards straight movement, imitating the rook
         for (int r = row; r > 0; r--) {
             // skip free tiles
             if (testBoard[r - 1][column].getTileState() != TileState.FREE) {
+                if (firstIteration) {
+                    // king self-checking first option
+                    if (testBoard[r - 1][column].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") &&
+                            testBoard[r - 1][column].getCurrentPiece().getType() == Figure.KING) {
+                        return false;
+                    }
+                    // king self-checking second option
+                    if (testBoard[r - 1][column].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
+                            testBoard[r - 1][column].getCurrentPiece().getType() == Figure.KING) {
+                        return false;
+                    }
+                }
                 // own piece is in way
                 if (testBoard[r - 1][column].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("black") ||
                         testBoard[r - 1][column].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("white")) {
@@ -869,7 +999,7 @@ public class ChessEngine {
                 // enemy piece is in way (second option)
                 if (testBoard[r - 1][column].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
                         testBoard[r - 1][column].getCurrentPiece().getType() != Figure.ROOK &&
-                        testBoard[r - 1][column].getCurrentPiece().getType() != Figure.QUEEN ) {
+                        testBoard[r - 1][column].getCurrentPiece().getType() != Figure.QUEEN) {
                     break;
                 }
                 // king is in check
@@ -885,12 +1015,28 @@ public class ChessEngine {
                     return false;
                 }
             }
+            firstIteration = false;
         }
+
+        // set firstIteration again to true for next loop
+        firstIteration = true;
 
         //loop for downwards straight movement, imitating the rook
         for (int r = row; r < 7; r++) {
             // skip free tiles
             if (testBoard[r + 1][column].getTileState() != TileState.FREE) {
+                if (firstIteration) {
+                    // king self-checking first option
+                    if (testBoard[r + 1][column].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") &&
+                            testBoard[r + 1][column].getCurrentPiece().getType() == Figure.KING) {
+                        return false;
+                    }
+                    // king self-checking second option
+                    if (testBoard[r + 1][column].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
+                            testBoard[r + 1][column].getCurrentPiece().getType() == Figure.KING) {
+                        return false;
+                    }
+                }
                 // own piece is in way
                 if (testBoard[r + 1][column].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("black") ||
                         testBoard[r + 1][column].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("white")) {
@@ -905,7 +1051,7 @@ public class ChessEngine {
                 // enemy piece is in way (second option)
                 if (testBoard[r + 1][column].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
                         testBoard[r + 1][column].getCurrentPiece().getType() != Figure.ROOK &&
-                        testBoard[r + 1][column].getCurrentPiece().getType() != Figure.QUEEN ) {
+                        testBoard[r + 1][column].getCurrentPiece().getType() != Figure.QUEEN) {
                     break;
                 }
                 // king is in check
@@ -921,56 +1067,10 @@ public class ChessEngine {
                     return false;
                 }
             }
+            firstIteration = false;
         }
-
         return true;
+
+        // TODO ADD KNIGHT
     }
 }
-
-/*
-        //loop for left upwards diagonal movement, still imitating the bishop
-        for (int r = row, c = column; r > 0 && c > 0; r--, c--) {
-            if (testBoard[row][column].getTileState() != TileState.FREE) {
-                // null-check
-                if (testBoard[r - 1][c - 1].getCurrentPiece() != null) {
-                    //capturing
-                    if (testBoard[r - 1][c - 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") ||
-                            testBoard[r - 1][c - 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
-                            testBoard[r - 1][c - 1].getCurrentPiece().getType() == Figure.BISHOP ||
-                            testBoard[r - 1][c - 1].getCurrentPiece().getType() == Figure.QUEEN) {
-                        return false;
-                        //can not move past friendly piece
-                    } else if (testBoard[r - 1][c - 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("black") ||
-                            testBoard[r - 1][c - 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("white")) {
-                        break;
-                    }
-                }
-            }
-        }
-*/
-/* New loop for eradicateSelfCheckingmethod, was bugged as hell though
-        //loop for right downwards diagonal movement, imitating the bishop
-        for (int r = row, c = column; r < 7 && c < 7; r++, c++) {
-            //skip free tiles
-            if (testBoard[r + 1][c + 1].getTileState() != TileState.FREE) {
-                //king is in check
-                if (testBoard[r + 1][c + 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") ||
-                        testBoard[r + 1][c + 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
-                                testBoard[r + 1][c + 1].getCurrentPiece().getType() == Figure.BISHOP ||
-                        testBoard[r + 1][c + 1].getCurrentPiece().getType() == Figure.QUEEN ||
-                        (firstMove && testBoard[r + 1][c + 1].getCurrentPiece().getType() == Figure.KING ||
-                                (testBoard[r + 1][c + 1].getCurrentPiece().getType() == Figure.PAWN &&
-                                        testBoard[r + 1][c + 1].getTileState() == TileState.WHITE))) {
-                    return false;
-                    //own piece or piece that is not dangerous for our king is in the way
-                } else if (testBoard[r + 1][c + 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("black") ||
-                        testBoard[r + 1][c + 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("white") ||
-                        testBoard[r + 1][c + 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") ||
-                        testBoard[r + 1][c + 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black")) {
-                    break;
-                }
-            }
-            //after first loop boolean is set to false
-            firstMove = false;
-        }
- */
