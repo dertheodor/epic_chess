@@ -313,6 +313,10 @@ public class ChessGUI {
             if (button.getBackground().equals(captureColor)) {
                 // set button color to initial color
                 setButtonColorToDefault(aP.getRow(), aP.getColumn());
+                // remove all previously set listeners for possible moves
+                for (MouseListener ml : button.getMouseListeners()) {
+                    button.removeMouseListener(ml);
+                }
             }
 
             // \u2B24 stands for the black dot we use to indicate a piece can move to this position
