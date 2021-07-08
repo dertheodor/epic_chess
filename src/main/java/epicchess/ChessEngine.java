@@ -565,7 +565,9 @@ public class ChessEngine {
         List<ArrayPosition> validMovesList = new ArrayList<>();
         //tests if Piece which is currently selected is in fact the King.
         if (piece.getType() == Figure.KING) {
+            // when king is moving, the tile of the moving piece is the tile of the king
             tileOfKing = tileOfMovingPiece;
+            // variable set to true for later check
             isKingMoving = true;
         } else {
             // iterate over board to find the king
@@ -605,10 +607,12 @@ public class ChessEngine {
                 // set piece to new possible position
                 testBoard[validMove.getRow()][validMove.getColumn()].setCurrentPiece(piece);
 
+                // when the king is moving, use its "new" hypothetical position to eliminate self checking
                 if (isKingMoving) {
                     if (isMovePossibleWithoutCheckingOwnKing(validMove.getRow(), validMove.getColumn(), colorOfCurrentPlayer, testBoard)) {
                         validMovesList.add(validMove);
                     }
+                    // normal case for all other figures except king
                 } else if (isMovePossibleWithoutCheckingOwnKing(tileOfKing.getRow(), tileOfKing.getColumn(), colorOfCurrentPlayer, testBoard)) {
                     validMovesList.add(validMove);
                 }
@@ -638,6 +642,18 @@ public class ChessEngine {
                         testBoard[r + 1][c + 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("white")) {
                     break;
                 }
+                // enemy piece is in way (first option)
+                if (testBoard[r + 1][c + 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") &&
+                        testBoard[r + 1][c + 1].getCurrentPiece().getType() != Figure.BISHOP &&
+                        testBoard[r + 1][c + 1].getCurrentPiece().getType() != Figure.QUEEN) {
+                    break;
+                }
+                // enemy piece is in way (second option)
+                if (testBoard[r + 1][c + 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
+                        testBoard[r + 1][c + 1].getCurrentPiece().getType() != Figure.BISHOP &&
+                        testBoard[r + 1][c + 1].getCurrentPiece().getType() != Figure.QUEEN ) {
+                    break;
+                }
                 // king is in check
                 else if (testBoard[r + 1][c + 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") &&
                         testBoard[r + 1][c + 1].getCurrentPiece().getType() == Figure.BISHOP ||
@@ -660,6 +676,18 @@ public class ChessEngine {
                 // own piece is in way
                 if (testBoard[r + 1][c - 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("black") ||
                         testBoard[r + 1][c - 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("white")) {
+                    break;
+                }
+                // enemy piece is in way (first option)
+                if (testBoard[r + 1][c - 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") &&
+                        testBoard[r + 1][c - 1].getCurrentPiece().getType() != Figure.BISHOP &&
+                        testBoard[r + 1][c - 1].getCurrentPiece().getType() != Figure.QUEEN) {
+                    break;
+                }
+                // enemy piece is in way (second option)
+                if (testBoard[r + 1][c - 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
+                        testBoard[r + 1][c - 1].getCurrentPiece().getType() != Figure.BISHOP &&
+                        testBoard[r + 1][c - 1].getCurrentPiece().getType() != Figure.QUEEN ) {
                     break;
                 }
                 // king is in check
@@ -686,6 +714,18 @@ public class ChessEngine {
                         testBoard[r - 1][c + 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("white")) {
                     break;
                 }
+                // enemy piece is in way (first option)
+                if (testBoard[r - 1][c + 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") &&
+                        testBoard[r - 1][c + 1].getCurrentPiece().getType() != Figure.BISHOP &&
+                        testBoard[r - 1][c + 1].getCurrentPiece().getType() != Figure.QUEEN) {
+                    break;
+                }
+                // enemy piece is in way (second option)
+                if (testBoard[r - 1][c + 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
+                        testBoard[r - 1][c + 1].getCurrentPiece().getType() != Figure.BISHOP &&
+                        testBoard[r - 1][c + 1].getCurrentPiece().getType() != Figure.QUEEN ) {
+                    break;
+                }
                 // king is in check
                 else if (testBoard[r - 1][c + 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") &&
                         testBoard[r - 1][c + 1].getCurrentPiece().getType() == Figure.BISHOP ||
@@ -708,6 +748,18 @@ public class ChessEngine {
                 // own piece is in way
                 if (testBoard[r - 1][c - 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("black") ||
                         testBoard[r - 1][c - 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("white")) {
+                    break;
+                }
+                // enemy piece is in way (first option)
+                if (testBoard[r - 1][c - 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") &&
+                        testBoard[r - 1][c - 1].getCurrentPiece().getType() != Figure.BISHOP &&
+                        testBoard[r - 1][c - 1].getCurrentPiece().getType() != Figure.QUEEN) {
+                    break;
+                }
+                // enemy piece is in way (second option)
+                if (testBoard[r - 1][c - 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
+                        testBoard[r - 1][c - 1].getCurrentPiece().getType() != Figure.BISHOP &&
+                        testBoard[r - 1][c - 1].getCurrentPiece().getType() != Figure.QUEEN ) {
                     break;
                 }
                 // king is in check
@@ -736,6 +788,18 @@ public class ChessEngine {
                         testBoard[row][c - 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("white")) {
                     break;
                 }
+                // enemy piece is in way (first option)
+                if (testBoard[row][c - 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") &&
+                        testBoard[row][c - 1].getCurrentPiece().getType() != Figure.ROOK &&
+                        testBoard[row][c - 1].getCurrentPiece().getType() != Figure.QUEEN) {
+                    break;
+                }
+                // enemy piece is in way (second option)
+                if (testBoard[row][c - 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
+                        testBoard[row][c - 1].getCurrentPiece().getType() != Figure.ROOK &&
+                        testBoard[row][c - 1].getCurrentPiece().getType() != Figure.QUEEN ) {
+                    break;
+                }
                 // king is in check
                 else if (testBoard[row][c - 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") &&
                         testBoard[row][c - 1].getCurrentPiece().getType() == Figure.ROOK ||
@@ -758,6 +822,18 @@ public class ChessEngine {
                 // own piece is in way
                 if (testBoard[row][c + 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("black") ||
                         testBoard[row][c + 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("white")) {
+                    break;
+                }
+                // enemy piece is in way (first option)
+                if (testBoard[row][c + 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") &&
+                        testBoard[row][c + 1].getCurrentPiece().getType() != Figure.ROOK &&
+                        testBoard[row][c + 1].getCurrentPiece().getType() != Figure.QUEEN) {
+                    break;
+                }
+                // enemy piece is in way (second option)
+                if (testBoard[row][c + 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
+                        testBoard[row][c + 1].getCurrentPiece().getType() != Figure.ROOK &&
+                        testBoard[row][c + 1].getCurrentPiece().getType() != Figure.QUEEN ) {
                     break;
                 }
                 // king is in check
@@ -784,6 +860,18 @@ public class ChessEngine {
                         testBoard[r - 1][column].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("white")) {
                     break;
                 }
+                // enemy piece is in way (first option)
+                if (testBoard[r - 1][column].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") &&
+                        testBoard[r - 1][column].getCurrentPiece().getType() != Figure.ROOK &&
+                        testBoard[r - 1][column].getCurrentPiece().getType() != Figure.QUEEN) {
+                    break;
+                }
+                // enemy piece is in way (second option)
+                if (testBoard[r - 1][column].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
+                        testBoard[r - 1][column].getCurrentPiece().getType() != Figure.ROOK &&
+                        testBoard[r - 1][column].getCurrentPiece().getType() != Figure.QUEEN ) {
+                    break;
+                }
                 // king is in check
                 else if (testBoard[r - 1][column].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") &&
                         testBoard[r - 1][column].getCurrentPiece().getType() == Figure.ROOK ||
@@ -806,6 +894,18 @@ public class ChessEngine {
                 // own piece is in way
                 if (testBoard[r + 1][column].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("black") ||
                         testBoard[r + 1][column].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("white")) {
+                    break;
+                }
+                // enemy piece is in way (first option)
+                if (testBoard[r + 1][column].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") &&
+                        testBoard[r + 1][column].getCurrentPiece().getType() != Figure.ROOK &&
+                        testBoard[r + 1][column].getCurrentPiece().getType() != Figure.QUEEN) {
+                    break;
+                }
+                // enemy piece is in way (second option)
+                if (testBoard[r + 1][column].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
+                        testBoard[r + 1][column].getCurrentPiece().getType() != Figure.ROOK &&
+                        testBoard[r + 1][column].getCurrentPiece().getType() != Figure.QUEEN ) {
                     break;
                 }
                 // king is in check
