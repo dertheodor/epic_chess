@@ -557,6 +557,8 @@ public class ChessEngine {
     private List<ArrayPosition> eradicateSelfChecking(ArrayPosition tileOfMovingPiece, ChessPiece piece, ChessTile[][] gameBoard, List<ArrayPosition> validMovesWithSelfChecking) {
         // set color of current player
         String colorOfCurrentPlayer = piece.getColor();
+        // variable to check if piece that is currently selected is in fact the king
+        boolean isKingMoving = false;
         // initialize the tile of the king and tile of moving piece
         ArrayPosition tileOfKing = null;
         // init new validMovesList
@@ -564,6 +566,7 @@ public class ChessEngine {
         //tests if Piece which is currently selected is in fact the King.
         if (piece.getType() == Figure.KING) {
             tileOfKing = tileOfMovingPiece;
+            isKingMoving = true;
         } else {
             // iterate over board to find the king
             for (int r = 0; r < 8; r++) {
@@ -602,7 +605,11 @@ public class ChessEngine {
                 // set piece to new possible position
                 testBoard[validMove.getRow()][validMove.getColumn()].setCurrentPiece(piece);
 
-                if (isMovePossibleWithoutCheckingOwnKing(tileOfKing.getRow(), tileOfKing.getColumn(), colorOfCurrentPlayer, testBoard)) {
+                if (isKingMoving) {
+                    if (isMovePossibleWithoutCheckingOwnKing(validMove.getRow(), validMove.getColumn(), colorOfCurrentPlayer, testBoard)) {
+                        validMovesList.add(validMove);
+                    }
+                } else if (isMovePossibleWithoutCheckingOwnKing(tileOfKing.getRow(), tileOfKing.getColumn(), colorOfCurrentPlayer, testBoard)) {
                     validMovesList.add(validMove);
                 }
             }
@@ -841,3 +848,29 @@ public class ChessEngine {
             }
         }
 */
+/* New loop for eradicateSelfCheckingmethod, was bugged as hell though
+        //loop for right downwards diagonal movement, imitating the bishop
+        for (int r = row, c = column; r < 7 && c < 7; r++, c++) {
+            //skip free tiles
+            if (testBoard[r + 1][c + 1].getTileState() != TileState.FREE) {
+                //king is in check
+                if (testBoard[r + 1][c + 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") ||
+                        testBoard[r + 1][c + 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
+                                testBoard[r + 1][c + 1].getCurrentPiece().getType() == Figure.BISHOP ||
+                        testBoard[r + 1][c + 1].getCurrentPiece().getType() == Figure.QUEEN ||
+                        (firstMove && testBoard[r + 1][c + 1].getCurrentPiece().getType() == Figure.KING ||
+                                (testBoard[r + 1][c + 1].getCurrentPiece().getType() == Figure.PAWN &&
+                                        testBoard[r + 1][c + 1].getTileState() == TileState.WHITE))) {
+                    return false;
+                    //own piece or piece that is not dangerous for our king is in the way
+                } else if (testBoard[r + 1][c + 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("black") ||
+                        testBoard[r + 1][c + 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("white") ||
+                        testBoard[r + 1][c + 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") ||
+                        testBoard[r + 1][c + 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black")) {
+                    break;
+                }
+            }
+            //after first loop boolean is set to false
+            firstMove = false;
+        }
+ */
