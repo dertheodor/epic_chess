@@ -2,7 +2,6 @@ package epicchess;
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class ChessEngine {
@@ -542,6 +541,46 @@ public class ChessEngine {
         }
 
         return validMovesList;
+    }
+
+    /**
+     * stalemate is being checked by not being able to move anywhere only with the king
+     *
+     * @param gameBoard the gameboard
+     * @param color     color of current player
+     * @return true if stalemate, false if checkmate
+     */
+    public boolean checkForStaleMate(ChessTile[][] gameBoard, String color) {
+        // initialize the tile of the king and tile of moving piece
+        ArrayPosition tileOfKing = null;
+        // initialize the king piece
+        ChessPiece king = null;
+
+        // iterate over board to find the king
+        for (int r = 0; r < 8; r++) {
+            for (int c = 0; c < 8; c++) {
+                // find king
+                if (gameBoard[r][c].getTileState() != TileState.FREE) {
+                    if (gameBoard[r][c].getCurrentPiece().getType() == Figure.KING &&
+                            gameBoard[r][c].getCurrentPiece().getColor().equals(color)) {
+                        tileOfKing = new ArrayPosition(r, c, true);
+                        king = gameBoard[r][c].getCurrentPiece();
+                    }
+                }
+            }
+        }
+
+        // check that we have a king
+        if (tileOfKing != null) {
+            // create ArrayPosition List only for the king
+            List<ArrayPosition> tileOfKingList = new ArrayList<>();
+            tileOfKingList.add(tileOfKing);
+            // use eradicateSelfChecking to find out whether the game is a stalemate
+            if (eradicateSelfChecking(tileOfKing, king, gameBoard, tileOfKingList).size() > 0) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
