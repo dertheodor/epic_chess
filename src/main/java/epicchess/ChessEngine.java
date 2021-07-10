@@ -1075,9 +1075,14 @@ public class ChessEngine {
         // knight movement type 1
         // test if move is out of bounds
         if (row > 1 && column > 0) {
-            // king is in check
-            if (testBoard[row - 2][column - 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white")
-                    || testBoard[row - 2][column - 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
+            // king is in check, current player is white
+            if (testBoard[row - 2][column - 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") &&
+                    testBoard[row - 2][column - 1].getCurrentPiece().getType() == Figure.KNIGHT) {
+                return false;
+
+            }
+            // king is in check, current player is black
+            if (testBoard[row - 2][column - 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
                     testBoard[row - 2][column - 1].getCurrentPiece().getType() == Figure.KNIGHT) {
                 return false;
             }
@@ -1086,9 +1091,14 @@ public class ChessEngine {
         // knight movement type 2
         // test if move is out of bounds
         if (row > 1 && column < 7) {
-            // king is in check
-            if (testBoard[row - 2][column + 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white")
-                    || testBoard[row - 2][column + 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
+            // king is in check, current player is white
+            if (testBoard[row - 2][column + 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") &&
+                    testBoard[row - 2][column + 1].getCurrentPiece().getType() == Figure.KNIGHT) {
+                return false;
+
+            }
+            // king is in check, current player is black
+            if (testBoard[row - 2][column + 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
                     testBoard[row - 2][column + 1].getCurrentPiece().getType() == Figure.KNIGHT) {
                 return false;
             }
@@ -1097,9 +1107,14 @@ public class ChessEngine {
         // knight movement type 3
         // test if move is out of bounds
         if (row < 6 && column > 0) {
-            // king is in check
-            if (testBoard[row + 2][column - 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white")
-                    || testBoard[row + 2][column - 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
+            // king is in check, current player is white
+            if (testBoard[row + 2][column - 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") &&
+                    testBoard[row + 2][column - 1].getCurrentPiece().getType() == Figure.KNIGHT) {
+                return false;
+
+            }
+            // king is in check, current player is black
+            if (testBoard[row + 2][column - 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
                     testBoard[row + 2][column - 1].getCurrentPiece().getType() == Figure.KNIGHT) {
                 return false;
             }
@@ -1108,9 +1123,14 @@ public class ChessEngine {
         // knight movement type 4
         // test if move is out of bounds
         if (row < 6 && column < 7) {
-            // king is in check
-            if (testBoard[row + 2][column + 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white")
-                    || testBoard[row + 2][column + 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
+            // king is in check, current player is white
+            if (testBoard[row + 2][column + 1].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") &&
+                    testBoard[row + 2][column + 1].getCurrentPiece().getType() == Figure.KNIGHT) {
+                return false;
+
+            }
+            // king is in check, current player is black
+            if (testBoard[row + 2][column + 1].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
                     testBoard[row + 2][column + 1].getCurrentPiece().getType() == Figure.KNIGHT) {
                 return false;
             }
@@ -1119,9 +1139,14 @@ public class ChessEngine {
         // knight movement type 5
         // test if move is out of bounds
         if (row > 0 && column > 1) {
-            // king is in check
-            if (testBoard[row - 1][column - 2].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white")
-                    || testBoard[row - 1][column - 2].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
+            // king is in check, current player is white
+            if (testBoard[row - 1][column - 2].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") &&
+                    testBoard[row - 1][column - 2].getCurrentPiece().getType() == Figure.KNIGHT) {
+                return false;
+
+            }
+            // king is in check, current player is black
+            if (testBoard[row - 1][column - 2].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
                     testBoard[row - 1][column - 2].getCurrentPiece().getType() == Figure.KNIGHT) {
                 return false;
             }
@@ -1130,9 +1155,14 @@ public class ChessEngine {
         // knight movement type 6
         // test if move is out of bounds
         if (row < 7 && column > 1) {
-            // king is in check
-            if (testBoard[row + 1][column - 2].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white")
-                    || testBoard[row + 1][column - 2].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
+            // king is in check, current player is white
+            if (testBoard[row + 1][column - 2].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") &&
+                    testBoard[row + 1][column - 2].getCurrentPiece().getType() == Figure.KNIGHT) {
+                return false;
+
+            }
+            // king is in check, current player is black
+            if (testBoard[row + 1][column - 2].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
                     testBoard[row + 1][column - 2].getCurrentPiece().getType() == Figure.KNIGHT) {
                 return false;
             }
@@ -1141,9 +1171,14 @@ public class ChessEngine {
         // knight movement type 7
         // test if move is out of bounds
         if (row > 0 && column < 6) {
-            // king is in check
-            if (testBoard[row - 1][column + 2].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white")
-                    || testBoard[row - 1][column + 2].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
+            // king is in check, current player is white
+            if (testBoard[row - 1][column + 2].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") &&
+                    testBoard[row - 1][column + 2].getCurrentPiece().getType() == Figure.KNIGHT) {
+                return false;
+
+            }
+            // king is in check, current player is black
+            if (testBoard[row - 1][column + 2].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
                     testBoard[row - 1][column + 2].getCurrentPiece().getType() == Figure.KNIGHT) {
                 return false;
             }
@@ -1152,9 +1187,14 @@ public class ChessEngine {
         // knight movement type 8
         // test if move is out of bounds
         if (row < 7 && column < 6) {
-            // king is in check
-            if (testBoard[row + 1][column + 2].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white")
-                    || testBoard[row + 1][column + 2].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
+            // king is in check, current player is white
+            if (testBoard[row + 1][column + 2].getTileState() == TileState.BLACK && colorOfCurrentPlayer.equals("white") &&
+                    testBoard[row + 1][column + 2].getCurrentPiece().getType() == Figure.KNIGHT) {
+                return false;
+
+            }
+            // king is in check, current player is black
+            if (testBoard[row + 1][column + 2].getTileState() == TileState.WHITE && colorOfCurrentPlayer.equals("black") &&
                     testBoard[row + 1][column + 2].getCurrentPiece().getType() == Figure.KNIGHT) {
                 return false;
             }
