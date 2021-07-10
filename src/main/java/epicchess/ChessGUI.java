@@ -313,6 +313,10 @@ public class ChessGUI {
             if (button.getBackground().equals(captureColor)) {
                 // set button color to initial color
                 setButtonColorToDefault(aP.getRow(), aP.getColumn());
+                // remove all previously set listeners for possible moves
+                for (MouseListener ml : button.getMouseListeners()) {
+                    button.removeMouseListener(ml);
+                }
             }
 
             // \u2B24 stands for the black dot we use to indicate a piece can move to this position
@@ -413,9 +417,36 @@ public class ChessGUI {
     private void addAllListenersAfterMove(ArrayPosition oldPiecePosition) {
         List<ArrayPosition> nextTurnPiecePositions = board.returnNextPlayerPiecePositions(oldPiecePosition);
 
+        // check the games current state
+        String gameState = board.gameState(nextTurnPiecePositions);
+
+        // notify user when game is over
+        gameStateAnnouncement(gameState, board.gameBoard[nextTurnPiecePositions.get(0).getRow()][nextTurnPiecePositions.get(0).getColumn()].getCurrentPiece().getColor());
+
         // add new button listeners after turn-changing
         for (ArrayPosition position : nextTurnPiecePositions) {
             addMouseListenerForMoveablePieceButton(buttonArray[position.getRow()][position.getColumn()], position.getRow(), position.getColumn());
+        }
+    }
+
+    //TODO option start new game when old one is over
+
+    /**
+     * Announces the games state
+     *
+     * @param gameState state of the current game
+     */
+    private void gameStateAnnouncement(String gameState, String colorOfOppositePlayer) {
+        if (gameState.equals("staleMate")) {
+            JOptionPane.showMessageDialog(gameUI,
+                    "Stalemate.",
+                    "Game over",
+                    JOptionPane.INFORMATION_MESSAGE);
+        } else if (gameState.equals("checkMate")) {
+            JOptionPane.showMessageDialog(gameUI,
+                    colorOfOppositePlayer + " loses by checkmate.",
+                    "Game over",
+                    JOptionPane.INFORMATION_MESSAGE);
         }
     }
 

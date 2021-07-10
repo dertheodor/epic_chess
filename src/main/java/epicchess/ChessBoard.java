@@ -81,6 +81,33 @@ public class ChessBoard {
     }
 
     /**
+     * returns the games current state after each move
+     *
+     * @param positionOfPieces positions of all pieces
+     * @return the games current state. possible return values: "gameNotOver", "staleMate", "checkMate"
+     */
+    public String gameState(List<ArrayPosition> positionOfPieces) {
+        // iterate through all pieces of players color
+        for (ArrayPosition position : positionOfPieces) {
+            List<ArrayPosition> possibleMoves = engine.showNextValidMoves(position, gameBoard[position.getRow()][position.getColumn()].getCurrentPiece(), gameBoard);
+
+            // game is not over as there is a possible move
+            if (possibleMoves.size() > 0) {
+                return "gameNotOver";
+            }
+        }
+
+        String colorOfNextPlayer = gameBoard[positionOfPieces.get(0).getRow()][positionOfPieces.get(0).getColumn()].getCurrentPiece().getColor();
+
+        // code from here on executed only if there are no possible moves
+        if (engine.checkForStaleMate(gameBoard, colorOfNextPlayer)) {
+            return "staleMate";
+        } else {
+            return "checkMate";
+        }
+    }
+
+    /**
      * making the actual move of the piece
      *
      * @param oldPosition old position of the piece
