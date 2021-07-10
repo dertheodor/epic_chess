@@ -1,12 +1,19 @@
 package epicchess;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class ChessGUI {
 
@@ -19,6 +26,10 @@ public class ChessGUI {
     JMenuBar menuBar;
 
     JMenu fileMenu;
+    JMenuItem openItem;
+    JFileChooser openFileChooser;
+    JMenuItem saveItem;
+    JFileChooser saveFileChooser;
     JMenuItem exitItem;
 
     JMenu editMenu;
@@ -46,6 +57,25 @@ public class ChessGUI {
         board = boardReference;
         menuBar = new JMenuBar();
         fileMenu = new JMenu("File");
+
+        // opening past games
+        openItem = new JMenuItem("Open...");
+        openFileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+        // set default name
+        openFileChooser.setSelectedFile(new File("chess_game.txt"));
+        // only show txt files
+        openFileChooser.setFileFilter(new FileNameExtensionFilter("Text file (TXT)", "txt"));
+
+        // saving present game
+        saveItem = new JMenuItem("Save As...");
+        saveFileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+        // set default name
+        File saveModalSelectedFile = new File("chess_game.txt");
+        saveFileChooser.setSelectedFile(saveModalSelectedFile);
+        // only show txt files
+        saveFileChooser.setFileFilter(new FileNameExtensionFilter("Text file (TXT)", "txt"));
+        final FileWriter[] fileWriter = new FileWriter[1];
+
         exitItem = new JMenuItem("Exit");
         editMenu = new JMenu("Edit");
         greenBoard = new JMenuItem("Green themed board");
@@ -65,12 +95,30 @@ public class ChessGUI {
         gameUI.setJMenuBar(menuBar);
         //Add menuBar components
         menuBar.add(fileMenu);
+        fileMenu.add(openItem);
+        fileMenu.add(saveItem);
         fileMenu.add(exitItem);
         menuBar.add(editMenu);
         editMenu.add(greenBoard);
         editMenu.add(greyBoard);
         menuBar.add(helpMenu);
         helpMenu.add(aboutItem);
+
+        // add listener for open submenu-entry
+        openItem.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                readOnMousePressed(openFileChooser);
+            }
+        });
+
+        // add listener for save submenu-entry
+        saveItem.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                saveOnMousePressed(fileWriter, saveFileChooser);
+            }
+        });
 
         // add listener for exit submenu-entry
         exitItem.addMouseListener(new MouseAdapter() {
@@ -172,6 +220,86 @@ public class ChessGUI {
         //Add board to Window and make window visible
         gameUI.add(boardPanel);
         gameUI.setVisible(true);
+    }
+
+    /**
+     * logic for opening past saved game
+     *
+     * @param openFileChooser JFileChooser responsible for selecting the directory and file name of to be read file
+     */
+    private void readOnMousePressed(JFileChooser openFileChooser) {
+        // init modal on button press and save its return value for further processing
+        int returnValue = openFileChooser.showOpenDialog(gameUI);
+
+        // triggered when save button is pressed
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            File toBeReadFile = openFileChooser.getSelectedFile();
+            try {
+                Scanner input = new Scanner(toBeReadFile);
+
+                while (input.hasNextLine()) {
+                    String line = input.nextLine();
+                    //TODO correctly read old game from saved file
+                    reconstructChessGame(line);
+                }
+                input.close();
+
+            } catch (FileNotFoundException fileNotFoundException) {
+                fileNotFoundException.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * reconstructs game from saved file
+     *
+     * @param line string of line to read
+     */
+    private void reconstructChessGame(String line) {
+        //TODO
+        // call clearBoard method from board
+        // also clear buttons in gui so pieces are also gone from the gui
+        // read file with board and its contents
+        // reconstruct old chess game (info who's turn it was is yet missing)
+        // set listeners like in the initFillButtonsWithPieces method so pieces are clickable
+        // determine which users turn it was and also persist this info
+    }
+
+    /**
+     * logic for saving current game
+     *
+     * @param fileWriter      fileWriter responsible for writing file to disk
+     * @param saveFileChooser JFileChooser responsible for selecting the directory and file name
+     */
+    private void saveOnMousePressed(FileWriter[] fileWriter, JFileChooser saveFileChooser) {
+        // init modal on button press and save its return value for further processing
+        int returnValue = saveFileChooser.showSaveDialog(gameUI);
+
+        // triggered when save button is pressed
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            String filename = saveFileChooser.getSelectedFile().toString();
+
+            // ensure that the file is saved as txt
+            if (filename.endsWith(".txt")) {
+                File file = new File(filename);
+                try {
+                    fileWriter[0] = new FileWriter(file, true);
+                    fileWriter[0].write(String.valueOf(board.saveBoardContents()));
+                    fileWriter[0].close();
+                    JOptionPane.showMessageDialog(gameUI,
+                            "File successfully saved!",
+                            "Success",
+                            JOptionPane.WARNING_MESSAGE);
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+            } else {
+                JOptionPane.showMessageDialog(gameUI,
+                        "Game can only be saved as .txt file",
+                        "Warning",
+                        JOptionPane.WARNING_MESSAGE);
+            }
+        }
     }
 
     /**
