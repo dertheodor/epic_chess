@@ -6,6 +6,7 @@ import java.util.List;
 public class ChessBoard {
     ChessEngine engine;
     ChessTile[][] gameBoard;
+    boolean whiteToMove;
 
     public ChessBoard(ChessEngine engineReference) {
         engine = engineReference;
@@ -18,6 +19,18 @@ public class ChessBoard {
                 gameBoard[row][column] = new ChessTile();
             }
         }
+        // white player is first to move
+        whiteToMove = true;
+    }
+
+    //TODO use correctly
+    /**
+     * method used for turn changing
+     *
+     * @param whitesTurn true if white is to move, false if black is to move
+     */
+    public void turnChanging(boolean whitesTurn) {
+        whiteToMove = whitesTurn;
     }
 
     /**
@@ -73,6 +86,13 @@ public class ChessBoard {
         gameBoard[6][5].setCurrentPiece(new ChessPiece("white", Figure.PAWN, "\u2659", "F2pawn", false));
         gameBoard[6][6].setCurrentPiece(new ChessPiece("white", Figure.PAWN, "\u2659", "G2pawn", false));
         gameBoard[6][7].setCurrentPiece(new ChessPiece("white", Figure.PAWN, "\u2659", "H2pawn", false));
+    }
+
+    /**
+     * called on reading saved game, puts pieces into board again to their respective positions
+     */
+    public void initPiecesOnReadGame(String colorOfPiece, Figure figure, String figurePicture, String figureID, boolean hasBeenMoved, int row, int column) {
+        gameBoard[row][column].setCurrentPiece(new ChessPiece(colorOfPiece, figure, figurePicture, figureID, hasBeenMoved));
     }
 
     /**
@@ -194,6 +214,12 @@ public class ChessBoard {
                 // custom logic for free tiles
                 if (gameBoard[row][column].getTileState() == TileState.FREE) {
                     sB.append("free");
+                    // value separator
+                    sB.append(";");
+                    sB.append(row);
+                    // value separator
+                    sB.append(";");
+                    sB.append(column);
                     // line separator
                     sB.append("#");
                     // newline
@@ -213,6 +239,12 @@ public class ChessBoard {
                     // value separator
                     sB.append(";");
                     sB.append(gameBoard[row][column].getCurrentPiece().getMovedBefore());
+                    // value separator
+                    sB.append(";");
+                    sB.append(row);
+                    // value separator
+                    sB.append(";");
+                    sB.append(column);
                     // line separator
                     sB.append("#");
                     // newline

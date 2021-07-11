@@ -236,10 +236,14 @@ public class ChessGUI {
             File toBeReadFile = openFileChooser.getSelectedFile();
             try {
                 Scanner input = new Scanner(toBeReadFile);
+                // clear board internally
+                board.clearBoard();
+
+                // clear pieces and listeners from gui
+                removeAllListenersAfterMove(true);
 
                 while (input.hasNextLine()) {
                     String line = input.nextLine();
-                    //TODO correctly read old game from saved file
                     reconstructChessGame(line);
                 }
                 input.close();
@@ -256,12 +260,72 @@ public class ChessGUI {
      * @param line string of line to read
      */
     private void reconstructChessGame(String line) {
+        // separated lines
+        String[] separatedEntries = line.split("#");
+
+        // all of piece values
+        String[] separatedPieceValues = separatedEntries[0].split(";");
+
+        // custom logic not free tiles
+        if (!separatedPieceValues[0].equals("free")) {
+            Figure figureEnum;
+            // map string figures to enum figures
+            switch (separatedPieceValues[1]) {
+                case "PAWN":
+                    figureEnum = Figure.PAWN;
+                    break;
+                case "KNIGHT":
+                    figureEnum = Figure.KNIGHT;
+                    break;
+                case "BISHOP":
+                    figureEnum = Figure.BISHOP;
+                    break;
+                case "ROOK":
+                    figureEnum = Figure.ROOK;
+                    break;
+                case "QUEEN":
+                    figureEnum = Figure.QUEEN;
+                    break;
+                case "KING":
+                    figureEnum = Figure.KING;
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + separatedPieceValues[1]);
+            }
+
+            boolean hasBeenMovedBoolean;
+            // map string boolean to actual boolean
+            if (separatedPieceValues[4].equals("true")) {
+                hasBeenMovedBoolean = true;
+            } else {
+                hasBeenMovedBoolean = false;
+            }
+
+            int pieceRow = Integer.parseInt(separatedPieceValues[5]);
+            int pieceColumn = Integer.parseInt(separatedPieceValues[6]);
+
+            // put pieces from saveFile again onto the board
+            board.initPiecesOnReadGame(
+                    separatedPieceValues[0], // colorOfPiece
+                    figureEnum, // figure
+                    separatedPieceValues[2], // figurePicture
+                    separatedPieceValues[3], // figureID
+                    hasBeenMovedBoolean, // hasBeenMoved
+                    pieceRow, // row
+                    pieceColumn); // column
+
+            // show pieces again in gui
+            // set "text" (picture) and font size
+            buttonArray[pieceRow][pieceColumn].setText(board.getTile(pieceRow, pieceColumn).getCurrentPiece().getUniCodePicture());
+            buttonArray[pieceRow][pieceColumn].setFont(new Font("Arial Unicode MS", Font.BOLD, 90));
+            // add initial mousePressed-listeners to only the white pieces
+            if (board.getTile(pieceRow, pieceColumn).getCurrentPiece().getColor().equals("white")) {
+                addMouseListenerForMoveablePieceButton(buttonArray[pieceRow][pieceColumn], pieceRow, pieceColumn);
+            }
+        }
+
         //TODO
-        // call clearBoard method from board
-        // also clear buttons in gui so pieces are also gone from the gui
-        // read file with board and its contents
         // reconstruct old chess game (info who's turn it was is yet missing)
-        // set listeners like in the initFillButtonsWithPieces method so pieces are clickable
         // determine which users turn it was and also persist this info
     }
 
@@ -581,12 +645,15 @@ public class ChessGUI {
     /**
      * all listeners on board get removed after a turn has been made
      */
-    private void removeAllListenersAfterMove() {
+    private void removeAllListenersAfterMove(boolean clearGUI) {
         // remove all previously set listeners from board
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 for (MouseListener ml : buttonArray[i][j].getMouseListeners()) {
                     buttonArray[i][j].removeMouseListener(ml);
+                    if (clearGUI) {
+                        buttonArray[i][j].setText("");
+                    }
                 }
             }
         }
@@ -603,7 +670,7 @@ public class ChessGUI {
         // remove oldHighlightedButtons
         removeOldHighlightedButtons();
         // remove all listeners for current color for turn-changing
-        removeAllListenersAfterMove();
+        removeAllListenersAfterMove(false);
         // move piece on board
         movePieceToNewPosition(currentlySelectedPiecePosition, arrayPosition);
         // reset currently currentlyHighlightedPosition
