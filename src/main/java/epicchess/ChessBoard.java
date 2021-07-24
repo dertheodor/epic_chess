@@ -23,14 +23,11 @@ public class ChessBoard {
         whiteToMove = true;
     }
 
-    //TODO use correctly
     /**
-     * method used for turn changing
-     *
-     * @param whitesTurn true if white is to move, false if black is to move
+     * method used for turn changing, calling method results in change current player
      */
-    public void turnChanging(boolean whitesTurn) {
-        whiteToMove = whitesTurn;
+    public void turnChanging() {
+        whiteToMove = !whiteToMove;
     }
 
     /**
@@ -156,6 +153,8 @@ public class ChessBoard {
         if (!piece.getMovedBefore()) {
             piece.setMovedBeforeTrue();
         }
+        // change turn
+        turnChanging();
     }
 
     /**
@@ -207,6 +206,13 @@ public class ChessBoard {
     public StringBuilder saveBoardContents() {
         // init StringBuilder
         StringBuilder sB = new StringBuilder();
+
+        // first line tells which colors turn it is (white if true, black if false)
+        sB.append(whiteToMove);
+        // line separator
+        sB.append("#");
+        sB.append(System.getProperty("line.separator"));
+
 
         // iterate over whole board
         for (int row = 0; row < 8; row++) {

@@ -242,9 +242,15 @@ public class ChessGUI {
                 // clear pieces and listeners from gui
                 removeAllListenersAfterMove(true);
 
+                // first-line
+                String firstLine = input.nextLine();
+                boolean isWhitesTurn = figureOutWhoseTurnItIs(firstLine);
+
+
+                // all other lines after first
                 while (input.hasNextLine()) {
                     String line = input.nextLine();
-                    reconstructChessGame(line);
+                    reconstructChessGame(line, isWhitesTurn);
                 }
                 input.close();
 
@@ -255,16 +261,46 @@ public class ChessGUI {
     }
 
     /**
-     * reconstructs game from saved file
-     *
-     * @param line string of line to read
+     * @param line the first line of the txt file
+     * @return true if it was whites turn, false if it was black
      */
-    private void reconstructChessGame(String line) {
+    private boolean figureOutWhoseTurnItIs(String line) {
         // separated lines
         String[] separatedEntries = line.split("#");
 
         // all of piece values
         String[] separatedPieceValues = separatedEntries[0].split(";");
+
+        // first line says true so it was whites move
+        if (separatedPieceValues[0].equals("true")) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * reconstructs game from saved file
+     *
+     * @param line         the line to read
+     * @param isWhitesTurn information whose turn it is
+     */
+    private void reconstructChessGame(String line, boolean isWhitesTurn) {
+        // separated lines
+        String[] separatedEntries = line.split("#");
+
+        // all of piece values
+        String[] separatedPieceValues = separatedEntries[0].split(";");
+
+
+        // first line says true so it was whites move
+        if (separatedPieceValues[0].equals("true")) {
+            return;
+        } else
+            // first line says false so it was blacks move
+            if (separatedPieceValues[0].equals("false")) {
+                return;
+            }
+
 
         // custom logic not free tiles
         if (!separatedPieceValues[0].equals("free")) {
@@ -318,15 +354,16 @@ public class ChessGUI {
             // set "text" (picture) and font size
             buttonArray[pieceRow][pieceColumn].setText(board.getTile(pieceRow, pieceColumn).getCurrentPiece().getUniCodePicture());
             buttonArray[pieceRow][pieceColumn].setFont(new Font("Arial Unicode MS", Font.BOLD, 90));
-            // add initial mousePressed-listeners to only the white pieces
-            if (board.getTile(pieceRow, pieceColumn).getCurrentPiece().getColor().equals("white")) {
+            // add initial mousePressed-listeners to color whose turn it was
+            // white
+            if (board.getTile(pieceRow, pieceColumn).getCurrentPiece().getColor().equals("white") && isWhitesTurn) {
                 addMouseListenerForMoveablePieceButton(buttonArray[pieceRow][pieceColumn], pieceRow, pieceColumn);
-            }
+            } else
+                // black
+                if (board.getTile(pieceRow, pieceColumn).getCurrentPiece().getColor().equals("black") && !isWhitesTurn) {
+                    addMouseListenerForMoveablePieceButton(buttonArray[pieceRow][pieceColumn], pieceRow, pieceColumn);
+                }
         }
-
-        //TODO
-        // reconstruct old chess game (info who's turn it was is yet missing)
-        // determine which users turn it was and also persist this info
     }
 
     /**
