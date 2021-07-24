@@ -7,12 +7,12 @@ public class ChessPiece {
     private final String figureID;
     private boolean movedBefore;
 
-    public ChessPiece(String colorOfPiece, Figure pieceType, String picture, String id) {
+    public ChessPiece(String colorOfPiece, Figure pieceType, String picture, String id, boolean hasBeenMoved) {
         color = colorOfPiece;
         type = pieceType;
         uniCodePicture = picture;
         figureID = id;
-        movedBefore = false;
+        movedBefore = hasBeenMoved;
     }
 
     /**

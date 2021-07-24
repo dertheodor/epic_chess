@@ -1,12 +1,19 @@
 package epicchess;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class ChessGUI {
 
@@ -19,6 +26,10 @@ public class ChessGUI {
     JMenuBar menuBar;
 
     JMenu fileMenu;
+    JMenuItem openItem;
+    JFileChooser openFileChooser;
+    JMenuItem saveItem;
+    JFileChooser saveFileChooser;
     JMenuItem exitItem;
 
     JMenu editMenu;
@@ -46,6 +57,25 @@ public class ChessGUI {
         board = boardReference;
         menuBar = new JMenuBar();
         fileMenu = new JMenu("File");
+
+        // opening past games
+        openItem = new JMenuItem("Open...");
+        openFileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+        // set default name
+        openFileChooser.setSelectedFile(new File("chess_game.txt"));
+        // only show txt files
+        openFileChooser.setFileFilter(new FileNameExtensionFilter("Text file (TXT)", "txt"));
+
+        // saving present game
+        saveItem = new JMenuItem("Save As...");
+        saveFileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+        // set default name
+        File saveModalSelectedFile = new File("chess_game.txt");
+        saveFileChooser.setSelectedFile(saveModalSelectedFile);
+        // only show txt files
+        saveFileChooser.setFileFilter(new FileNameExtensionFilter("Text file (TXT)", "txt"));
+        final FileWriter[] fileWriter = new FileWriter[1];
+
         exitItem = new JMenuItem("Exit");
         editMenu = new JMenu("Edit");
         greenBoard = new JMenuItem("Green themed board");
@@ -65,12 +95,30 @@ public class ChessGUI {
         gameUI.setJMenuBar(menuBar);
         //Add menuBar components
         menuBar.add(fileMenu);
+        fileMenu.add(openItem);
+        fileMenu.add(saveItem);
         fileMenu.add(exitItem);
         menuBar.add(editMenu);
         editMenu.add(greenBoard);
         editMenu.add(greyBoard);
         menuBar.add(helpMenu);
         helpMenu.add(aboutItem);
+
+        // add listener for open submenu-entry
+        openItem.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                readOnMousePressed(openFileChooser);
+            }
+        });
+
+        // add listener for save submenu-entry
+        saveItem.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                saveOnMousePressed(fileWriter, saveFileChooser);
+            }
+        });
 
         // add listener for exit submenu-entry
         exitItem.addMouseListener(new MouseAdapter() {
@@ -172,6 +220,187 @@ public class ChessGUI {
         //Add board to Window and make window visible
         gameUI.add(boardPanel);
         gameUI.setVisible(true);
+    }
+
+    /**
+     * logic for opening past saved game
+     *
+     * @param openFileChooser JFileChooser responsible for selecting the directory and file name of to be read file
+     */
+    private void readOnMousePressed(JFileChooser openFileChooser) {
+        // init modal on button press and save its return value for further processing
+        int returnValue = openFileChooser.showOpenDialog(gameUI);
+
+        // triggered when save button is pressed
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            File toBeReadFile = openFileChooser.getSelectedFile();
+            try {
+                Scanner input = new Scanner(toBeReadFile);
+                // clear board internally
+                board.clearBoard();
+
+                // clear pieces and listeners from gui
+                removeAllListenersAfterMove(true);
+
+                // first-line
+                String firstLine = input.nextLine();
+                boolean isWhitesTurn = figureOutWhoseTurnItIs(firstLine);
+
+
+                // all other lines after first
+                while (input.hasNextLine()) {
+                    String line = input.nextLine();
+                    reconstructChessGame(line, isWhitesTurn);
+                }
+                input.close();
+
+            } catch (FileNotFoundException fileNotFoundException) {
+                fileNotFoundException.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * @param line the first line of the txt file
+     * @return true if it was whites turn, false if it was black
+     */
+    private boolean figureOutWhoseTurnItIs(String line) {
+        // separated lines
+        String[] separatedEntries = line.split("#");
+
+        // all of piece values
+        String[] separatedPieceValues = separatedEntries[0].split(";");
+
+        // first line says true so it was whites move
+        if (separatedPieceValues[0].equals("true")) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * reconstructs game from saved file
+     *
+     * @param line         the line to read
+     * @param isWhitesTurn information whose turn it is
+     */
+    private void reconstructChessGame(String line, boolean isWhitesTurn) {
+        // separated lines
+        String[] separatedEntries = line.split("#");
+
+        // all of piece values
+        String[] separatedPieceValues = separatedEntries[0].split(";");
+
+
+        // first line says true so it was whites move
+        if (separatedPieceValues[0].equals("true")) {
+            return;
+        } else
+            // first line says false so it was blacks move
+            if (separatedPieceValues[0].equals("false")) {
+                return;
+            }
+
+
+        // custom logic not free tiles
+        if (!separatedPieceValues[0].equals("free")) {
+            Figure figureEnum;
+            // map string figures to enum figures
+            switch (separatedPieceValues[1]) {
+                case "PAWN":
+                    figureEnum = Figure.PAWN;
+                    break;
+                case "KNIGHT":
+                    figureEnum = Figure.KNIGHT;
+                    break;
+                case "BISHOP":
+                    figureEnum = Figure.BISHOP;
+                    break;
+                case "ROOK":
+                    figureEnum = Figure.ROOK;
+                    break;
+                case "QUEEN":
+                    figureEnum = Figure.QUEEN;
+                    break;
+                case "KING":
+                    figureEnum = Figure.KING;
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + separatedPieceValues[1]);
+            }
+
+            boolean hasBeenMovedBoolean;
+            // map string boolean to actual boolean
+            if (separatedPieceValues[4].equals("true")) {
+                hasBeenMovedBoolean = true;
+            } else {
+                hasBeenMovedBoolean = false;
+            }
+
+            int pieceRow = Integer.parseInt(separatedPieceValues[5]);
+            int pieceColumn = Integer.parseInt(separatedPieceValues[6]);
+
+            // put pieces from saveFile again onto the board
+            board.initPiecesOnReadGame(
+                    separatedPieceValues[0], // colorOfPiece
+                    figureEnum, // figure
+                    separatedPieceValues[2], // figurePicture
+                    separatedPieceValues[3], // figureID
+                    hasBeenMovedBoolean, // hasBeenMoved
+                    pieceRow, // row
+                    pieceColumn); // column
+
+            // show pieces again in gui
+            // set "text" (picture) and font size
+            buttonArray[pieceRow][pieceColumn].setText(board.getTile(pieceRow, pieceColumn).getCurrentPiece().getUniCodePicture());
+            buttonArray[pieceRow][pieceColumn].setFont(new Font("Arial Unicode MS", Font.BOLD, 90));
+            // add initial mousePressed-listeners to color whose turn it was
+            // white
+            if (board.getTile(pieceRow, pieceColumn).getCurrentPiece().getColor().equals("white") && isWhitesTurn) {
+                addMouseListenerForMoveablePieceButton(buttonArray[pieceRow][pieceColumn], pieceRow, pieceColumn);
+            } else
+                // black
+                if (board.getTile(pieceRow, pieceColumn).getCurrentPiece().getColor().equals("black") && !isWhitesTurn) {
+                    addMouseListenerForMoveablePieceButton(buttonArray[pieceRow][pieceColumn], pieceRow, pieceColumn);
+                }
+        }
+    }
+
+    /**
+     * logic for saving current game
+     *
+     * @param fileWriter      fileWriter responsible for writing file to disk
+     * @param saveFileChooser JFileChooser responsible for selecting the directory and file name
+     */
+    private void saveOnMousePressed(FileWriter[] fileWriter, JFileChooser saveFileChooser) {
+        // init modal on button press and save its return value for further processing
+        int returnValue = saveFileChooser.showSaveDialog(gameUI);
+
+        // triggered when save button is pressed
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            String filename = saveFileChooser.getSelectedFile().toString();
+
+            // ensure that the file is saved as txt
+            if (filename.endsWith(".txt")) {
+                File file = new File(filename);
+                try {
+                    fileWriter[0] = new FileWriter(file, true);
+                    fileWriter[0].write(String.valueOf(board.saveBoardContents()));
+                    fileWriter[0].close();
+                    JOptionPane.showMessageDialog(gameUI,
+                            "File successfully saved!",
+                            "Success",
+                            JOptionPane.WARNING_MESSAGE);
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+            } else {
+                JOptionPane.showMessageDialog(gameUI,
+                        "Game can only be saved as .txt file",
+                        "Warning",
+                        JOptionPane.WARNING_MESSAGE);
+            }
+        }
     }
 
     /**
@@ -453,12 +682,15 @@ public class ChessGUI {
     /**
      * all listeners on board get removed after a turn has been made
      */
-    private void removeAllListenersAfterMove() {
+    private void removeAllListenersAfterMove(boolean clearGUI) {
         // remove all previously set listeners from board
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 for (MouseListener ml : buttonArray[i][j].getMouseListeners()) {
                     buttonArray[i][j].removeMouseListener(ml);
+                    if (clearGUI) {
+                        buttonArray[i][j].setText("");
+                    }
                 }
             }
         }
@@ -475,7 +707,7 @@ public class ChessGUI {
         // remove oldHighlightedButtons
         removeOldHighlightedButtons();
         // remove all listeners for current color for turn-changing
-        removeAllListenersAfterMove();
+        removeAllListenersAfterMove(false);
         // move piece on board
         movePieceToNewPosition(currentlySelectedPiecePosition, arrayPosition);
         // reset currently currentlyHighlightedPosition
