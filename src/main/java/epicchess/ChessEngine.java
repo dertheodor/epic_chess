@@ -454,7 +454,7 @@ public class ChessEngine {
 
         // king has not moved before so castling may be possible
         if (!piece.getMovedBefore()) {
-            //validMovesList.addAll(shortCastling(position, piece, gameBoard));
+            validMovesList.addAll(shortCastling(position, piece, gameBoard));
             validMovesList.addAll(longCastling(position, piece, gameBoard));
         }
 
@@ -581,29 +581,50 @@ public class ChessEngine {
                 if (eradicateSelfChecking(position, piece, gameBoard, testMovesList).size() == 3) {
                     validMovesList.add(new ArrayPosition(position.getRow(), position.getColumn() - 2, false));
                 }
-                ;
+
             }
         }
         return validMovesList;
     }
 
-    /*
+    /**
+     * method for checking if short-castling is possible
+     *
+     * @param position  position of king
+     * @param piece     piece of king
+     * @param gameBoard the gameboard
+     * @return validMove for short-castling if possible
+     */
     private List<ArrayPosition> shortCastling(ArrayPosition position, ChessPiece piece, ChessTile[][] gameBoard) {
         List<ArrayPosition> validMovesList = new ArrayList<>();
 
-        if (gameBoard[position.getRow()][0].getTileState() != TileState.FREE) {
-            if (gameBoard[position.getRow()][0].getCurrentPiece().getType() == Figure.ROOK &&
-                    !gameBoard[position.getRow()][0].getCurrentPiece().getMovedBefore()) {
-                for (int column = 1; column < position.getColumn(); column++) {
+        List<ArrayPosition> testMovesList = new ArrayList<>();
+
+        if (gameBoard[position.getRow()][7].getTileState() != TileState.FREE) {
+            if (gameBoard[position.getRow()][7].getCurrentPiece().getType() == Figure.ROOK &&
+                    !gameBoard[position.getRow()][7].getCurrentPiece().getMovedBefore()) {
+                for (int column = 6; column > position.getColumn(); column--) {
                     if (gameBoard[position.getRow()][column].getTileState() != TileState.FREE) {
                         return validMovesList;
                     }
                 }
+
+                // possible moves for king during castling
+                testMovesList.add(new ArrayPosition(position.getRow(), position.getColumn(), false));
+                testMovesList.add(new ArrayPosition(position.getRow(), position.getColumn() + 1, false));
+                testMovesList.add(new ArrayPosition(position.getRow(), position.getColumn() + 2, false));
+
+
+                // castling can take place, check if king moves through check
+                if (eradicateSelfChecking(position, piece, gameBoard, testMovesList).size() == 3) {
+                    validMovesList.add(new ArrayPosition(position.getRow(), position.getColumn() + 2, false));
+                }
+
             }
         }
         return validMovesList;
     }
-     */
+
 
     /**
      * stalemate is being checked by not being able to move anywhere only with the king

@@ -22,4 +22,11 @@ public class ArrayPosition {
     public boolean getIsOccupied() {
         return isOccupied;
     }
+
+    public boolean equals(ArrayPosition otherPosition) {
+        if (row == otherPosition.getRow() && column == otherPosition.getColumn() && isOccupied == otherPosition.getIsOccupied()) {
+            return true;
+        }
+        return false;
+    }
 }
