@@ -158,6 +158,52 @@ public class ChessBoard {
     }
 
     /**
+     * Handles the castling case.
+     *
+     * @param oldPosition oldPosition of moving Piece
+     * @param newPosition new Position of moving Piece
+     * @return returns a string that indicates if and what kind of castling has took place.
+     */
+    public String castling(ArrayPosition oldPosition, ArrayPosition newPosition) {
+        String castleInfo = "no castle";
+        //check if move that was just made is the long-castling of the black King.
+        if (gameBoard[oldPosition.getRow()][oldPosition.getColumn()].getCurrentPiece().getType() ==
+                Figure.KING && oldPosition.equals(new ArrayPosition(0, 4, true)) &&
+                newPosition.equals(new ArrayPosition(0, 2, false))) {
+            ChessPiece rookToBeMoved = gameBoard[0][0].getCurrentPiece();
+            gameBoard[0][0].removeCurrentPiece();
+            gameBoard[0][3].setCurrentPiece(rookToBeMoved);
+            castleInfo = "long-castle black";
+        } else         //check if move that was just made is the short-castling of the black King.
+            if (gameBoard[oldPosition.getRow()][oldPosition.getColumn()].getCurrentPiece().getType() ==
+                    Figure.KING && oldPosition.equals(new ArrayPosition(0, 4, true)) &&
+                    newPosition.equals(new ArrayPosition(0, 6, false))) {
+                ChessPiece rookToBeMoved = gameBoard[0][7].getCurrentPiece();
+                gameBoard[0][7].removeCurrentPiece();
+                gameBoard[0][5].setCurrentPiece(rookToBeMoved);
+                castleInfo = "short-castle black";
+            } else         //check if move that was just made is the long-castling of the white King.
+                if (gameBoard[oldPosition.getRow()][oldPosition.getColumn()].getCurrentPiece().getType() ==
+                        Figure.KING && oldPosition.equals(new ArrayPosition(7, 4, true)) &&
+                        newPosition.equals(new ArrayPosition(7, 2, false))) {
+                    ChessPiece rookToBeMoved = gameBoard[7][0].getCurrentPiece();
+                    gameBoard[7][0].removeCurrentPiece();
+                    gameBoard[7][3].setCurrentPiece(rookToBeMoved);
+                    castleInfo = "long-castle white";
+                } else         //check if move that was just made is the short-castling of the white King.
+                    if (gameBoard[oldPosition.getRow()][oldPosition.getColumn()].getCurrentPiece().getType() ==
+                            Figure.KING && oldPosition.equals(new ArrayPosition(7, 4, true)) &&
+                            newPosition.equals(new ArrayPosition(7, 6, false))) {
+                        ChessPiece rookToBeMoved = gameBoard[7][7].getCurrentPiece();
+                        gameBoard[7][7].removeCurrentPiece();
+                        gameBoard[7][5].setCurrentPiece(rookToBeMoved);
+                        castleInfo = "short-castle white";
+                    }
+
+        return castleInfo;
+    }
+
+    /**
      * @param pieceThatWasJustMoved just moved piece
      * @return list of positions of the pieces that are now able to move
      */

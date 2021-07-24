@@ -703,6 +703,24 @@ public class ChessGUI {
      */
     private void mouseListenerBodyForPossibleMoves(ArrayPosition arrayPosition) {
         // make move
+        String castleInfo = board.castling(currentlySelectedPiecePosition, arrayPosition);
+
+        switch (castleInfo) {
+            case "no castle":
+                break;
+            case "long-castle black":
+                movePieceToNewPosition(new ArrayPosition(0, 0, true), new ArrayPosition(0, 3, false));
+                break;
+            case "short-castle black":
+                movePieceToNewPosition(new ArrayPosition(0, 7, true), new ArrayPosition(0, 5, false));
+                break;
+            case "long-castle white":
+                movePieceToNewPosition(new ArrayPosition(7, 0, true), new ArrayPosition(7, 3, false));
+                break;
+            case "short-castle white":
+                movePieceToNewPosition(new ArrayPosition(7, 7, true), new ArrayPosition(7, 5, false));
+                break;
+        }
         board.makeMove(currentlySelectedPiecePosition, arrayPosition);
         // remove oldHighlightedButtons
         removeOldHighlightedButtons();
