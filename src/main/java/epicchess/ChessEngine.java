@@ -57,7 +57,6 @@ public class ChessEngine {
      * @param gameBoard gameBoard
      * @return validMovesList - list of valid moves
      */
-    //TODO fix it so pawns cant move past the border of the gameBoard
     private List<ArrayPosition> whitePawnMovement(ArrayPosition position, ChessPiece piece, ChessTile[][] gameBoard) {
         List<ArrayPosition> validMovesList = new ArrayList<>();
         //check if pawn has moved before
@@ -91,7 +90,6 @@ public class ChessEngine {
      * @param gameBoard gameBoard
      * @return validMovesList - list of valid moves
      */
-    //TODO fix it so pawns cant move past the border of the gameBoard
     private List<ArrayPosition> blackPawnMovement(ArrayPosition position, ChessPiece piece, ChessTile[][] gameBoard) {
         List<ArrayPosition> validMovesList = new ArrayList<>();
         //check if pawn has moved before
