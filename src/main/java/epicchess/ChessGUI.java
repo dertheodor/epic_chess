@@ -751,10 +751,10 @@ public class ChessGUI {
                 "\u2656", "\u2658", "\u2657", "\u2655"};
 
         JPanel panel = new JPanel();
-        panel.add(new JLabel("Choose a piece"));
+        panel.add(new JLabel("Press button"));
 
         // 0 is rook, 1 is knight, 2 is bishop, 3 is queen, -1 if window closed
-        int result = JOptionPane.showOptionDialog(gameUI, panel, "Press piece",
+        int result = JOptionPane.showOptionDialog(gameUI, panel, "Choose a piece",
                 JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE,
                 null, pieces, null);
 
