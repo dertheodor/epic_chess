@@ -700,9 +700,8 @@ public class ChessGUI {
      * @param arrayPosition The Position of the Button, where the selected Piece could move.
      */
     private void actionListenerBodyForPossibleMoves(ArrayPosition arrayPosition) {
-        // make move
+        // special case castling
         String castleInfo = board.castling(currentlySelectedPiecePosition, arrayPosition);
-
         switch (castleInfo) {
             case "no castle":
                 break;
@@ -719,7 +718,17 @@ public class ChessGUI {
                 movePieceToNewPosition(new ArrayPosition(7, 7, true), new ArrayPosition(7, 5, false));
                 break;
         }
+
+        // make move
         board.makeMove(currentlySelectedPiecePosition, arrayPosition);
+
+        // special case pawn promotion
+        // promotion is possible
+        if (board.promotionPossible(arrayPosition)) {
+            // visualizes the promotion in the GUI
+            promotionInGUI(arrayPosition);
+        }
+
         // remove oldHighlightedButtons
         removeOldHighlightedButtons();
         // remove all listeners for current color for turn-changing
@@ -728,5 +737,50 @@ public class ChessGUI {
         movePieceToNewPosition(currentlySelectedPiecePosition, arrayPosition);
         // reset currently currentlyHighlightedPosition
         currentlySelectedPiecePosition = null;
+    }
+
+    /**
+     * visualizes the promotion in the GUI
+     *
+     * @param arrayPosition position of piece
+     */
+    private void promotionInGUI(ArrayPosition arrayPosition) {
+        int row = arrayPosition.getRow();
+        int column = arrayPosition.getColumn();
+        Object[] pieces = {
+                "\u2656", "\u2658", "\u2657", "\u2655"};
+
+        JPanel panel = new JPanel();
+        panel.add(new JLabel("Choose a piece"));
+
+        // 0 is rook, 1 is knight, 2 is bishop, 3 is queen, -1 if window closed
+        int result = JOptionPane.showOptionDialog(gameUI, panel, "Press piece",
+                JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE,
+                null, pieces, null);
+
+        // promote figure in board and show it on the GUI depending on what was chosen
+        switch (result) {
+            case -1:
+            case 3:
+                board.promotion(arrayPosition, Figure.QUEEN);
+                buttonArray[row][column].setText(board.getTile(row, column).getCurrentPiece().getUniCodePicture());
+                buttonArray[row][column].setFont(new Font("Arial Unicode MS", Font.BOLD, 90));
+                break;
+            case 0:
+                board.promotion(arrayPosition, Figure.ROOK);
+                buttonArray[row][column].setText(board.getTile(row, column).getCurrentPiece().getUniCodePicture());
+                buttonArray[row][column].setFont(new Font("Arial Unicode MS", Font.BOLD, 90));
+                break;
+            case 1:
+                board.promotion(arrayPosition, Figure.KNIGHT);
+                buttonArray[row][column].setText(board.getTile(row, column).getCurrentPiece().getUniCodePicture());
+                buttonArray[row][column].setFont(new Font("Arial Unicode MS", Font.BOLD, 90));
+                break;
+            case 2:
+                board.promotion(arrayPosition, Figure.BISHOP);
+                buttonArray[row][column].setText(board.getTile(row, column).getCurrentPiece().getUniCodePicture());
+                buttonArray[row][column].setFont(new Font("Arial Unicode MS", Font.BOLD, 90));
+                break;
+        }
     }
 }
