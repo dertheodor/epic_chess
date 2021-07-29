@@ -204,6 +204,72 @@ public class ChessBoard {
     }
 
     /**
+     * checks if promotion is possible
+     *
+     * @param newPosition new position of piece
+     * @return return true if promotion is possible else false
+     */
+    public boolean promotionPossible(ArrayPosition newPosition) {
+        if (gameBoard[newPosition.getRow()][newPosition.getColumn()].getCurrentPiece().getType() == Figure.PAWN) {
+            // pawn is at the end of the board
+            if (newPosition.getRow() == 7 || newPosition.getRow() == 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * executes the promotion internally in the board
+     *
+     * @param arrayPosition  new position of piece
+     * @param promotedFigure promoted Figure
+     */
+    public void promotion(ArrayPosition arrayPosition, Figure promotedFigure) {
+        String uniCodePicture = "";
+
+        // white promotion
+        if (arrayPosition.getRow() == 0) {
+            if (promotedFigure == Figure.ROOK) {
+                uniCodePicture = "\u2656";
+            } else if (promotedFigure == Figure.KNIGHT) {
+                uniCodePicture = "\u2658";
+            } else if (promotedFigure == Figure.BISHOP) {
+                uniCodePicture = "\u2657";
+            } else {
+                uniCodePicture = "\u2655";
+            }
+
+            // remove pawn from new position and save oldID to variable
+            String oldID = gameBoard[arrayPosition.getRow()][arrayPosition.getColumn()].getCurrentPiece().getFigureID();
+            gameBoard[arrayPosition.getRow()][arrayPosition.getColumn()].removeCurrentPiece();
+            // set promoted piece to new position
+            gameBoard[arrayPosition.getRow()][arrayPosition.getColumn()].setCurrentPiece(
+                    new ChessPiece("white", promotedFigure, uniCodePicture, oldID, false));
+        }
+
+        // black promotion
+        if (arrayPosition.getRow() == 7) {
+            if (promotedFigure == Figure.ROOK) {
+                uniCodePicture = "\u265c";
+            } else if (promotedFigure == Figure.KNIGHT) {
+                uniCodePicture = "\u265e";
+            } else if (promotedFigure == Figure.BISHOP) {
+                uniCodePicture = "\u265d";
+            } else {
+                uniCodePicture = "\u265b";
+            }
+
+            // remove pawn from new position and save oldID to variable
+            String oldID = gameBoard[arrayPosition.getRow()][arrayPosition.getColumn()].getCurrentPiece().getFigureID();
+            gameBoard[arrayPosition.getRow()][arrayPosition.getColumn()].removeCurrentPiece();
+            // set promoted piece to new position
+            gameBoard[arrayPosition.getRow()][arrayPosition.getColumn()].setCurrentPiece(
+                    new ChessPiece("black", promotedFigure, uniCodePicture, oldID, false));
+        }
+    }
+
+    /**
      * @param pieceThatWasJustMoved just moved piece
      * @return list of positions of the pieces that are now able to move
      */
