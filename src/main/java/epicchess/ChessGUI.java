@@ -4,9 +4,7 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -105,33 +103,33 @@ public class ChessGUI {
         helpMenu.add(aboutItem);
 
         // add listener for open submenu-entry
-        openItem.addMouseListener(new MouseAdapter() {
+        openItem.addActionListener(new ActionListener() {
             @Override
-            public void mousePressed(MouseEvent e) {
+            public void actionPerformed(ActionEvent e) {
                 readOnMousePressed(openFileChooser);
             }
         });
 
         // add listener for save submenu-entry
-        saveItem.addMouseListener(new MouseAdapter() {
+        saveItem.addActionListener(new ActionListener() {
             @Override
-            public void mousePressed(MouseEvent e) {
+            public void actionPerformed(ActionEvent e) {
                 saveOnMousePressed(fileWriter, saveFileChooser);
             }
         });
 
         // add listener for exit submenu-entry
-        exitItem.addMouseListener(new MouseAdapter() {
+        exitItem.addActionListener(new ActionListener() {
             @Override
-            public void mousePressed(MouseEvent e) {
+            public void actionPerformed(ActionEvent e) {
                 System.exit(0);
             }
         });
 
         // add listener for board theme change
-        greenBoard.addMouseListener(new MouseAdapter() {
+        greenBoard.addActionListener(new ActionListener() {
             @Override
-            public void mousePressed(MouseEvent e) {
+            public void actionPerformed(ActionEvent e) {
                 darkTileColor = new Color(118, 150, 86);
                 lightTileColor = new Color(238, 238, 210);
                 initBoardColorChange();
@@ -139,9 +137,9 @@ public class ChessGUI {
         });
 
         // add listener for board theme change
-        greyBoard.addMouseListener(new MouseAdapter() {
+        greyBoard.addActionListener(new ActionListener() {
             @Override
-            public void mousePressed(MouseEvent e) {
+            public void actionPerformed(ActionEvent e) {
                 darkTileColor = new Color(125, 135, 150);
                 lightTileColor = new Color(232, 235, 239);
                 initBoardColorChange();
@@ -149,9 +147,9 @@ public class ChessGUI {
         });
 
         // add listener for about submenu-entry
-        aboutItem.addMouseListener(new MouseAdapter() {
+        aboutItem.addActionListener(new ActionListener() {
             @Override
-            public void mousePressed(MouseEvent e) {
+            public void actionPerformed(ActionEvent e) {
                 JOptionPane.showMessageDialog(gameUI,
                         "This chess game has been made by Lars Penning(8penning) and Theodor Bajusz(8bajusz) " +
                                 "as part of PTP_2021 at the University of Hamburg",
@@ -357,11 +355,11 @@ public class ChessGUI {
             // add initial mousePressed-listeners to color whose turn it was
             // white
             if (board.getTile(pieceRow, pieceColumn).getCurrentPiece().getColor().equals("white") && isWhitesTurn) {
-                addMouseListenerForMoveablePieceButton(buttonArray[pieceRow][pieceColumn], pieceRow, pieceColumn);
+                addActionListenerForMoveablePieceButton(buttonArray[pieceRow][pieceColumn], pieceRow, pieceColumn);
             } else
                 // black
                 if (board.getTile(pieceRow, pieceColumn).getCurrentPiece().getColor().equals("black") && !isWhitesTurn) {
-                    addMouseListenerForMoveablePieceButton(buttonArray[pieceRow][pieceColumn], pieceRow, pieceColumn);
+                    addActionListenerForMoveablePieceButton(buttonArray[pieceRow][pieceColumn], pieceRow, pieceColumn);
                 }
         }
     }
@@ -481,7 +479,7 @@ public class ChessGUI {
                 buttonArray[row][column].setFont(new Font("Arial Unicode MS", Font.BOLD, 90));
                 // add initial mousePressed-listeners to only the white pieces
                 if (board.getTile(row, column).getCurrentPiece().getColor().equals("white")) {
-                    addMouseListenerForMoveablePieceButton(buttonArray[row][column], row, column);
+                    addActionListenerForMoveablePieceButton(buttonArray[row][column], row, column);
                 }
             }
         }
@@ -494,14 +492,14 @@ public class ChessGUI {
      * @param row    row of the button
      * @param column column of the button
      */
-    private void addMouseListenerForMoveablePieceButton(JButton button, int row, int column) {
-        button.addMouseListener(new MouseAdapter() {
+    private void addActionListenerForMoveablePieceButton(JButton button, int row, int column) {
+        button.addActionListener(new ActionListener() {
             @Override
-            public void mousePressed(MouseEvent e) {
+            public void actionPerformed(ActionEvent e) {
                 // save currentlyHighlightedPosition of selected piece
                 currentlySelectedPiecePosition = new ArrayPosition(row, column, true);
                 // call further logic for moving
-                setMouseListenerForPossibleMoves(board.highlightNextValidMoves(new ArrayPosition(row, column, true)));
+                setActionListenerForPossibleMoves(board.highlightNextValidMoves(new ArrayPosition(row, column, true)));
             }
         });
     }
@@ -511,7 +509,7 @@ public class ChessGUI {
      *
      * @param arrayPositionList the positions of next possible moves
      */
-    private void setMouseListenerForPossibleMoves(List<ArrayPosition> arrayPositionList) {
+    private void setActionListenerForPossibleMoves(List<ArrayPosition> arrayPositionList) {
         // revert old possible moves
         if (currentlyHighlightedArrayPositionList != null) {
             removeOldHighlightedButtons();
@@ -522,10 +520,10 @@ public class ChessGUI {
 
         // listener for turn-taking
         arrayPositionList.forEach(arrayPosition ->
-                buttonArray[arrayPosition.getRow()][arrayPosition.getColumn()].addMouseListener(new MouseAdapter() {
+                buttonArray[arrayPosition.getRow()][arrayPosition.getColumn()].addActionListener(new ActionListener() {
                     @Override
-                    public void mousePressed(MouseEvent e) {
-                        mouseListenerBodyForPossibleMoves(arrayPosition);
+                    public void actionPerformed(ActionEvent e) {
+                        actionListenerBodyForPossibleMoves(arrayPosition);
                     }
                 }));
     }
@@ -543,8 +541,8 @@ public class ChessGUI {
                 // set button color to initial color
                 setButtonColorToDefault(aP.getRow(), aP.getColumn());
                 // remove all previously set listeners for possible moves
-                for (MouseListener ml : button.getMouseListeners()) {
-                    button.removeMouseListener(ml);
+                for (ActionListener al : button.getActionListeners()) {
+                    button.removeActionListener(al);
                 }
             }
 
@@ -553,8 +551,8 @@ public class ChessGUI {
                 button.setText("");
                 button.setForeground(Color.black);
                 // remove all previously set listeners for possible moves
-                for (MouseListener ml : button.getMouseListeners()) {
-                    button.removeMouseListener(ml);
+                for (ActionListener al : button.getActionListeners()) {
+                    button.removeActionListener(al);
                 }
             }
         }
@@ -598,8 +596,8 @@ public class ChessGUI {
         oldButton.setText("");
 
         // remove all previously set listeners for old position
-        for (MouseListener ml : oldButton.getMouseListeners()) {
-            oldButton.removeMouseListener(ml);
+        for (ActionListener al : oldButton.getActionListeners()) {
+            oldButton.removeActionListener(al);
         }
 
         // make moved piece visible on new position
@@ -654,7 +652,7 @@ public class ChessGUI {
 
         // add new button listeners after turn-changing
         for (ArrayPosition position : nextTurnPiecePositions) {
-            addMouseListenerForMoveablePieceButton(buttonArray[position.getRow()][position.getColumn()], position.getRow(), position.getColumn());
+            addActionListenerForMoveablePieceButton(buttonArray[position.getRow()][position.getColumn()], position.getRow(), position.getColumn());
         }
     }
 
@@ -686,8 +684,8 @@ public class ChessGUI {
         // remove all previously set listeners from board
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                for (MouseListener ml : buttonArray[i][j].getMouseListeners()) {
-                    buttonArray[i][j].removeMouseListener(ml);
+                for (ActionListener al : buttonArray[i][j].getActionListeners()) {
+                    buttonArray[i][j].removeActionListener(al);
                     if (clearGUI) {
                         buttonArray[i][j].setText("");
                     }
@@ -697,11 +695,11 @@ public class ChessGUI {
     }
 
     /**
-     * Body of the MouseListeners for the Positions where a selected Piece could move.
+     * Body of the ActionListeners for the Positions where a selected Piece could move.
      *
      * @param arrayPosition The Position of the Button, where the selected Piece could move.
      */
-    private void mouseListenerBodyForPossibleMoves(ArrayPosition arrayPosition) {
+    private void actionListenerBodyForPossibleMoves(ArrayPosition arrayPosition) {
         // make move
         String castleInfo = board.castling(currentlySelectedPiecePosition, arrayPosition);
 

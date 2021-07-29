@@ -114,12 +114,10 @@ public class ChessTest {
     // TODO test for moving pieces
     @Test
     void pawnMovementGUITest() {
-        window.buttonArray[6][0].doClick(1);
+        window.buttonArray[6][0].doClick();
         System.out.println(window.buttonArray[6][0].getText());
-        System.out.println(window.buttonArray[6][0].getMouseListeners());
-        window.buttonArray[5][0].doClick(500);
-        System.out.println(window.buttonArray[4][0].getText());
-        System.out.println(window.buttonArray[4][0].getMouseListeners());
+        window.buttonArray[5][0].doClick();
+        System.out.println(window.buttonArray[5][0].getText());
     }
 
     @Test
