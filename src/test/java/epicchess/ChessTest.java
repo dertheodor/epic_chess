@@ -111,17 +111,112 @@ public class ChessTest {
         Assertions.assertEquals("H2pawn", board.gameBoard[6][7].getCurrentPiece().getFigureID());
     }
 
-    // TODO test for moving pieces
+    // figures tests
     @Test
-    void pawnMovementGUITest() {
+    void pawnMovementTest() {
+        // white pawn
         window.buttonArray[6][0].doClick();
-        System.out.println(window.buttonArray[6][0].getText());
         window.buttonArray[5][0].doClick();
-        System.out.println(window.buttonArray[5][0].getText());
+        // black pawn
+        window.buttonArray[1][1].doClick();
+        window.buttonArray[2][1].doClick();
+        Assertions.assertEquals("A2pawn", board.gameBoard[5][0].getCurrentPiece().getFigureID());
+        Assertions.assertEquals("B7pawn", board.gameBoard[2][1].getCurrentPiece().getFigureID());
     }
 
     @Test
-    void pawnMovementModelTest() {
+    void knightMovementTest() {
+        // white knight
+        window.buttonArray[7][1].doClick();
+        window.buttonArray[5][2].doClick();
+        // black knight
+        window.buttonArray[0][1].doClick();
+        window.buttonArray[2][2].doClick();
+        Assertions.assertEquals("B1knight", board.gameBoard[5][2].getCurrentPiece().getFigureID());
+        Assertions.assertEquals("B8knight", board.gameBoard[2][2].getCurrentPiece().getFigureID());
+    }
 
+    @Test
+    void rookMovementTest() {
+        // move pawns before rook can move
+        // white pawn
+        window.buttonArray[6][0].doClick();
+        window.buttonArray[4][0].doClick();
+        // black pawn
+        window.buttonArray[1][0].doClick();
+        window.buttonArray[3][0].doClick();
+
+
+        // white rook
+        window.buttonArray[7][0].doClick();
+        window.buttonArray[5][0].doClick();
+        // black rook
+        window.buttonArray[0][0].doClick();
+        window.buttonArray[2][0].doClick();
+        Assertions.assertEquals("A1rook", board.gameBoard[5][0].getCurrentPiece().getFigureID());
+        Assertions.assertEquals("A8rook", board.gameBoard[2][0].getCurrentPiece().getFigureID());
+    }
+
+    @Test
+    void bishopMovementTest() {
+        // move pawns before bishop can move
+        // white pawn
+        window.buttonArray[6][3].doClick();
+        window.buttonArray[4][3].doClick();
+        // black pawn
+        window.buttonArray[1][3].doClick();
+        window.buttonArray[3][3].doClick();
+
+
+        // white bishop
+        window.buttonArray[7][2].doClick();
+        window.buttonArray[4][5].doClick();
+        // black bishop
+        window.buttonArray[0][2].doClick();
+        window.buttonArray[4][6].doClick();
+        Assertions.assertEquals("C1bishop", board.gameBoard[4][5].getCurrentPiece().getFigureID());
+        Assertions.assertEquals("C8bishop", board.gameBoard[4][6].getCurrentPiece().getFigureID());
+    }
+
+    @Test
+    void queenMovementTest() {
+        // move pawns before queen can move
+        // white pawn
+        window.buttonArray[6][4].doClick();
+        window.buttonArray[5][4].doClick();
+        // black pawn
+        window.buttonArray[1][4].doClick();
+        window.buttonArray[2][4].doClick();
+
+
+        // white queen
+        window.buttonArray[7][3].doClick();
+        window.buttonArray[3][7].doClick();
+        // black queen
+        window.buttonArray[0][3].doClick();
+        window.buttonArray[4][7].doClick();
+        Assertions.assertEquals("D1queen", board.gameBoard[3][7].getCurrentPiece().getFigureID());
+        Assertions.assertEquals("D8queen", board.gameBoard[4][7].getCurrentPiece().getFigureID());
+    }
+
+    @Test
+    void kingMovementTest() {
+        // move pawns before king can move
+        // white pawn
+        window.buttonArray[6][4].doClick();
+        window.buttonArray[5][4].doClick();
+        // black pawn
+        window.buttonArray[1][4].doClick();
+        window.buttonArray[2][4].doClick();
+
+
+        // white king
+        window.buttonArray[7][4].doClick();
+        window.buttonArray[6][4].doClick();
+        // black king
+        window.buttonArray[0][4].doClick();
+        window.buttonArray[1][4].doClick();
+        Assertions.assertEquals("E1king", board.gameBoard[6][4].getCurrentPiece().getFigureID());
+        Assertions.assertEquals("E8king", board.gameBoard[1][4].getCurrentPiece().getFigureID());
     }
 }
