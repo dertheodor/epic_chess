@@ -262,7 +262,7 @@ public class ChessGUI {
      * @param line the first line of the txt file
      * @return true if it was whites turn, false if it was black
      */
-    private boolean figureOutWhoseTurnItIs(String line) {
+    public boolean figureOutWhoseTurnItIs(String line) {
         // separated lines
         String[] separatedEntries = line.split("#");
 
@@ -282,7 +282,7 @@ public class ChessGUI {
      * @param line         the line to read
      * @param isWhitesTurn information whose turn it is
      */
-    private void reconstructChessGame(String line, boolean isWhitesTurn) {
+    public void reconstructChessGame(String line, boolean isWhitesTurn) {
         // separated lines
         String[] separatedEntries = line.split("#");
 
@@ -679,8 +679,10 @@ public class ChessGUI {
 
     /**
      * all listeners on board get removed after a turn has been made
+     *
+     * @param clearGUI true if GUI buttons should also be cleared, false otherwise
      */
-    private void removeAllListenersAfterMove(boolean clearGUI) {
+    public void removeAllListenersAfterMove(boolean clearGUI) {
         // remove all previously set listeners from board
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
