@@ -305,4 +305,6 @@ public class ChessTest {
         // checkmate
         Assertions.assertTrue(true);
     }
+
+    // TODO tests: rochade, bauer entwickeln, spielstand speichern/ laden, ein paar negativtests vllt. ?!
 }
