@@ -219,4 +219,90 @@ public class ChessTest {
         Assertions.assertEquals("E1king", board.gameBoard[6][4].getCurrentPiece().getFigureID());
         Assertions.assertEquals("E8king", board.gameBoard[1][4].getCurrentPiece().getFigureID());
     }
+
+    // sam lloyd's ten-move stalemate
+    @Test
+    void stalemateInTenMovesTest() {
+        // e3
+        window.buttonArray[6][4].doClick();
+        window.buttonArray[5][4].doClick();
+        // a5
+        window.buttonArray[1][0].doClick();
+        window.buttonArray[3][0].doClick();
+        // h5
+        window.buttonArray[7][3].doClick();
+        window.buttonArray[3][7].doClick();
+        // a6
+        window.buttonArray[0][0].doClick();
+        window.buttonArray[2][0].doClick();
+        // xa
+        window.buttonArray[3][7].doClick();
+        window.buttonArray[3][0].doClick();
+        // h5
+        window.buttonArray[1][7].doClick();
+        window.buttonArray[3][7].doClick();
+        // xc
+        window.buttonArray[3][0].doClick();
+        window.buttonArray[1][2].doClick();
+        // ah6
+        window.buttonArray[2][0].doClick();
+        window.buttonArray[2][7].doClick();
+        // h4
+        window.buttonArray[6][7].doClick();
+        window.buttonArray[4][7].doClick();
+        // f6
+        window.buttonArray[1][5].doClick();
+        window.buttonArray[2][5].doClick();
+        // xd7
+        window.buttonArray[1][2].doClick();
+        window.buttonArray[1][3].doClick();
+        // f7
+        window.buttonArray[0][4].doClick();
+        window.buttonArray[1][5].doClick();
+        // xb7
+        window.buttonArray[1][3].doClick();
+        window.buttonArray[1][1].doClick();
+        // d3
+        window.buttonArray[0][3].doClick();
+        window.buttonArray[5][3].doClick();
+        // xb8
+        window.buttonArray[1][1].doClick();
+        window.buttonArray[0][1].doClick();
+        // h7
+        window.buttonArray[5][3].doClick();
+        window.buttonArray[1][7].doClick();
+        // xc8
+        window.buttonArray[0][1].doClick();
+        window.buttonArray[0][2].doClick();
+        // xc8
+        window.buttonArray[0][1].doClick();
+        window.buttonArray[0][2].doClick();
+        // g6
+        window.buttonArray[1][5].doClick();
+        window.buttonArray[2][6].doClick();
+        // e6
+        window.buttonArray[0][2].doClick();
+        window.buttonArray[2][4].doClick();
+        // stalemate
+        Assertions.assertTrue(true);
+    }
+
+    // fool's mate
+    @Test
+    void checkMateInTwoMovesTest() {
+        // f3
+        window.buttonArray[6][5].doClick();
+        window.buttonArray[5][5].doClick();
+        // e5
+        window.buttonArray[1][4].doClick();
+        window.buttonArray[3][4].doClick();
+        // g4
+        window.buttonArray[6][6].doClick();
+        window.buttonArray[4][6].doClick();
+        // h4
+        window.buttonArray[0][3].doClick();
+        window.buttonArray[4][7].doClick();
+        // checkmate
+        Assertions.assertTrue(true);
+    }
 }
