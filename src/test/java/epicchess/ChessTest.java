@@ -224,6 +224,44 @@ public class ChessTest {
         Assertions.assertEquals("E8king", testBoard.gameBoard[1][4].getCurrentPiece().getFigureID());
     }
 
+    @Test
+    void castlingTest() {
+        // move pieces out of the way before king can castle
+        // white knight
+        testGui.buttonArray[7][6].doClick();
+        testGui.buttonArray[5][5].doClick();
+        // black knight
+        testGui.buttonArray[0][6].doClick();
+        testGui.buttonArray[2][5].doClick();
+        // white pawn so bishop can move
+        testGui.buttonArray[6][6].doClick();
+        testGui.buttonArray[5][6].doClick();
+        // black pawn so bishop can move
+        testGui.buttonArray[1][6].doClick();
+        testGui.buttonArray[2][6].doClick();
+        // white bishop
+        testGui.buttonArray[7][5].doClick();
+        testGui.buttonArray[5][7].doClick();
+        // black bishop
+        testGui.buttonArray[0][5].doClick();
+        testGui.buttonArray[2][7].doClick();
+
+
+        // white king castling
+        testGui.buttonArray[7][4].doClick();
+        testGui.buttonArray[7][6].doClick();
+        // black king castling
+        testGui.buttonArray[0][4].doClick();
+        testGui.buttonArray[0][6].doClick();
+        //testing if kings and rooks moved to the right spot
+        Assertions.assertEquals("E1king", testBoard.gameBoard[7][6].getCurrentPiece().getFigureID());
+        Assertions.assertEquals("E8king", testBoard.gameBoard[0][6].getCurrentPiece().getFigureID());
+        Assertions.assertEquals("H1rook", testBoard.gameBoard[7][5].getCurrentPiece().getFigureID());
+        Assertions.assertEquals("H8rook", testBoard.gameBoard[0][5].getCurrentPiece().getFigureID());
+
+
+    }
+
     // sam lloyd's ten-move stalemate
     @Test
     void stalemateInTenMovesTest() {
