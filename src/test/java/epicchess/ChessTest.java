@@ -3,8 +3,10 @@ package epicchess;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Scanner;
 
 
@@ -262,6 +264,17 @@ public class ChessTest {
 
     }
 
+    @Test
+    void gameStateTest() {
+        //make one move
+        testGui.buttonArray[6][0].doClick();
+        testGui.buttonArray[4][0].doClick();
+        // get positions of all the pieces that should be able to move next
+        List<ArrayPosition> nowMovablePieces = testBoard.returnNextPlayerPiecePositions(new ArrayPosition(4, 0, true));
+        String gameState = testBoard.gameState(nowMovablePieces);
+        Assertions.assertEquals("gameNotOver", gameState);
+    }
+
     // sam lloyd's ten-move stalemate
     @Test
     void stalemateInTenMovesTest() {
@@ -326,8 +339,9 @@ public class ChessTest {
         testGui.buttonArray[0][2].doClick();
         testGui.buttonArray[2][4].doClick();
         // stalemate
-        //TODO das hier vielleicht zu etwas sinnvollerem ändern als einfach nur wahr asserten?
-        Assertions.assertTrue(true);
+        List<ArrayPosition> nowMovablePieces = testBoard.returnNextPlayerPiecePositions(new ArrayPosition(2, 4, true));
+        String gameState = testBoard.gameState(nowMovablePieces);
+        Assertions.assertEquals("staleMate", gameState);
     }
 
     // fool's mate
@@ -346,11 +360,12 @@ public class ChessTest {
         testGui.buttonArray[0][3].doClick();
         testGui.buttonArray[4][7].doClick();
         // checkmate
-        //TODO das hier vielleicht zu etwas sinnvollerem ändern als einfach nur wahr asserten?
-        Assertions.assertTrue(true);
+        List<ArrayPosition> nowMovablePieces = testBoard.returnNextPlayerPiecePositions(new ArrayPosition(4, 7, true));
+        String gameState = testBoard.gameState(nowMovablePieces);
+        Assertions.assertEquals("checkMate", gameState);
     }
 
-    // TODO tests: rochade, bauer entwickeln, spielstand speichern/ laden, ein paar negativtests vllt. ?!
+    // TODO tests: bauer entwickeln, spielstand speichern/ laden, ein paar negativtests vllt. ?!
 
     @Test
     void readPastChessGamePositive() throws IOException {
