@@ -665,15 +665,38 @@ public class ChessGUI {
      */
     private void gameStateAnnouncement(String gameState, String colorOfOppositePlayer) {
         if (gameState.equals("staleMate")) {
-            JOptionPane.showMessageDialog(gameUI,
-                    "Stalemate.",
-                    "Game over",
-                    JOptionPane.INFORMATION_MESSAGE);
+            // https://stackoverflow.com/questions/18105598/closing-a-joptionpane-programmatically
+            JOptionPane jop = new JOptionPane();
+            jop.setMessageType(JOptionPane.PLAIN_MESSAGE);
+            jop.setMessage("Stalemate.");
+            JDialog dialog = jop.createDialog(gameUI, "Game over");
+
+            // Set a 2 second timer
+            new Thread(() -> {
+                try {
+                    Thread.sleep(2000);
+                } catch (Exception ignored) {
+                }
+                dialog.dispose();
+            }).start();
+
+            dialog.setVisible(true);
         } else if (gameState.equals("checkMate")) {
-            JOptionPane.showMessageDialog(gameUI,
-                    colorOfOppositePlayer + " loses by checkmate.",
-                    "Game over",
-                    JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane jop = new JOptionPane();
+            jop.setMessageType(JOptionPane.PLAIN_MESSAGE);
+            jop.setMessage(colorOfOppositePlayer + " loses by checkmate.");
+            JDialog dialog = jop.createDialog(gameUI, "Game over");
+
+            // Set a 2 second timer
+            new Thread(() -> {
+                try {
+                    Thread.sleep(2000);
+                } catch (Exception ignored) {
+                }
+                dialog.dispose();
+            }).start();
+
+            dialog.setVisible(true);
         }
     }
 
