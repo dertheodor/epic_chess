@@ -367,6 +367,8 @@ public class ChessTest {
 
     // TODO tests: bauer entwickeln, spielstand speichern/ laden, ein paar negativtests vllt. ?!
 
+    // TODO Tests brauchen auch Kommentare
+
     @Test
     void readPastChessGamePositive() throws IOException {
         // read txt file of saved chess_game
