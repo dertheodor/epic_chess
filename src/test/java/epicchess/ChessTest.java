@@ -379,7 +379,7 @@ public class ChessTest {
         testBoard.clearBoard();
 
         // clear pieces and listeners from gui
-        testGui.removeAllListenersAfterMove(true);
+        testGui.resetBoard();
 
         // first-line
         String firstLine = input.nextLine();
@@ -474,7 +474,7 @@ public class ChessTest {
         testBoard.clearBoard();
 
         // clear pieces and listeners from gui
-        testGui.removeAllListenersAfterMove(true);
+        testGui.resetBoard();
 
         // first-line
         String firstLine = input.nextLine();

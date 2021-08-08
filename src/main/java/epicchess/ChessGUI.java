@@ -238,7 +238,7 @@ public class ChessGUI {
                 board.clearBoard();
 
                 // clear pieces and listeners from gui
-                removeAllListenersAfterMove(true);
+                resetBoard();
 
                 // first-line
                 String firstLine = input.nextLine();
@@ -702,18 +702,27 @@ public class ChessGUI {
 
     /**
      * all listeners on board get removed after a turn has been made
-     *
-     * @param clearGUI true if GUI buttons should also be cleared, false otherwise
      */
-    public void removeAllListenersAfterMove(boolean clearGUI) {
+    public void removeAllListenersAfterMove() {
         // remove all previously set listeners from board
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 for (ActionListener al : buttonArray[i][j].getActionListeners()) {
                     buttonArray[i][j].removeActionListener(al);
-                    if (clearGUI) {
-                        buttonArray[i][j].setText("");
-                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * method used for clearing the GUI before reading game, also removes possible action listeners<
+     */
+    public void resetBoard() {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                buttonArray[i][j].setText("");
+                for (ActionListener al : buttonArray[i][j].getActionListeners()) {
+                    buttonArray[i][j].removeActionListener(al);
                 }
             }
         }
@@ -757,7 +766,7 @@ public class ChessGUI {
         // remove oldHighlightedButtons
         removeOldHighlightedButtons();
         // remove all listeners for current color for turn-changing
-        removeAllListenersAfterMove(false);
+        removeAllListenersAfterMove();
         // move piece on board
         movePieceToNewPosition(currentlySelectedPiecePosition, arrayPosition);
         // reset currently currentlyHighlightedPosition
