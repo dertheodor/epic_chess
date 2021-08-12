@@ -33,6 +33,8 @@ public class ChessGUI {
     JMenu editMenu;
     JMenuItem greenBoard;
     JMenuItem greyBoard;
+    JMenuItem blueBoard;
+    JMenuItem brownBoard;
 
     JMenu helpMenu;
     JMenuItem aboutItem;
@@ -78,6 +80,8 @@ public class ChessGUI {
         editMenu = new JMenu("Edit");
         greenBoard = new JMenuItem("Green themed board");
         greyBoard = new JMenuItem("Grey themed board");
+        blueBoard = new JMenuItem("Blue themed board");
+        brownBoard = new JMenuItem("Brown themed board");
         helpMenu = new JMenu("Help");
         aboutItem = new JMenuItem("About");
         buttonArray = new JButton[8][8];
@@ -99,6 +103,8 @@ public class ChessGUI {
         menuBar.add(editMenu);
         editMenu.add(greenBoard);
         editMenu.add(greyBoard);
+        editMenu.add(blueBoard);
+        editMenu.add(brownBoard);
         menuBar.add(helpMenu);
         helpMenu.add(aboutItem);
 
@@ -142,6 +148,26 @@ public class ChessGUI {
             public void actionPerformed(ActionEvent e) {
                 darkTileColor = new Color(125, 135, 150);
                 lightTileColor = new Color(232, 235, 239);
+                initBoardColorChange();
+            }
+        });
+
+        // add listener for board theme change
+        blueBoard.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                darkTileColor = new Color(92, 132, 166);
+                lightTileColor = new Color(180, 206, 229);
+                initBoardColorChange();
+            }
+        });
+
+        // add listener for board theme change
+        brownBoard.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                darkTileColor = new Color(150, 110, 69);
+                lightTileColor = new Color(205, 181, 156);
                 initBoardColorChange();
             }
         });
@@ -408,58 +434,57 @@ public class ChessGUI {
      * @param button the button that needs to be described.
      */
     private void descriptionOfEdgeTiles(int i, JButton button) {
-        //TODO Change back to real Tile Description.
         switch (i) {
             case 0:
-                button.setText("0");
+                button.setText("8");
                 break;
             case 9:
-                button.setText("1");
+                button.setText("7");
                 break;
             case 18:
-                button.setText("2");
+                button.setText("6");
                 break;
             case 27:
-                button.setText("3");
+                button.setText("5");
                 break;
             case 36:
                 button.setText("4");
                 break;
             case 45:
-                button.setText("5");
+                button.setText("3");
                 break;
             case 54:
-                button.setText("6");
+                button.setText("2");
                 break;
             case 63:
-                button.setText("7");
+                button.setText("1");
                 break;
             case 72:
                 button.setText("");
                 break;
             case 73:
-                button.setText("0");
+                button.setText("a");
                 break;
             case 74:
-                button.setText("1");
+                button.setText("b");
                 break;
             case 75:
-                button.setText("2");
+                button.setText("c");
                 break;
             case 76:
-                button.setText("3");
+                button.setText("d");
                 break;
             case 77:
-                button.setText("4");
+                button.setText("e");
                 break;
             case 78:
-                button.setText("5");
+                button.setText("f");
                 break;
             case 79:
-                button.setText("6");
+                button.setText("g");
                 break;
             case 80:
-                button.setText("7");
+                button.setText("h");
                 break;
             default:
         }
@@ -655,8 +680,6 @@ public class ChessGUI {
             addActionListenerForMoveablePieceButton(buttonArray[position.getRow()][position.getColumn()], position.getRow(), position.getColumn());
         }
     }
-
-    //TODO option start new game when old one is over
 
     /**
      * Announces the games state
