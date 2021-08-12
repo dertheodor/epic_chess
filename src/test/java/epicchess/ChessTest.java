@@ -226,6 +226,7 @@ public class ChessTest {
         Assertions.assertEquals("E8king", testBoard.gameBoard[1][4].getCurrentPiece().getFigureID());
     }
 
+    // test used for checking if castling works correctly
     @Test
     void castlingTest() {
         // move pieces out of the way before king can castle
@@ -264,6 +265,7 @@ public class ChessTest {
 
     }
 
+    // test if game state works correctly
     @Test
     void gameStateTest() {
         //make one move
@@ -365,10 +367,7 @@ public class ChessTest {
         Assertions.assertEquals("checkMate", gameState);
     }
 
-    // TODO tests: bauer entwickeln, spielstand speichern/ laden, ein paar negativtests vllt. ?!
-
-    // TODO Tests brauchen auch Kommentare
-
+    // test for reading old save-game
     @Test
     void readPastChessGamePositive() throws IOException {
         // read txt file of saved chess_game
@@ -464,6 +463,7 @@ public class ChessTest {
         }
     }
 
+    // negative test for reading old save-game
     @Test
     void readPastChessGameNegative() throws IOException {
         // read txt file of saved chess_game
@@ -554,4 +554,6 @@ public class ChessTest {
             }
         }
     }
+
+    // TODO tests: bauer entwickeln, ein paar negativtests vllt. ?!
 }
