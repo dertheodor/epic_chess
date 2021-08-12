@@ -92,6 +92,7 @@ public class ChessGUI {
         gameUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         gameUI.setSize(1200, 1000);
         gameUI.setLayout(new BorderLayout());
+        gameUI.setTitle("Epic Chess");
 
         //Add menuBar to our Window
         gameUI.setJMenuBar(menuBar);
